@@ -1,0 +1,2374 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    :root {
+        --ticket-primary: #0f2f5f;
+        --ticket-primary-2: #174b8f;
+        --ticket-accent: #2563eb;
+        --ticket-bg: #f5f7fb;
+        --ticket-card: #ffffff;
+        --ticket-text: #182230;
+        --ticket-muted: #667085;
+        --ticket-border: #e4e7ec;
+        --ticket-soft: #f8fafc;
+        --ticket-danger: #dc2626;
+        --ticket-success: #16a34a;
+        --ticket-radius: 18px;
+    }
+
+    .ticket-page {
+        padding-bottom: 32px;
+    }
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .ticket-hero {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 24px;
+        padding: 28px 30px;
+        border-radius: 22px;
+
+        background:
+            radial-gradient(
+                circle at 88% 22%,
+                rgba(255,255,255,.18) 0 70px,
+                transparent 71px
+            ),
+            radial-gradient(
+                circle at 95% 88%,
+                rgba(255,255,255,.10) 0 120px,
+                transparent 121px
+            ),
+            linear-gradient(
+                135deg,
+                #0b2348 0%,
+                #123d76 55%,
+                #1b5aae 100%
+            );
+
+        color: #fff;
+
+        box-shadow:
+            0 16px 40px rgba(15, 47, 95, .16);
+    }
+
+    .ticket-hero-content {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+    }
+
+    .ticket-hero-title {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .ticket-hero-icon {
+        width: 52px;
+        height: 52px;
+
+        display: grid;
+        place-items: center;
+
+        flex: 0 0 52px;
+
+        border: 1px solid rgba(255,255,255,.22);
+        border-radius: 15px;
+
+        background: rgba(255,255,255,.12);
+
+        font-size: 24px;
+    }
+
+    .ticket-hero h3 {
+        margin: 0 0 5px;
+
+        color: #fff;
+
+        font-size: 25px;
+        font-weight: 750;
+    }
+
+    .ticket-hero p {
+        margin: 0;
+
+        color: rgba(255,255,255,.76);
+
+        font-size: 13px;
+    }
+
+    .hero-status {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 8px;
+
+        padding: 9px 13px;
+
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 999px;
+
+        background: rgba(255,255,255,.10);
+
+        color: #fff;
+
+        font-size: 12px;
+        font-weight: 600;
+
+        white-space: nowrap;
+    }
+
+    .hero-status-dot {
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: #4ade80;
+
+        box-shadow:
+            0 0 0 4px rgba(74,222,128,.14);
+    }
+
+
+    /* =====================================================
+       PAGE LAYOUT
+    ===================================================== */
+
+    .ticket-layout {
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr) 285px;
+
+        gap: 22px;
+
+        align-items: start;
+    }
+
+
+    /* =====================================================
+       MAIN CARD
+    ===================================================== */
+
+    .ticket-card {
+        border: 1px solid var(--ticket-border);
+
+        border-radius: var(--ticket-radius);
+
+        background: var(--ticket-card);
+
+        box-shadow:
+            0 10px 34px rgba(16, 24, 40, .06);
+
+        overflow: hidden;
+    }
+
+    .ticket-card-header {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 16px;
+
+        padding: 20px 24px;
+
+        border-bottom:
+            1px solid #edf0f4;
+
+        background:
+            linear-gradient(
+                180deg,
+                #ffffff 0%,
+                #fcfdff 100%
+            );
+    }
+
+    .ticket-card-header-left {
+        display: flex;
+
+        align-items: center;
+
+        gap: 11px;
+    }
+
+    .ticket-card-header-icon {
+        width: 38px;
+        height: 38px;
+
+        display: grid;
+
+        place-items: center;
+
+        border-radius: 11px;
+
+        background: #eef4ff;
+
+        color: var(--ticket-primary-2);
+
+        font-size: 18px;
+    }
+
+    .ticket-card-header h4 {
+        margin: 0;
+
+        color: #132238;
+
+        font-size: 17px;
+
+        font-weight: 700;
+    }
+
+    .ticket-card-header p {
+        margin: 3px 0 0;
+
+        color: var(--ticket-muted);
+
+        font-size: 12px;
+    }
+
+    .required-note {
+        color: #98a2b3;
+
+        font-size: 11px;
+
+        white-space: nowrap;
+    }
+
+    .ticket-card-body {
+        padding: 24px;
+    }
+
+
+    /* =====================================================
+       FORM SECTIONS
+    ===================================================== */
+
+    .form-section {
+        margin-bottom: 28px;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-heading {
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        margin-bottom: 16px;
+    }
+
+    .section-number {
+        width: 28px;
+        height: 28px;
+
+        display: grid;
+
+        place-items: center;
+
+        flex: 0 0 28px;
+
+        border-radius: 8px;
+
+        background: #eef4ff;
+
+        color: var(--ticket-primary-2);
+
+        font-size: 12px;
+
+        font-weight: 800;
+    }
+
+    .section-heading h5 {
+        margin: 0;
+
+        color: #1d2939;
+
+        font-size: 14px;
+
+        font-weight: 700;
+    }
+
+    .section-heading span {
+        display: block;
+
+        margin-top: 2px;
+
+        color: #98a2b3;
+
+        font-size: 11px;
+    }
+
+
+    /* =====================================================
+       FORM FIELDS
+    ===================================================== */
+
+    .ticket-meta-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 15px;
+    }
+
+    .schedule-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 15px;
+    }
+
+    .issue-grid {
+        display: grid;
+
+        gap: 15px;
+    }
+
+    .form-label {
+        margin-bottom: 7px;
+
+        color: #344054;
+
+        font-size: 12px;
+
+        font-weight: 650;
+    }
+
+    .required-star {
+        color: var(--ticket-danger);
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 46px;
+
+        border:
+            1px solid #d9dee7;
+
+        border-radius: 10px;
+
+        background-color: #fff;
+
+        color: #25324a;
+
+        font-size: 13px;
+
+        box-shadow: none;
+
+        transition:
+            border-color .2s ease,
+            box-shadow .2s ease;
+    }
+
+    .form-control {
+        padding: 10px 13px;
+    }
+
+    .form-select {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #6f9ce0;
+
+        box-shadow:
+            0 0 0 4px rgba(37, 99, 235, .08);
+    }
+
+    textarea.form-control {
+        min-height: 145px;
+
+        resize: vertical;
+
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+       MODULE BOX
+    ===================================================== */
+
+    .module-box {
+        display: none;
+
+        position: relative;
+
+        margin-top: 16px;
+
+        padding: 17px;
+
+        border:
+            1px solid #dfe7f3;
+
+        border-radius: 13px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f8fbff 0%,
+                #f4f8fd 100%
+            );
+
+        overflow: hidden;
+    }
+
+    .module-title {
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        margin-bottom: 13px;
+
+        color: #234269;
+
+        font-size: 12px;
+
+        font-weight: 700;
+    }
+
+    .module-content {
+        max-width: 420px;
+    }
+
+
+    /* =====================================================
+       SCHEDULE BOX
+    ===================================================== */
+
+    .schedule-box {
+        padding: 18px;
+
+        border:
+            1px solid #dfe7f3;
+
+        border-radius: 13px;
+
+        background: #f8fbff;
+    }
+
+    .duration-preview {
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        margin-top: 15px;
+
+        padding: 14px 16px;
+
+        border:
+            1px solid #dce6f4;
+
+        border-radius: 11px;
+
+        background: #ffffff;
+    }
+
+    .duration-icon {
+        width: 40px;
+        height: 40px;
+
+        flex: 0 0 40px;
+
+        display: grid;
+
+        place-items: center;
+
+        border-radius: 10px;
+
+        background: #eef4ff;
+
+        color: #174b8f;
+
+        font-size: 18px;
+    }
+
+    .duration-preview small {
+        display: block;
+
+        color: #98a2b3;
+
+        font-size: 10px;
+    }
+
+    .duration-preview strong {
+        display: block;
+
+        margin-top: 2px;
+
+        color: #1f3553;
+
+        font-size: 14px;
+    }
+
+    .schedule-error {
+        display: none;
+
+        margin-top: 10px;
+
+        color: #dc2626;
+
+        font-size: 11px;
+    }
+
+
+    /* =====================================================
+       ATTACHMENT
+    ===================================================== */
+
+    .attachment-box {
+        position: relative;
+
+        min-height: 112px;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 14px;
+
+        padding: 18px;
+
+        border:
+            1.5px dashed #cbd5e1;
+
+        border-radius: 13px;
+
+        background: #fbfcfe;
+
+        transition: .2s ease;
+    }
+
+    .attachment-box:hover {
+        border-color: #8fb0df;
+
+        background: #f8fbff;
+    }
+
+    .attachment-icon {
+        width: 44px;
+        height: 44px;
+
+        display: grid;
+
+        place-items: center;
+
+        flex: 0 0 44px;
+
+        border-radius: 12px;
+
+        background: #eef4ff;
+
+        color: var(--ticket-primary-2);
+
+        font-size: 20px;
+    }
+
+    .attachment-content {
+        min-width: 0;
+
+        flex: 1;
+    }
+
+    .attachment-content strong {
+        display: block;
+
+        margin-bottom: 3px;
+
+        color: #344054;
+
+        font-size: 12px;
+    }
+
+    .attachment-content small {
+        color: #98a2b3;
+
+        font-size: 11px;
+    }
+
+    .attachment-file-name {
+        display: block;
+
+        margin-top: 5px;
+
+        overflow: hidden;
+
+        color: #5a6a82;
+
+        font-size: 11px;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+    }
+
+    .attachment-box input[type="file"] {
+        position: absolute;
+
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        opacity: 0;
+
+        cursor: pointer;
+    }
+
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    .ticket-actions {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: flex-end;
+
+        gap: 10px;
+
+        margin:
+            2px -24px -24px;
+
+        padding:
+            18px 24px;
+
+        border-top:
+            1px solid #edf0f4;
+
+        background: #fbfcfd;
+    }
+
+    .btn-ticket-reset,
+    .btn-ticket-submit {
+        min-height: 43px;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        border-radius: 10px;
+
+        padding: 10px 17px;
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        transition: .22s ease;
+    }
+
+    .btn-ticket-reset {
+        border:
+            1px solid #d8dee8;
+
+        background: #fff;
+
+        color: #5f6c80;
+    }
+
+    .btn-ticket-submit {
+        min-width: 180px;
+
+        border:
+            1px solid transparent;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f2f5f 0%,
+                #184f96 100%
+            );
+
+        color: #fff;
+
+        box-shadow:
+            0 8px 20px rgba(15, 47, 95, .16);
+    }
+
+    .btn-ticket-submit:hover {
+        transform:
+            translateY(-1px);
+
+        color: #fff;
+
+        box-shadow:
+            0 10px 24px rgba(15, 47, 95, .22);
+    }
+
+
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    .ticket-sidebar {
+        display: grid;
+
+        gap: 16px;
+
+        position: sticky;
+
+        top: 16px;
+    }
+
+    .sidebar-card {
+        padding: 19px;
+
+        border:
+            1px solid var(--ticket-border);
+
+        border-radius: 16px;
+
+        background: #fff;
+
+        box-shadow:
+            0 8px 26px rgba(16, 24, 40, .045);
+    }
+
+    .sidebar-card-title {
+        display: flex;
+
+        align-items: center;
+
+        gap: 9px;
+
+        margin-bottom: 14px;
+
+        color: #1f3553;
+
+        font-size: 13px;
+
+        font-weight: 750;
+    }
+
+    .sidebar-card-title i {
+        width: 30px;
+        height: 30px;
+
+        display: grid;
+
+        place-items: center;
+
+        border-radius: 9px;
+
+        background: #eef4ff;
+
+        color: var(--ticket-primary-2);
+    }
+
+    .ticket-step {
+        position: relative;
+
+        display: flex;
+
+        gap: 11px;
+
+        padding-bottom: 15px;
+    }
+
+    .ticket-step:last-child {
+        padding-bottom: 0;
+    }
+
+    .ticket-step:not(:last-child)::after {
+        content: "";
+
+        position: absolute;
+
+        left: 13px;
+
+        top: 28px;
+
+        bottom: 2px;
+
+        width: 1px;
+
+        background: #e6eaf0;
+    }
+
+    .ticket-step-number {
+        width: 27px;
+        height: 27px;
+
+        display: grid;
+
+        place-items: center;
+
+        flex: 0 0 27px;
+
+        border:
+            1px solid #d9e4f4;
+
+        border-radius: 50%;
+
+        background: #f8fbff;
+
+        color: #315e96;
+
+        font-size: 10px;
+
+        font-weight: 800;
+    }
+
+    .ticket-step strong {
+        display: block;
+
+        margin-bottom: 2px;
+
+        color: #344054;
+
+        font-size: 11px;
+    }
+
+    .ticket-step p {
+        margin: 0;
+
+        color: #8a94a6;
+
+        font-size: 10px;
+
+        line-height: 1.55;
+    }
+
+    .info-mini {
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 9px;
+
+        padding: 12px;
+
+        border-radius: 11px;
+
+        background: #f8fafc;
+
+        color: #697586;
+
+        font-size: 10px;
+
+        line-height: 1.55;
+    }
+
+    .info-mini i {
+        color: #5378a8;
+
+        font-size: 13px;
+    }
+
+    .ticket-alert {
+        border: 0;
+
+        border-radius: 12px;
+
+        font-size: 12px;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 1199px) {
+
+        .ticket-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .ticket-sidebar {
+            grid-template-columns:
+                1fr 1fr;
+
+            position: static;
+        }
+    }
+
+    @media (max-width: 767px) {
+
+        .ticket-meta-grid,
+        .schedule-grid,
+        .ticket-sidebar {
+            grid-template-columns: 1fr;
+        }
+
+        .ticket-hero-content {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+        .ticket-card-body {
+            padding: 18px;
+        }
+
+        .ticket-actions {
+            margin:
+                0 -18px -18px;
+
+            padding:
+                16px 18px;
+
+            flex-direction: column-reverse;
+        }
+
+        .btn-ticket-reset,
+        .btn-ticket-submit {
+            width: 100%;
+        }
+    }
+
+</style>
+
+
+<div class="ticket-page">
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <div class="ticket-hero">
+
+        <div class="ticket-hero-content">
+
+            <div class="ticket-hero-title">
+
+                <div class="ticket-hero-icon">
+                    <i class="bi bi-calendar2-check"></i>
+                </div>
+
+                <div>
+
+                    <h3>
+                        Schedule Maintenance
+                    </h3>
+
+                    <p>
+                        Plan Software or Hardware maintenance
+                        for a specific date and time.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="hero-status">
+
+                <span class="hero-status-dot"></span>
+
+                Maintenance Scheduler Active
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MESSAGES
+    ====================================================== -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div
+                class="alert alert-{{ message.tags }}
+                       alert-dismissible fade show
+                       ticket-alert"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+
+    <div class="ticket-layout">
+
+
+        <!-- =================================================
+             MAIN FORM CARD
+        ================================================== -->
+
+        <div class="ticket-card">
+
+
+            <div class="ticket-card-header">
+
+                <div class="ticket-card-header-left">
+
+                    <div class="ticket-card-header-icon">
+
+                        <i class="bi bi-calendar-event"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h4>
+                            Create Maintenance Schedule
+                        </h4>
+
+                        <p>
+                            Select application, module and
+                            planned maintenance window.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="required-note">
+
+                    <span class="required-star">*</span>
+
+                    Required fields
+
+                </div>
+
+            </div>
+
+
+
+            <div class="ticket-card-body">
+
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    id="maintenanceForm"
+                >
+
+                    {% csrf_token %}
+
+
+
+                    <!-- =====================================
+                         SECTION 1
+                         APPLICATION INFORMATION
+                    ====================================== -->
+
+                    <div class="form-section">
+
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                01
+                            </div>
+
+                            <div>
+
+                                <h5>
+                                    Application Information
+                                </h5>
+
+                                <span>
+                                    Select Hardware or Software
+                                    and its respective module.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="ticket-meta-grid">
+
+
+                            <!-- APPLICATION TYPE -->
+
+                            <div>
+
+                                <label
+                                    for="application_type"
+                                    class="form-label"
+                                >
+
+                                    Application Type
+
+                                    <span class="required-star">
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <select
+                                    name="application_type"
+                                    id="application_type"
+                                    class="form-select"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select Application Type
+                                    </option>
+
+                                    <option value="SOFTWARE">
+                                        Software
+                                    </option>
+
+                                    <option value="HARDWARE">
+                                        Hardware
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- SOFTWARE MODULE -->
+
+                        <div
+                            class="module-box"
+                            id="softwareModuleSection"
+                        >
+
+                            <div class="module-title">
+
+                                <i class="bi bi-code-square"></i>
+
+                                Software Information
+
+                            </div>
+
+
+                            <div class="module-content">
+
+                                <label
+                                    for="software_module"
+                                    class="form-label"
+                                >
+
+                                    Software Module
+
+                                    <span class="required-star">
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <select
+                                    name="software_module"
+                                    id="software_module"
+                                    class="form-select"
+                                >
+
+                                    <option value="">
+                                        Select Software Module
+                                    </option>
+
+
+                                    {% for module in software_modules %}
+
+                                        <option value="{{ module.id }}">
+
+                                            {{ module.moduleName }}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- HARDWARE MODULE -->
+
+                        <div
+                            class="module-box"
+                            id="hardwareModuleSection"
+                        >
+
+                            <div class="module-title">
+
+                                <i class="bi bi-cpu"></i>
+
+                                Hardware Information
+
+                            </div>
+
+
+                            <div class="module-content">
+
+                                <label
+                                    for="hardware_module"
+                                    class="form-label"
+                                >
+
+                                    Hardware Module
+
+                                    <span class="required-star">
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <select
+                                    name="hardware_module"
+                                    id="hardware_module"
+                                    class="form-select"
+                                >
+
+                                    <option value="">
+                                        Select Hardware Module
+                                    </option>
+
+
+                                    {% for module in hardware_modules %}
+
+                                        <option value="{{ module.id }}">
+
+                                            {{ module.moduleName }}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         SECTION 2
+                         MAINTENANCE DETAILS
+                    ====================================== -->
+
+                    <div class="form-section">
+
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                02
+                            </div>
+
+                            <div>
+
+                                <h5>
+                                    Maintenance Details
+                                </h5>
+
+                                <span>
+                                    Enter maintenance subject
+                                    and complete description.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="issue-grid">
+
+
+                            <!-- SUBJECT -->
+
+                            <div>
+
+                                <label
+                                    for="subject"
+                                    class="form-label"
+                                >
+
+                                    Subject
+
+                                    <span class="required-star">
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    name="subject"
+                                    id="subject"
+                                    class="form-control"
+                                    maxlength="255"
+                                    placeholder="Example: Database Server Maintenance"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- DESCRIPTION -->
+
+                            <div>
+
+                                <label
+                                    for="description"
+                                    class="form-label"
+                                >
+
+                                    Description
+
+                                    <span class="required-star">
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <textarea
+                                    name="description"
+                                    id="description"
+                                    class="form-control"
+                                    rows="6"
+                                    placeholder="Describe the planned maintenance activity..."
+                                    required
+                                ></textarea>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         SECTION 3
+                         MAINTENANCE WINDOW
+                    ====================================== -->
+
+                    <div class="form-section">
+
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                03
+                            </div>
+
+                            <div>
+
+                                <h5>
+                                    Maintenance Schedule
+                                </h5>
+
+                                <span>
+                                    Select maintenance start
+                                    and end date & time.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="schedule-box">
+
+
+                            <div class="schedule-grid">
+
+
+                                <!-- FROM -->
+
+                                <div>
+
+                                    <label
+                                        for="schedule_from"
+                                        class="form-label"
+                                    >
+
+                                        Schedule From
+
+                                        <span class="required-star">
+                                            *
+                                        </span>
+
+                                    </label>
+
+
+                                    <input
+                                        type="datetime-local"
+                                        name="schedule_from"
+                                        id="schedule_from"
+                                        class="form-control"
+                                        required
+                                    >
+
+                                </div>
+
+
+
+                                <!-- TO -->
+
+                                <div>
+
+                                    <label
+                                        for="schedule_to"
+                                        class="form-label"
+                                    >
+
+                                        Schedule To
+
+                                        <span class="required-star">
+                                            *
+                                        </span>
+
+                                    </label>
+
+
+                                    <input
+                                        type="datetime-local"
+                                        name="schedule_to"
+                                        id="schedule_to"
+                                        class="form-control"
+                                        required
+                                    >
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <!-- LIVE DURATION -->
+
+                            <div class="duration-preview">
+
+                                <div class="duration-icon">
+
+                                    <i class="bi bi-clock-history"></i>
+
+                                </div>
+
+
+                                <div>
+
+                                    <small>
+                                        Maintenance Duration
+                                    </small>
+
+                                    <strong id="durationDisplay">
+
+                                        Select start and end time
+
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                id="scheduleError"
+                                class="schedule-error"
+                            >
+
+                                Schedule To must be greater
+                                than Schedule From.
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         SECTION 4
+                         ATTACHMENT
+                    ====================================== -->
+
+                    <div class="form-section">
+
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                04
+                            </div>
+
+                            <div>
+
+                                <h5>
+                                    Supporting Attachment
+                                </h5>
+
+                                <span>
+                                    Add maintenance document,
+                                    screenshot or supporting file.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <label
+                            for="attachment"
+                            class="attachment-box"
+                        >
+
+                            <div class="attachment-icon">
+
+                                <i class="bi bi-cloud-arrow-up"></i>
+
+                            </div>
+
+
+                            <div class="attachment-content">
+
+                                <strong>
+                                    Choose a file to attach
+                                </strong>
+
+                                <small>
+                                    Image, PDF or supporting document
+                                </small>
+
+                                <span
+                                    class="attachment-file-name"
+                                    id="attachmentFileName"
+                                >
+
+                                    No file selected
+
+                                </span>
+
+                            </div>
+
+
+                            <input
+                                type="file"
+                                name="attachment"
+                                id="attachment"
+                            >
+
+                        </label>
+
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         ACTIONS
+                    ====================================== -->
+
+                    <div class="ticket-actions">
+
+
+                        <button
+                            type="reset"
+                            class="btn-ticket-reset"
+                            id="resetMaintenanceButton"
+                        >
+
+                            <i class="bi bi-arrow-counterclockwise"></i>
+
+                            Reset
+
+                        </button>
+
+
+
+                        <button
+                            type="submit"
+                            class="btn-ticket-submit"
+                            id="scheduleButton"
+                        >
+
+                            <i class="bi bi-calendar2-check"></i>
+
+                            Schedule Maintenance
+
+                        </button>
+
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT SIDEBAR
+        ================================================== -->
+
+        <aside class="ticket-sidebar">
+
+
+            <div class="sidebar-card">
+
+
+                <div class="sidebar-card-title">
+
+                    <i class="bi bi-list-check"></i>
+
+                    Schedule Process
+
+                </div>
+
+
+
+                <div class="ticket-step">
+
+                    <div class="ticket-step-number">
+                        1
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Select Application
+                        </strong>
+
+                        <p>
+                            Choose Software or Hardware
+                            maintenance.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="ticket-step">
+
+                    <div class="ticket-step-number">
+                        2
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Select Module
+                        </strong>
+
+                        <p>
+                            Choose the module on which
+                            maintenance will be performed.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="ticket-step">
+
+                    <div class="ticket-step-number">
+                        3
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Maintenance Details
+                        </strong>
+
+                        <p>
+                            Enter subject and explain the
+                            planned activity.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="ticket-step">
+
+                    <div class="ticket-step-number">
+                        4
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Select Schedule
+                        </strong>
+
+                        <p>
+                            Choose maintenance From and To
+                            date & time.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="ticket-step">
+
+                    <div class="ticket-step-number">
+                        5
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Schedule Maintenance
+                        </strong>
+
+                        <p>
+                            Review details and create the
+                            maintenance schedule.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="sidebar-card">
+
+
+                <div class="sidebar-card-title">
+
+                    <i class="bi bi-info-circle"></i>
+
+                    Helpful Tip
+
+                </div>
+
+
+                <div class="info-mini">
+
+                    <i class="bi bi-lightbulb"></i>
+
+                    <div>
+
+                        Always select the correct application
+                        and module and provide the exact
+                        maintenance window to avoid schedule
+                        conflicts.
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </aside>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        // =================================================
+        // ELEMENTS
+        // =================================================
+
+        const applicationType =
+            document.getElementById(
+                "application_type"
+            );
+
+
+        const softwareSection =
+            document.getElementById(
+                "softwareModuleSection"
+            );
+
+
+        const hardwareSection =
+            document.getElementById(
+                "hardwareModuleSection"
+            );
+
+
+        const softwareModule =
+            document.getElementById(
+                "software_module"
+            );
+
+
+        const hardwareModule =
+            document.getElementById(
+                "hardware_module"
+            );
+
+
+        const scheduleFrom =
+            document.getElementById(
+                "schedule_from"
+            );
+
+
+        const scheduleTo =
+            document.getElementById(
+                "schedule_to"
+            );
+
+
+        const durationDisplay =
+            document.getElementById(
+                "durationDisplay"
+            );
+
+
+        const scheduleError =
+            document.getElementById(
+                "scheduleError"
+            );
+
+
+        const attachment =
+            document.getElementById(
+                "attachment"
+            );
+
+
+        const attachmentFileName =
+            document.getElementById(
+                "attachmentFileName"
+            );
+
+
+        const resetButton =
+            document.getElementById(
+                "resetMaintenanceButton"
+            );
+
+
+        const maintenanceForm =
+            document.getElementById(
+                "maintenanceForm"
+            );
+
+
+
+        // =================================================
+        // APPLICATION TYPE CHANGE
+        // =================================================
+
+        function handleApplicationType() {
+
+
+            const value =
+                applicationType.value
+                .trim()
+                .toUpperCase();
+
+
+            // =============================================
+            // SOFTWARE
+            // =============================================
+
+            if (value === "SOFTWARE") {
+
+
+                softwareSection.style.display =
+                    "block";
+
+
+                hardwareSection.style.display =
+                    "none";
+
+
+                softwareModule.required =
+                    true;
+
+
+                hardwareModule.required =
+                    false;
+
+
+                hardwareModule.value =
+                    "";
+
+
+            }
+
+
+            // =============================================
+            // HARDWARE
+            // =============================================
+
+            else if (value === "HARDWARE") {
+
+
+                hardwareSection.style.display =
+                    "block";
+
+
+                softwareSection.style.display =
+                    "none";
+
+
+                hardwareModule.required =
+                    true;
+
+
+                softwareModule.required =
+                    false;
+
+
+                softwareModule.value =
+                    "";
+
+
+            }
+
+
+            // =============================================
+            // NOTHING SELECTED
+            // =============================================
+
+            else {
+
+
+                softwareSection.style.display =
+                    "none";
+
+
+                hardwareSection.style.display =
+                    "none";
+
+
+                softwareModule.required =
+                    false;
+
+
+                hardwareModule.required =
+                    false;
+
+
+                softwareModule.value =
+                    "";
+
+
+                hardwareModule.value =
+                    "";
+
+            }
+
+        }
+
+
+
+        applicationType.addEventListener(
+            "change",
+            handleApplicationType
+        );
+
+
+
+        // =================================================
+        // CALCULATE DURATION
+        // =================================================
+
+        function calculateDuration() {
+
+
+            const fromValue =
+                scheduleFrom.value;
+
+
+            const toValue =
+                scheduleTo.value;
+
+
+            if (!fromValue || !toValue) {
+
+
+                durationDisplay.textContent =
+                    "Select start and end time";
+
+
+                scheduleError.style.display =
+                    "none";
+
+
+                return;
+
+            }
+
+
+            const fromDate =
+                new Date(fromValue);
+
+
+            const toDate =
+                new Date(toValue);
+
+
+            const difference =
+                toDate - fromDate;
+
+
+            // =============================================
+            // INVALID TIME
+            // =============================================
+
+            if (difference <= 0) {
+
+
+                durationDisplay.textContent =
+                    "Invalid maintenance duration";
+
+
+                scheduleError.style.display =
+                    "block";
+
+
+                return;
+
+            }
+
+
+            scheduleError.style.display =
+                "none";
+
+
+            // =============================================
+            // TOTAL MINUTES
+            // =============================================
+
+            const totalMinutes =
+                Math.floor(
+                    difference / 60000
+                );
+
+
+            const days =
+                Math.floor(
+                    totalMinutes / 1440
+                );
+
+
+            const hours =
+                Math.floor(
+                    (totalMinutes % 1440)
+                    / 60
+                );
+
+
+            const minutes =
+                totalMinutes % 60;
+
+
+            let durationText = "";
+
+
+            if (days > 0) {
+
+
+                durationText +=
+                    days +
+                    (days === 1
+                        ? " Day "
+                        : " Days ");
+
+            }
+
+
+            if (hours > 0) {
+
+
+                durationText +=
+                    hours +
+                    (hours === 1
+                        ? " Hour "
+                        : " Hours ");
+
+            }
+
+
+            if (minutes > 0) {
+
+
+                durationText +=
+                    minutes +
+                    (minutes === 1
+                        ? " Minute"
+                        : " Minutes");
+
+            }
+
+
+            if (
+                days === 0 &&
+                hours === 0 &&
+                minutes === 0
+            ) {
+
+
+                durationText =
+                    "Less than 1 minute";
+
+            }
+
+
+            durationDisplay.textContent =
+                durationText.trim();
+
+        }
+
+
+
+        scheduleFrom.addEventListener(
+            "change",
+            function () {
+
+
+                // To should not be earlier than From
+                scheduleTo.min =
+                    scheduleFrom.value;
+
+
+                calculateDuration();
+
+            }
+        );
+
+
+        scheduleTo.addEventListener(
+            "change",
+            calculateDuration
+        );
+
+
+
+        // =================================================
+        // ATTACHMENT NAME
+        // =================================================
+
+        if (attachment) {
+
+
+            attachment.addEventListener(
+                "change",
+                function () {
+
+
+                    if (
+                        this.files &&
+                        this.files.length > 0
+                    ) {
+
+
+                        attachmentFileName.textContent =
+                            this.files[0].name;
+
+
+                    } else {
+
+
+                        attachmentFileName.textContent =
+                            "No file selected";
+
+                    }
+
+                }
+            );
+
+        }
+
+
+
+        // =================================================
+        // FORM SUBMIT VALIDATION
+        // =================================================
+
+        maintenanceForm.addEventListener(
+            "submit",
+            function (event) {
+
+
+                if (
+                    scheduleFrom.value &&
+                    scheduleTo.value
+                ) {
+
+
+                    const fromDate =
+                        new Date(
+                            scheduleFrom.value
+                        );
+
+
+                    const toDate =
+                        new Date(
+                            scheduleTo.value
+                        );
+
+
+                    if (
+                        toDate <= fromDate
+                    ) {
+
+
+                        event.preventDefault();
+
+
+                        scheduleError.style.display =
+                            "block";
+
+
+                        durationDisplay.textContent =
+                            "Invalid maintenance duration";
+
+
+                        scheduleTo.focus();
+
+                    }
+
+                }
+
+            }
+        );
+
+
+
+        // =================================================
+        // RESET
+        // =================================================
+
+        resetButton.addEventListener(
+            "click",
+            function () {
+
+
+                setTimeout(
+                    function () {
+
+
+                        handleApplicationType();
+
+
+                        durationDisplay.textContent =
+                            "Select start and end time";
+
+
+                        scheduleError.style.display =
+                            "none";
+
+
+                        scheduleTo.removeAttribute(
+                            "min"
+                        );
+
+
+                        attachmentFileName.textContent =
+                            "No file selected";
+
+
+                    },
+                    20
+                );
+
+            }
+        );
+
+
+
+        // =================================================
+        // INITIAL LOAD
+        // =================================================
+
+        handleApplicationType();
+
+    }
+);
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,3996 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+
+    /* =========================================================
+       DASHBOARD HEADER
+    ========================================================== */
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+    .dashboard-header h3 {
+        margin: 0 0 5px;
+        color: #25396f;
+        font-size: 25px;
+        font-weight: 700;
+    }
+
+    .dashboard-header p {
+        margin: 0;
+        color: #8a92a6;
+        font-size: 13px;
+    }
+
+
+    /* =========================================================
+       FILTER WRAPPER
+    ========================================================== */
+
+    .dashboard-filter-area {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+    }
+
+    .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+
+    /* =========================================================
+       COMMON FILTER
+    ========================================================== */
+
+    .filter-group {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px;
+        background: #ffffff;
+        border: 1px solid #e8edf4;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(37,57,111,.05);
+    }
+
+    .filter-btn {
+        border: none;
+        outline: none;
+        background: transparent;
+        color: #64748b;
+        padding: 8px 15px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        transition: .2s ease;
+        white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+        background: #f3f5ff;
+        color: #435ebe;
+    }
+
+    .filter-btn.active {
+        background: #435ebe;
+        color: #ffffff;
+        box-shadow: 0 3px 8px rgba(67,94,190,.22);
+    }
+
+
+    /* =========================================================
+       SECTION INDICATOR
+    ========================================================== */
+
+    .current-filter-box {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: #64748b;
+        font-size: 11.5px;
+    }
+
+    .current-filter-box strong {
+        color: #435ebe;
+    }
+
+
+    /* =========================================================
+       KPI CARD
+    ========================================================== */
+
+    .stat-card {
+        height: 100%;
+        padding: 18px;
+        background: #ffffff;
+        border: 1px solid #edf0f5;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(37,57,111,.05);
+        transition: all .2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(37,57,111,.09);
+    }
+
+    .stat-content {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .stat-label {
+        color: #8a92a6;
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+    }
+
+    .stat-value {
+        margin-top: 9px;
+        color: #25396f;
+        font-size: 27px;
+        line-height: 1;
+        font-weight: 800;
+    }
+
+    .stat-sub {
+        margin-top: 7px;
+        color: #94a3b8;
+        font-size: 10.5px;
+    }
+
+    .stat-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+        font-size: 18px;
+    }
+
+    .icon-blue {
+        background: #eef2ff;
+        color: #435ebe;
+    }
+
+    .icon-green {
+        background: #ecfdf3;
+        color: #198754;
+    }
+
+    .icon-red {
+        background: #fff1f2;
+        color: #dc3545;
+    }
+
+    .icon-orange {
+        background: #fff7ed;
+        color: #d97706;
+    }
+
+    .icon-purple {
+        background: #f5f3ff;
+        color: #7c3aed;
+    }
+
+    .icon-cyan {
+        background: #ecfeff;
+        color: #0891b2;
+    }
+
+
+    /* =========================================================
+       DASHBOARD CARD
+    ========================================================== */
+
+    .dashboard-card {
+        height: 100%;
+        overflow: hidden;
+        background: #ffffff;
+        border: 1px solid #edf0f5;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(37,57,111,.05);
+    }
+
+    .dashboard-card-header {
+        min-height: 63px;
+        padding: 15px 18px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        border-bottom: 1px solid #f0f3f8;
+    }
+
+    .dashboard-card-header h5 {
+        margin: 0;
+        color: #25396f;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .dashboard-card-header p {
+        margin: 4px 0 0;
+        color: #94a3b8;
+        font-size: 10.5px;
+    }
+
+    .dashboard-card-body {
+        padding: 17px 18px;
+    }
+
+
+    /* =========================================================
+       BADGE
+    ========================================================== */
+
+    .soft-badge {
+        padding: 5px 9px;
+        border-radius: 20px;
+        background: #eef2ff;
+        color: #435ebe;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+
+    /* =========================================================
+       SLA
+    ========================================================== */
+
+    .sla-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .sla-item:last-child {
+        border-bottom: none;
+    }
+
+    .sla-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 7px;
+        font-size: 11.5px;
+    }
+
+    .sla-name {
+        color: #475569;
+        font-weight: 600;
+    }
+
+    .sla-value {
+        color: #25396f;
+        font-weight: 700;
+    }
+
+    .progress {
+        height: 6px;
+        background: #f1f5f9;
+    }
+
+
+    /* =========================================================
+       AGEING
+    ========================================================== */
+
+    .age-box {
+        padding: 14px 8px;
+        text-align: center;
+        background: #f8fafc;
+        border: 1px solid #edf0f5;
+        border-radius: 9px;
+    }
+
+    .age-value {
+        color: #25396f;
+        font-size: 22px;
+        font-weight: 800;
+    }
+
+    .age-label {
+        margin-top: 4px;
+        color: #94a3b8;
+        font-size: 9.5px;
+    }
+
+
+    /* =========================================================
+       AGENT
+    ========================================================== */
+
+    .agent-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .agent-row:last-child {
+        border-bottom: none;
+    }
+
+    .agent-avatar {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+        background: #eef2ff;
+        color: #435ebe;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .agent-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .agent-name {
+        margin: 0;
+        color: #334155;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .agent-meta {
+        margin-top: 2px;
+        color: #94a3b8;
+        font-size: 9.5px;
+    }
+
+    .agent-percent {
+        color: #198754;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+
+    /* =========================================================
+       MINI METRICS
+    ========================================================== */
+
+    .mini-card {
+        padding: 13px;
+        background: #f8fafc;
+        border: 1px solid #edf0f5;
+        border-radius: 9px;
+    }
+
+    .mini-label {
+        color: #94a3b8;
+        font-size: 9.5px;
+        font-weight: 600;
+    }
+
+    .mini-value {
+        margin-top: 5px;
+        color: #25396f;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+
+    /* =========================================================
+       TABLE
+    ========================================================== */
+
+    .ticket-table {
+        width: 100%;
+        margin: 0;
+    }
+
+    .ticket-table thead th {
+        padding: 11px 12px;
+        background: #f8fafc;
+        color: #64748b;
+
+        border: none;
+        border-bottom: 1px solid #e8edf4;
+
+        font-size: 9.5px;
+        text-transform: uppercase;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .ticket-table tbody td {
+        padding: 11px 12px;
+        color: #475569;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 11px;
+        vertical-align: middle;
+    }
+
+    .ticket-id {
+        color: #435ebe;
+        font-weight: 700;
+    }
+
+    .ticket-subject {
+        max-width: 220px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #334155;
+        font-weight: 600;
+    }
+
+
+    /* =========================================================
+       PILLS
+    ========================================================== */
+
+    .pill {
+        display: inline-flex;
+        padding: 4px 8px;
+        border-radius: 15px;
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+    .pill-software {
+        background: #eef2ff;
+        color: #435ebe;
+    }
+
+    .pill-hardware {
+        background: #fff7ed;
+        color: #d97706;
+    }
+
+    .pill-critical {
+        color: #dc2626;
+        background: #fef2f2;
+    }
+
+    .pill-high {
+        color: #ea580c;
+        background: #fff7ed;
+    }
+
+    .pill-medium {
+        color: #a16207;
+        background: #fefce8;
+    }
+
+    .pill-low {
+        color: #15803d;
+        background: #f0fdf4;
+    }
+
+    .pill-open {
+        color: #2563eb;
+        background: #eff6ff;
+    }
+
+    .pill-progress {
+        color: #d97706;
+        background: #fff7ed;
+    }
+
+    .pill-resolved {
+        color: #15803d;
+        background: #f0fdf4;
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================== */
+
+    @media(max-width: 767px) {
+
+        .dashboard-filter-area {
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .filter-row {
+            flex-direction: column;
+        }
+
+        .filter-group {
+            width: 100%;
+        }
+
+        .filter-btn {
+            flex: 1;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .current-filter-box {
+            justify-content: flex-start;
+        }
+
+    }
+
+</style>
+
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================== -->
+
+<div class="dashboard-header">
+
+    <div>
+
+        <h3>
+            Support Ticket Dashboard
+        </h3>
+
+        <p>
+            Monitor software and hardware ticket performance, SLA and support operations.
+        </p>
+
+    </div>
+
+
+    <div class="dashboard-filter-area">
+
+
+        <div class="filter-row">
+
+
+            <!-- =================================================
+                 PERIOD
+            ================================================== -->
+
+            <div class="filter-group">
+
+                <button
+                    type="button"
+                    class="filter-btn range-btn active"
+                    data-range="day"
+                >
+                    Today
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-btn range-btn"
+                    data-range="week"
+                >
+                    This Week
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-btn range-btn"
+                    data-range="month3"
+                >
+                    3 Months
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 TYPE
+            ================================================== -->
+
+            <div class="filter-group">
+
+                <button
+                    type="button"
+                    class="filter-btn type-btn"
+                    data-type="software"
+                >
+                    <i class="bi bi-code-square me-1"></i>
+                    Software
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-btn type-btn"
+                    data-type="hardware"
+                >
+                    <i class="bi bi-pc-display me-1"></i>
+                    Hardware
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-btn type-btn active"
+                    data-type="both"
+                >
+                    <i class="bi bi-grid me-1"></i>
+                    Both
+                </button>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="current-filter-box">
+
+            <i class="bi bi-funnel"></i>
+
+            Showing:
+
+            <strong id="currentFilterText">
+                Today • Software + Hardware
+            </strong>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     PRIMARY KPI
+========================================================== -->
+
+<div class="row g-3 mb-3">
+
+
+    <!-- Total -->
+
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-content">
+
+                <div>
+
+                    <div class="stat-label">
+                        Total Tickets
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="totalTickets"
+                    >
+                        128
+                    </div>
+
+                    <div class="stat-sub">
+                        Selected ticket category
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-blue">
+
+                    <i class="bi bi-ticket-perforated"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Open -->
+
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-content">
+
+                <div>
+
+                    <div class="stat-label">
+                        Open Tickets
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="openTickets"
+                    >
+                        34
+                    </div>
+
+                    <div
+                        class="stat-sub"
+                        id="openPercentage"
+                    >
+                        26.6% of total
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-orange">
+
+                    <i class="bi bi-folder2-open"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Resolved -->
+
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-content">
+
+                <div>
+
+                    <div class="stat-label">
+                        Resolved
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="resolvedTickets"
+                    >
+                        78
+                    </div>
+
+                    <div
+                        class="stat-sub"
+                        id="resolvedPercentage"
+                    >
+                        60.9% resolved
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-green">
+
+                    <i class="bi bi-check2-circle"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SLA -->
+
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-content">
+
+                <div>
+
+                    <div class="stat-label">
+                        SLA Compliance
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="slaCompliance"
+                    >
+                        94.8%
+                    </div>
+
+                    <div class="stat-sub">
+                        Target: 95%
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-purple">
+
+                    <i class="bi bi-stopwatch"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     SECOND KPI
+========================================================== -->
+
+<div class="row g-3 mb-3">
+
+
+    <div class="col-6 col-lg-3">
+
+        <div class="stat-card">
+
+            <div class="stat-content">
+
+                <div>
+
+                    <div class="stat-label">
+                        Critical / High
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="criticalTickets"
+                    >
+                        13
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-red">
+
+                    <i class="bi bi-exclamation-triangle"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-6 col-lg-3">
+
+        <div class="stat-card">
+
+            <div class="stat-content">
+
+                <div>
+
+                    <div class="stat-label">
+                        Avg Response
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="avgResponse"
+                    >
+                        18m
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-cyan">
+
+                    <i class="bi bi-reply"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-6 col-lg-3">
+
+        <div class="stat-card">
+
+            <div class="stat-content">
+
+                <div>
+
+                    <div class="stat-label">
+                        Avg Resolution
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="avgResolution"
+                    >
+                        3.4h
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-blue">
+
+                    <i class="bi bi-clock-history"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-6 col-lg-3">
+
+        <div class="stat-card">
+
+            <div class="stat-content">
+
+                <div>
+
+                    <div class="stat-label">
+                        Reopened
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="reopenedTickets"
+                    >
+                        5
+                    </div>
+
+                </div>
+
+                <div class="stat-icon icon-orange">
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     TREND + STATUS
+========================================================== -->
+
+<div class="row g-3 mb-3">
+
+
+    <div class="col-12 col-xl-8">
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <h5>
+                        Ticket Trend
+                    </h5>
+
+                    <p>
+                        Created vs resolved tickets
+                    </p>
+
+                </div>
+
+                <span class="soft-badge">
+                    Dynamic
+                </span>
+
+            </div>
+
+
+            <div class="dashboard-card-body">
+
+                <div id="ticketTrendChart"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-12 col-xl-4">
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <h5>
+                        Ticket Status
+                    </h5>
+
+                    <p>
+                        Distribution by current status
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="dashboard-card-body">
+
+                <div id="statusChart"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     PRIORITY + SLA + AGE
+========================================================== -->
+
+<div class="row g-3 mb-3">
+
+
+    <!-- Priority -->
+
+    <div class="col-12 col-lg-4">
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <h5>
+                        Priority Distribution
+                    </h5>
+
+                    <p>
+                        Tickets by priority
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="dashboard-card-body">
+
+                <div id="priorityChart"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SLA -->
+
+    <div class="col-12 col-lg-4">
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <h5>
+                        SLA Performance
+                    </h5>
+
+                    <p>
+                        Severity-wise compliance
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="dashboard-card-body">
+
+
+                <div class="sla-item">
+
+                    <div class="sla-info">
+
+                        <span class="sla-name">
+                            Sev-1 / Critical
+                        </span>
+
+                        <span
+                            class="sla-value"
+                            id="sla1Text"
+                        >
+                            88%
+                        </span>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar bg-danger"
+                            id="sla1Bar"
+                            style="width:88%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sla-item">
+
+                    <div class="sla-info">
+
+                        <span class="sla-name">
+                            Sev-2 / High
+                        </span>
+
+                        <span
+                            class="sla-value"
+                            id="sla2Text"
+                        >
+                            93%
+                        </span>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar bg-warning"
+                            id="sla2Bar"
+                            style="width:93%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sla-item">
+
+                    <div class="sla-info">
+
+                        <span class="sla-name">
+                            Sev-3 / Medium
+                        </span>
+
+                        <span
+                            class="sla-value"
+                            id="sla3Text"
+                        >
+                            97%
+                        </span>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar bg-primary"
+                            id="sla3Bar"
+                            style="width:97%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sla-item">
+
+                    <div class="sla-info">
+
+                        <span class="sla-name">
+                            Sev-4 / Low
+                        </span>
+
+                        <span
+                            class="sla-value"
+                            id="sla4Text"
+                        >
+                            99%
+                        </span>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar bg-success"
+                            id="sla4Bar"
+                            style="width:99%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Ageing -->
+
+    <div class="col-12 col-lg-4">
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <h5>
+                        Open Ticket Ageing
+                    </h5>
+
+                    <p>
+                        Pending tickets by ageing
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-card-body">
+
+                <div class="row g-2">
+
+
+                    <div class="col-6">
+
+                        <div class="age-box">
+
+                            <div
+                                class="age-value"
+                                id="age1"
+                            >
+                                18
+                            </div>
+
+                            <div class="age-label">
+                                &lt; 4 Hours
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-6">
+
+                        <div class="age-box">
+
+                            <div
+                                class="age-value"
+                                id="age2"
+                            >
+                                9
+                            </div>
+
+                            <div class="age-label">
+                                4 - 8 Hours
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-6">
+
+                        <div class="age-box">
+
+                            <div
+                                class="age-value"
+                                id="age3"
+                            >
+                                5
+                            </div>
+
+                            <div class="age-label">
+                                8 - 24 Hours
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-6">
+
+                        <div class="age-box">
+
+                            <div
+                                class="age-value text-danger"
+                                id="age4"
+                            >
+                                2
+                            </div>
+
+                            <div class="age-label">
+                                &gt; 24 Hours
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     CATEGORY + AGENT
+========================================================== -->
+
+<div class="row g-3 mb-3">
+
+
+    <div class="col-12 col-lg-7">
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <h5 id="categoryChartTitle">
+                        Module / Hardware Category
+                    </h5>
+
+                    <p id="categoryChartSubtitle">
+                        Software and hardware ticket distribution
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="dashboard-card-body">
+
+                <div id="categoryChart"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-12 col-lg-5">
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <h5>
+                        Agent Performance
+                    </h5>
+
+                    <p>
+                        Resolution efficiency
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="dashboard-card-body"
+                id="agentList"
+            >
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     OPERATIONAL KPI
+========================================================== -->
+
+<div class="row g-3 mb-3">
+
+
+    <div class="col-6 col-lg-3">
+
+        <div class="mini-card">
+
+            <div class="mini-label">
+                First Contact Resolution
+            </div>
+
+            <div
+                class="mini-value"
+                id="firstContact"
+            >
+                72%
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-6 col-lg-3">
+
+        <div class="mini-card">
+
+            <div class="mini-label">
+                Escalated Tickets
+            </div>
+
+            <div
+                class="mini-value"
+                id="escalated"
+            >
+                7
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-6 col-lg-3">
+
+        <div class="mini-card">
+
+            <div class="mini-label">
+                Pending User Reply
+            </div>
+
+            <div
+                class="mini-value"
+                id="pendingReply"
+            >
+                11
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-6 col-lg-3">
+
+        <div class="mini-card">
+
+            <div class="mini-label">
+                CSAT Score
+            </div>
+
+            <div
+                class="mini-value"
+                id="csat"
+            >
+                4.6 / 5
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     RECENT TICKETS
+========================================================== -->
+
+<div class="row">
+
+    <div class="col-12">
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+
+                    <h5>
+                        Recent Tickets
+                    </h5>
+
+                    <p>
+                        Recent ticket activity based on selected type
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                >
+
+                    View All
+
+                    <i class="bi bi-arrow-right ms-1"></i>
+
+                </button>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="ticket-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Ticket
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Subject
+                            </th>
+
+                            <th>
+                                Module / Device
+                            </th>
+
+                            <th>
+                                Priority
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Agent
+                            </th>
+
+                            <th>
+                                Created
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="ticketTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =========================================================
+           CURRENT FILTER
+        ========================================================== */
+
+        let currentRange = "day";
+
+        let currentType = "both";
+
+
+
+        /* =========================================================
+           PROTOTYPE DASHBOARD DATA
+        ========================================================== */
+
+        const dashboardData = {
+
+
+            /* =====================================================
+               TODAY
+            ====================================================== */
+
+            day: {
+
+
+                /* SOFTWARE */
+
+                software: {
+
+                    total: 82,
+
+                    open: 21,
+
+                    resolved: 52,
+
+                    sla: 96.2,
+
+                    critical: 7,
+
+                    avgResponse: "14m",
+
+                    avgResolution: "2.8h",
+
+                    reopened: 3,
+
+                    firstContact: "78%",
+
+                    escalated: 4,
+
+                    pendingReply: 7,
+
+                    csat: "4.7 / 5",
+
+
+                    trendCategories: [
+                        "9 AM",
+                        "11 AM",
+                        "1 PM",
+                        "3 PM",
+                        "5 PM",
+                        "7 PM"
+                    ],
+
+                    createdTrend: [
+                        12,
+                        18,
+                        20,
+                        14,
+                        11,
+                        7
+                    ],
+
+                    resolvedTrend: [
+                        8,
+                        12,
+                        14,
+                        9,
+                        6,
+                        3
+                    ],
+
+
+                    status: [
+                        21,
+                        9,
+                        52
+                    ],
+
+
+                    priority: [
+                        3,
+                        4,
+                        26,
+                        49
+                    ],
+
+
+                    slaLevels: [
+                        91,
+                        95,
+                        98,
+                        100
+                    ],
+
+
+                    ageing: [
+                        12,
+                        5,
+                        3,
+                        1
+                    ],
+
+
+                    categories: [
+                        "DSS",
+                        "eServices",
+                        "Eravana",
+                        "API",
+                        "Database"
+                    ],
+
+                    categoryValues: [
+                        17,
+                        21,
+                        16,
+                        15,
+                        13
+                    ]
+
+                },
+
+
+                /* HARDWARE */
+
+                hardware: {
+
+                    total: 46,
+
+                    open: 13,
+
+                    resolved: 26,
+
+                    sla: 92.4,
+
+                    critical: 6,
+
+                    avgResponse: "24m",
+
+                    avgResolution: "4.5h",
+
+                    reopened: 2,
+
+                    firstContact: "63%",
+
+                    escalated: 3,
+
+                    pendingReply: 4,
+
+                    csat: "4.4 / 5",
+
+
+                    trendCategories: [
+                        "9 AM",
+                        "11 AM",
+                        "1 PM",
+                        "3 PM",
+                        "5 PM",
+                        "7 PM"
+                    ],
+
+                    createdTrend: [
+                        6,
+                        7,
+                        9,
+                        10,
+                        9,
+                        5
+                    ],
+
+                    resolvedTrend: [
+                        4,
+                        5,
+                        6,
+                        5,
+                        4,
+                        2
+                    ],
+
+
+                    status: [
+                        13,
+                        7,
+                        26
+                    ],
+
+
+                    priority: [
+                        2,
+                        4,
+                        16,
+                        24
+                    ],
+
+
+                    slaLevels: [
+                        84,
+                        90,
+                        95,
+                        98
+                    ],
+
+
+                    ageing: [
+                        6,
+                        4,
+                        2,
+                        1
+                    ],
+
+
+                    categories: [
+                        "Checkgate",
+                        "Weighbridge",
+                        "RFID",
+                        "Camera",
+                        "Network"
+                    ],
+
+                    categoryValues: [
+                        12,
+                        10,
+                        8,
+                        9,
+                        7
+                    ]
+
+                },
+
+
+                /* BOTH */
+
+                both: {
+
+                    total: 128,
+
+                    open: 34,
+
+                    resolved: 78,
+
+                    sla: 94.8,
+
+                    critical: 13,
+
+                    avgResponse: "18m",
+
+                    avgResolution: "3.4h",
+
+                    reopened: 5,
+
+                    firstContact: "72%",
+
+                    escalated: 7,
+
+                    pendingReply: 11,
+
+                    csat: "4.6 / 5",
+
+
+                    trendCategories: [
+                        "9 AM",
+                        "11 AM",
+                        "1 PM",
+                        "3 PM",
+                        "5 PM",
+                        "7 PM"
+                    ],
+
+                    createdTrend: [
+                        18,
+                        25,
+                        29,
+                        24,
+                        20,
+                        12
+                    ],
+
+                    resolvedTrend: [
+                        12,
+                        17,
+                        20,
+                        14,
+                        10,
+                        5
+                    ],
+
+
+                    status: [
+                        34,
+                        16,
+                        78
+                    ],
+
+
+                    priority: [
+                        5,
+                        8,
+                        42,
+                        73
+                    ],
+
+
+                    slaLevels: [
+                        88,
+                        93,
+                        97,
+                        99
+                    ],
+
+
+                    ageing: [
+                        18,
+                        9,
+                        5,
+                        2
+                    ],
+
+
+                    categories: [
+                        "DSS",
+                        "eServices",
+                        "Checkgate",
+                        "Weighbridge",
+                        "RFID",
+                        "Eravana"
+                    ],
+
+                    categoryValues: [
+                        21,
+                        24,
+                        20,
+                        18,
+                        16,
+                        29
+                    ]
+
+                }
+
+            },
+
+
+
+            /* =====================================================
+               WEEK
+            ====================================================== */
+
+            week: {
+
+
+                software: {
+
+                    total: 541,
+
+                    open: 89,
+
+                    resolved: 423,
+
+                    sla: 96.8,
+
+                    critical: 23,
+
+                    avgResponse: "13m",
+
+                    avgResolution: "2.6h",
+
+                    reopened: 12,
+
+                    firstContact: "81%",
+
+                    escalated: 15,
+
+                    pendingReply: 29,
+
+                    csat: "4.8 / 5",
+
+
+                    trendCategories: [
+                        "Mon",
+                        "Tue",
+                        "Wed",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                        "Sun"
+                    ],
+
+                    createdTrend: [
+                        72,
+                        84,
+                        91,
+                        88,
+                        90,
+                        65,
+                        51
+                    ],
+
+                    resolvedTrend: [
+                        56,
+                        63,
+                        72,
+                        70,
+                        74,
+                        50,
+                        38
+                    ],
+
+
+                    status: [
+                        89,
+                        29,
+                        423
+                    ],
+
+
+                    priority: [
+                        8,
+                        15,
+                        181,
+                        337
+                    ],
+
+
+                    slaLevels: [
+                        93,
+                        96,
+                        98,
+                        100
+                    ],
+
+
+                    ageing: [
+                        43,
+                        24,
+                        15,
+                        7
+                    ],
+
+
+                    categories: [
+                        "DSS",
+                        "eServices",
+                        "Eravana",
+                        "API",
+                        "Database"
+                    ],
+
+                    categoryValues: [
+                        113,
+                        146,
+                        101,
+                        96,
+                        85
+                    ]
+
+                },
+
+
+                hardware: {
+
+                    total: 323,
+
+                    open: 54,
+
+                    resolved: 249,
+
+                    sla: 93.5,
+
+                    critical: 24,
+
+                    avgResponse: "21m",
+
+                    avgResolution: "4.1h",
+
+                    reopened: 9,
+
+                    firstContact: "68%",
+
+                    escalated: 19,
+
+                    pendingReply: 17,
+
+                    csat: "4.5 / 5",
+
+
+                    trendCategories: [
+                        "Mon",
+                        "Tue",
+                        "Wed",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                        "Sun"
+                    ],
+
+                    createdTrend: [
+                        40,
+                        53,
+                        58,
+                        38,
+                        61,
+                        39,
+                        34
+                    ],
+
+                    resolvedTrend: [
+                        36,
+                        41,
+                        44,
+                        29,
+                        44,
+                        32,
+                        23
+                    ],
+
+
+                    status: [
+                        54,
+                        20,
+                        249
+                    ],
+
+
+                    priority: [
+                        10,
+                        14,
+                        110,
+                        189
+                    ],
+
+
+                    slaLevels: [
+                        88,
+                        92,
+                        96,
+                        98
+                    ],
+
+
+                    ageing: [
+                        25,
+                        14,
+                        10,
+                        5
+                    ],
+
+
+                    categories: [
+                        "Checkgate",
+                        "Weighbridge",
+                        "RFID",
+                        "Camera",
+                        "Network"
+                    ],
+
+                    categoryValues: [
+                        83,
+                        72,
+                        59,
+                        61,
+                        48
+                    ]
+
+                },
+
+
+                both: {
+
+                    total: 864,
+
+                    open: 143,
+
+                    resolved: 672,
+
+                    sla: 95.6,
+
+                    critical: 47,
+
+                    avgResponse: "16m",
+
+                    avgResolution: "3.1h",
+
+                    reopened: 21,
+
+                    firstContact: "75%",
+
+                    escalated: 34,
+
+                    pendingReply: 46,
+
+                    csat: "4.7 / 5",
+
+
+                    trendCategories: [
+                        "Mon",
+                        "Tue",
+                        "Wed",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                        "Sun"
+                    ],
+
+                    createdTrend: [
+                        112,
+                        137,
+                        149,
+                        126,
+                        151,
+                        104,
+                        85
+                    ],
+
+                    resolvedTrend: [
+                        92,
+                        104,
+                        116,
+                        99,
+                        118,
+                        82,
+                        61
+                    ],
+
+
+                    status: [
+                        143,
+                        49,
+                        672
+                    ],
+
+
+                    priority: [
+                        18,
+                        29,
+                        291,
+                        526
+                    ],
+
+
+                    slaLevels: [
+                        91,
+                        95,
+                        97,
+                        99
+                    ],
+
+
+                    ageing: [
+                        68,
+                        38,
+                        25,
+                        12
+                    ],
+
+
+                    categories: [
+                        "DSS",
+                        "eServices",
+                        "Eravana",
+                        "Checkgate",
+                        "Weighbridge",
+                        "RFID"
+                    ],
+
+                    categoryValues: [
+                        182,
+                        211,
+                        140,
+                        127,
+                        104,
+                        100
+                    ]
+
+                }
+
+            },
+
+
+
+            /* =====================================================
+               3 MONTH
+            ====================================================== */
+
+            month3: {
+
+
+                software: {
+
+                    total: 6881,
+
+                    open: 298,
+
+                    resolved: 6412,
+
+                    sla: 97.1,
+
+                    critical: 142,
+
+                    avgResponse: "12m",
+
+                    avgResolution: "2.4h",
+
+                    reopened: 102,
+
+                    firstContact: "83%",
+
+                    escalated: 103,
+
+                    pendingReply: 171,
+
+                    csat: "4.8 / 5",
+
+
+                    trendCategories: [
+                        "Jun W1",
+                        "Jun W2",
+                        "Jun W3",
+                        "Jun W4",
+                        "Jul W1",
+                        "Jul W2",
+                        "Jul W3",
+                        "Jul W4",
+                        "Aug W1",
+                        "Aug W2",
+                        "Aug W3"
+                    ],
+
+                    createdTrend: [
+                        501,
+                        536,
+                        562,
+                        589,
+                        610,
+                        638,
+                        647,
+                        675,
+                        694,
+                        720,
+                        709
+                    ],
+
+                    resolvedTrend: [
+                        470,
+                        498,
+                        525,
+                        548,
+                        575,
+                        600,
+                        611,
+                        630,
+                        651,
+                        667,
+                        637
+                    ],
+
+
+                    status: [
+                        298,
+                        171,
+                        6412
+                    ],
+
+
+                    priority: [
+                        49,
+                        93,
+                        2210,
+                        4529
+                    ],
+
+
+                    slaLevels: [
+                        95,
+                        97,
+                        99,
+                        100
+                    ],
+
+
+                    ageing: [
+                        157,
+                        73,
+                        45,
+                        23
+                    ],
+
+
+                    categories: [
+                        "DSS",
+                        "eServices",
+                        "Eravana",
+                        "API",
+                        "Database"
+                    ],
+
+                    categoryValues: [
+                        1460,
+                        1790,
+                        1310,
+                        1215,
+                        1106
+                    ]
+
+                },
+
+
+                hardware: {
+
+                    total: 3961,
+
+                    open: 219,
+
+                    resolved: 3559,
+
+                    sla: 94.8,
+
+                    critical: 154,
+
+                    avgResponse: "18m",
+
+                    avgResolution: "3.7h",
+
+                    reopened: 81,
+
+                    firstContact: "71%",
+
+                    escalated: 116,
+
+                    pendingReply: 133,
+
+                    csat: "4.6 / 5",
+
+
+                    trendCategories: [
+                        "Jun W1",
+                        "Jun W2",
+                        "Jun W3",
+                        "Jun W4",
+                        "Jul W1",
+                        "Jul W2",
+                        "Jul W3",
+                        "Jul W4",
+                        "Aug W1",
+                        "Aug W2",
+                        "Aug W3"
+                    ],
+
+                    createdTrend: [
+                        309,
+                        344,
+                        358,
+                        371,
+                        370,
+                        372,
+                        383,
+                        395,
+                        356,
+                        370,
+                        333
+                    ],
+
+                    resolvedTrend: [
+                        260,
+                        303,
+                        317,
+                        322,
+                        326,
+                        324,
+                        340,
+                        351,
+                        319,
+                        334,
+                        363
+                    ],
+
+
+                    status: [
+                        219,
+                        183,
+                        3559
+                    ],
+
+
+                    priority: [
+                        53,
+                        101,
+                        1306,
+                        2501
+                    ],
+
+
+                    slaLevels: [
+                        90,
+                        94,
+                        97,
+                        99
+                    ],
+
+
+                    ageing: [
+                        114,
+                        58,
+                        34,
+                        13
+                    ],
+
+
+                    categories: [
+                        "Checkgate",
+                        "Weighbridge",
+                        "RFID",
+                        "Camera",
+                        "Network"
+                    ],
+
+                    categoryValues: [
+                        1020,
+                        881,
+                        752,
+                        706,
+                        602
+                    ]
+
+                },
+
+
+                both: {
+
+                    total: 10842,
+
+                    open: 517,
+
+                    resolved: 9971,
+
+                    sla: 96.3,
+
+                    critical: 296,
+
+                    avgResponse: "14m",
+
+                    avgResolution: "2.8h",
+
+                    reopened: 183,
+
+                    firstContact: "79%",
+
+                    escalated: 219,
+
+                    pendingReply: 304,
+
+                    csat: "4.8 / 5",
+
+
+                    trendCategories: [
+                        "Jun W1",
+                        "Jun W2",
+                        "Jun W3",
+                        "Jun W4",
+                        "Jul W1",
+                        "Jul W2",
+                        "Jul W3",
+                        "Jul W4",
+                        "Aug W1",
+                        "Aug W2",
+                        "Aug W3"
+                    ],
+
+                    createdTrend: [
+                        810,
+                        880,
+                        920,
+                        960,
+                        980,
+                        1010,
+                        1030,
+                        1070,
+                        1050,
+                        1090,
+                        1042
+                    ],
+
+                    resolvedTrend: [
+                        730,
+                        801,
+                        842,
+                        870,
+                        901,
+                        924,
+                        951,
+                        981,
+                        970,
+                        1001,
+                        1000
+                    ],
+
+
+                    status: [
+                        517,
+                        354,
+                        9971
+                    ],
+
+
+                    priority: [
+                        102,
+                        194,
+                        3516,
+                        7030
+                    ],
+
+
+                    slaLevels: [
+                        93,
+                        96,
+                        98,
+                        99
+                    ],
+
+
+                    ageing: [
+                        271,
+                        131,
+                        79,
+                        36
+                    ],
+
+
+                    categories: [
+                        "DSS",
+                        "eServices",
+                        "Eravana",
+                        "Checkgate",
+                        "Weighbridge",
+                        "RFID"
+                    ],
+
+                    categoryValues: [
+                        2350,
+                        2830,
+                        2162,
+                        1430,
+                        1100,
+                        970
+                    ]
+
+                }
+
+            }
+
+        };
+
+
+
+        /* =========================================================
+           AGENT DATA
+        ========================================================== */
+
+        const agentData = {
+
+            software: [
+
+                {
+                    name: "Neha Singh",
+                    resolved: 91,
+                    assigned: 98,
+                    score: "93%"
+                },
+
+                {
+                    name: "Amit Kumar",
+                    resolved: 84,
+                    assigned: 92,
+                    score: "91%"
+                },
+
+                {
+                    name: "Pooja Sharma",
+                    resolved: 79,
+                    assigned: 87,
+                    score: "91%"
+                },
+
+                {
+                    name: "Rahul Verma",
+                    resolved: 72,
+                    assigned: 82,
+                    score: "88%"
+                }
+
+            ],
+
+            hardware: [
+
+                {
+                    name: "Vikas Yadav",
+                    resolved: 61,
+                    assigned: 67,
+                    score: "91%"
+                },
+
+                {
+                    name: "Rohit Singh",
+                    resolved: 59,
+                    assigned: 66,
+                    score: "89%"
+                },
+
+                {
+                    name: "Arun Kumar",
+                    resolved: 56,
+                    assigned: 64,
+                    score: "88%"
+                },
+
+                {
+                    name: "Mohit Verma",
+                    resolved: 51,
+                    assigned: 60,
+                    score: "85%"
+                }
+
+            ],
+
+            both: [
+
+                {
+                    name: "Neha Singh",
+                    resolved: 109,
+                    assigned: 118,
+                    score: "92%"
+                },
+
+                {
+                    name: "Amit Kumar",
+                    resolved: 102,
+                    assigned: 113,
+                    score: "90%"
+                },
+
+                {
+                    name: "Vikas Yadav",
+                    resolved: 97,
+                    assigned: 108,
+                    score: "90%"
+                },
+
+                {
+                    name: "Pooja Sharma",
+                    resolved: 98,
+                    assigned: 106,
+                    score: "92%"
+                }
+
+            ]
+
+        };
+
+
+
+        /* =========================================================
+           RECENT TICKET DATA
+        ========================================================== */
+
+        const tickets = [
+
+            {
+                id: "#TKT-10248",
+                type: "software",
+                subject: "Vehicle transaction not reflecting",
+                module: "DSS",
+                priority: "Critical",
+                status: "Open",
+                agent: "Amit Kumar",
+                created: "10 min ago"
+            },
+
+            {
+                id: "#TKT-10247",
+                type: "software",
+                subject: "Permit application approval issue",
+                module: "eServices",
+                priority: "High",
+                status: "In Progress",
+                agent: "Neha Singh",
+                created: "25 min ago"
+            },
+
+            {
+                id: "#TKT-10246",
+                type: "hardware",
+                subject: "RFID reader not detecting tag",
+                module: "RFID Reader",
+                priority: "High",
+                status: "Open",
+                agent: "Vikas Yadav",
+                created: "31 min ago"
+            },
+
+            {
+                id: "#TKT-10245",
+                type: "hardware",
+                subject: "Checkgate camera offline",
+                module: "Camera",
+                priority: "Critical",
+                status: "In Progress",
+                agent: "Rohit Singh",
+                created: "45 min ago"
+            },
+
+            {
+                id: "#TKT-10244",
+                type: "software",
+                subject: "Eravana unable to generate",
+                module: "Eravana",
+                priority: "Medium",
+                status: "Resolved",
+                agent: "Pooja Sharma",
+                created: "1 hr ago"
+            },
+
+            {
+                id: "#TKT-10243",
+                type: "hardware",
+                subject: "Weighbridge weight mismatch",
+                module: "Weighbridge",
+                priority: "Medium",
+                status: "Resolved",
+                agent: "Arun Kumar",
+                created: "2 hrs ago"
+            }
+
+        ];
+
+
+
+        /* =========================================================
+           TREND CHART
+        ========================================================== */
+
+        const trendChart = new ApexCharts(
+
+            document.querySelector(
+                "#ticketTrendChart"
+            ),
+
+            {
+
+                chart: {
+                    type: "area",
+                    height: 300,
+                    toolbar: {
+                        show: false
+                    }
+                },
+
+                series: [
+
+                    {
+                        name: "Created",
+                        data:
+                            dashboardData.day.both.createdTrend
+                    },
+
+                    {
+                        name: "Resolved",
+                        data:
+                            dashboardData.day.both.resolvedTrend
+                    }
+
+                ],
+
+                xaxis: {
+
+                    categories:
+                        dashboardData.day.both.trendCategories
+
+                },
+
+                dataLabels: {
+                    enabled: false
+                },
+
+                stroke: {
+                    curve: "smooth",
+                    width: 3
+                },
+
+                fill: {
+
+                    type: "gradient",
+
+                    gradient: {
+
+                        opacityFrom: .20,
+
+                        opacityTo: .02
+
+                    }
+
+                },
+
+                grid: {
+                    borderColor: "#f1f5f9"
+                },
+
+                legend: {
+
+                    position: "top",
+
+                    horizontalAlign: "right"
+
+                }
+
+            }
+
+        );
+
+        trendChart.render();
+
+
+
+        /* =========================================================
+           STATUS CHART
+        ========================================================== */
+
+        const statusChart = new ApexCharts(
+
+            document.querySelector(
+                "#statusChart"
+            ),
+
+            {
+
+                chart: {
+                    type: "donut",
+                    height: 300
+                },
+
+                series:
+                    dashboardData.day.both.status,
+
+                labels: [
+                    "Open",
+                    "In Progress",
+                    "Resolved"
+                ],
+
+                legend: {
+                    position: "bottom"
+                },
+
+                dataLabels: {
+                    enabled: false
+                },
+
+                plotOptions: {
+
+                    pie: {
+
+                        donut: {
+
+                            size: "68%",
+
+                            labels: {
+
+                                show: true,
+
+                                total: {
+
+                                    show: true,
+
+                                    label: "Tickets"
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+        statusChart.render();
+
+
+
+        /* =========================================================
+           PRIORITY
+        ========================================================== */
+
+        const priorityChart = new ApexCharts(
+
+            document.querySelector(
+                "#priorityChart"
+            ),
+
+            {
+
+                chart: {
+                    type: "bar",
+                    height: 270,
+                    toolbar: {
+                        show: false
+                    }
+                },
+
+                series: [
+
+                    {
+
+                        name: "Tickets",
+
+                        data:
+                            dashboardData.day.both.priority
+
+                    }
+
+                ],
+
+                xaxis: {
+
+                    categories: [
+                        "Critical",
+                        "High",
+                        "Medium",
+                        "Low"
+                    ]
+
+                },
+
+                dataLabels: {
+                    enabled: false
+                },
+
+                plotOptions: {
+
+                    bar: {
+
+                        borderRadius: 5,
+
+                        columnWidth: "45%"
+
+                    }
+
+                },
+
+                grid: {
+                    borderColor: "#f1f5f9"
+                }
+
+            }
+
+        );
+
+        priorityChart.render();
+
+
+
+        /* =========================================================
+           CATEGORY CHART
+        ========================================================== */
+
+        const categoryChart = new ApexCharts(
+
+            document.querySelector(
+                "#categoryChart"
+            ),
+
+            {
+
+                chart: {
+                    type: "bar",
+                    height: 300,
+                    toolbar: {
+                        show: false
+                    }
+                },
+
+                series: [
+
+                    {
+
+                        name: "Tickets",
+
+                        data:
+                            dashboardData.day.both.categoryValues
+
+                    }
+
+                ],
+
+                xaxis: {
+
+                    categories:
+                        dashboardData.day.both.categories
+
+                },
+
+                dataLabels: {
+                    enabled: false
+                },
+
+                plotOptions: {
+
+                    bar: {
+
+                        horizontal: true,
+
+                        borderRadius: 5,
+
+                        barHeight: "48%"
+
+                    }
+
+                },
+
+                grid: {
+                    borderColor: "#f1f5f9"
+                }
+
+            }
+
+        );
+
+        categoryChart.render();
+
+
+
+        /* =========================================================
+           AGENT RENDER
+        ========================================================== */
+
+        function renderAgents() {
+
+            const agents =
+                agentData[currentType];
+
+
+            const container =
+                document.getElementById(
+                    "agentList"
+                );
+
+
+            container.innerHTML = "";
+
+
+            agents.forEach(
+                function(agent) {
+
+
+                    const initials =
+                        agent.name
+                            .split(" ")
+                            .map(
+                                value =>
+                                    value.charAt(0)
+                            )
+                            .join("")
+                            .substring(0,2);
+
+
+                    container.innerHTML += `
+
+                        <div class="agent-row">
+
+                            <div class="agent-avatar">
+
+                                ${initials}
+
+                            </div>
+
+                            <div class="agent-info">
+
+                                <p class="agent-name">
+
+                                    ${agent.name}
+
+                                </p>
+
+                                <div class="agent-meta">
+
+                                    ${agent.resolved}
+                                    resolved /
+                                    ${agent.assigned}
+                                    assigned
+
+                                </div>
+
+                            </div>
+
+                            <div class="agent-percent">
+
+                                ${agent.score}
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+        }
+
+
+
+        /* =========================================================
+           TABLE RENDER
+        ========================================================== */
+
+        function renderTickets() {
+
+            const tbody =
+                document.getElementById(
+                    "ticketTableBody"
+                );
+
+
+            let filteredTickets;
+
+
+            if (
+                currentType ===
+                "both"
+            ) {
+
+                filteredTickets =
+                    tickets;
+
+            }
+
+            else {
+
+                filteredTickets =
+                    tickets.filter(
+                        ticket =>
+                            ticket.type ===
+                            currentType
+                    );
+
+            }
+
+
+            tbody.innerHTML = "";
+
+
+            filteredTickets.forEach(
+                function(ticket) {
+
+
+                    let priorityClass =
+                        "pill-low";
+
+
+                    if (
+                        ticket.priority ===
+                        "Critical"
+                    ) {
+
+                        priorityClass =
+                            "pill-critical";
+
+                    }
+
+                    else if (
+                        ticket.priority ===
+                        "High"
+                    ) {
+
+                        priorityClass =
+                            "pill-high";
+
+                    }
+
+                    else if (
+                        ticket.priority ===
+                        "Medium"
+                    ) {
+
+                        priorityClass =
+                            "pill-medium";
+
+                    }
+
+
+
+                    let statusClass =
+                        "pill-open";
+
+
+                    if (
+                        ticket.status ===
+                        "Resolved"
+                    ) {
+
+                        statusClass =
+                            "pill-resolved";
+
+                    }
+
+                    else if (
+                        ticket.status ===
+                        "In Progress"
+                    ) {
+
+                        statusClass =
+                            "pill-progress";
+
+                    }
+
+
+                    const typeClass =
+                        ticket.type === "software"
+                        ? "pill-software"
+                        : "pill-hardware";
+
+
+                    const typeName =
+                        ticket.type === "software"
+                        ? "Software"
+                        : "Hardware";
+
+
+                    const typeIcon =
+                        ticket.type === "software"
+                        ? "bi-code-square"
+                        : "bi-pc-display";
+
+
+                    tbody.innerHTML += `
+
+                        <tr>
+
+                            <td>
+
+                                <span class="ticket-id">
+
+                                    ${ticket.id}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="
+                                        pill
+                                        ${typeClass}
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            bi
+                                            ${typeIcon}
+                                            me-1
+                                        "
+                                    ></i>
+
+                                    ${typeName}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="ticket-subject">
+
+                                    ${ticket.subject}
+
+                                </div>
+
+                            </td>
+
+                            <td>
+
+                                ${ticket.module}
+
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="
+                                        pill
+                                        ${priorityClass}
+                                    "
+                                >
+
+                                    ${ticket.priority}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="
+                                        pill
+                                        ${statusClass}
+                                    "
+                                >
+
+                                    ${ticket.status}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                ${ticket.agent}
+
+                            </td>
+
+                            <td>
+
+                                ${ticket.created}
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            );
+
+        }
+
+
+
+        /* =========================================================
+           FILTER TEXT
+        ========================================================== */
+
+        function updateFilterText() {
+
+            let rangeText =
+                "Today";
+
+
+            if (
+                currentRange ===
+                "week"
+            ) {
+
+                rangeText =
+                    "This Week";
+
+            }
+
+            else if (
+                currentRange ===
+                "month3"
+            ) {
+
+                rangeText =
+                    "3 Months";
+
+            }
+
+
+            let typeText =
+                "Software + Hardware";
+
+
+            if (
+                currentType ===
+                "software"
+            ) {
+
+                typeText =
+                    "Software";
+
+            }
+
+            else if (
+                currentType ===
+                "hardware"
+            ) {
+
+                typeText =
+                    "Hardware";
+
+            }
+
+
+            document.getElementById(
+                "currentFilterText"
+            ).innerText =
+                rangeText +
+                " • " +
+                typeText;
+
+        }
+
+
+
+        /* =========================================================
+           DASHBOARD UPDATE
+        ========================================================== */
+
+        function updateDashboard() {
+
+
+            const data =
+                dashboardData
+                    [currentRange]
+                    [currentType];
+
+
+            /* KPI */
+
+            document.getElementById(
+                "totalTickets"
+            ).innerText =
+                data.total.toLocaleString();
+
+
+            document.getElementById(
+                "openTickets"
+            ).innerText =
+                data.open.toLocaleString();
+
+
+            document.getElementById(
+                "resolvedTickets"
+            ).innerText =
+                data.resolved.toLocaleString();
+
+
+            document.getElementById(
+                "slaCompliance"
+            ).innerText =
+                data.sla + "%";
+
+
+            document.getElementById(
+                "criticalTickets"
+            ).innerText =
+                data.critical.toLocaleString();
+
+
+            document.getElementById(
+                "avgResponse"
+            ).innerText =
+                data.avgResponse;
+
+
+            document.getElementById(
+                "avgResolution"
+            ).innerText =
+                data.avgResolution;
+
+
+            document.getElementById(
+                "reopenedTickets"
+            ).innerText =
+                data.reopened.toLocaleString();
+
+
+
+            /* Percentage */
+
+            document.getElementById(
+                "openPercentage"
+            ).innerText =
+                (
+                    data.open /
+                    data.total *
+                    100
+                ).toFixed(1)
+                +
+                "% of total";
+
+
+            document.getElementById(
+                "resolvedPercentage"
+            ).innerText =
+                (
+                    data.resolved /
+                    data.total *
+                    100
+                ).toFixed(1)
+                +
+                "% resolved";
+
+
+
+            /* Operational */
+
+            document.getElementById(
+                "firstContact"
+            ).innerText =
+                data.firstContact;
+
+
+            document.getElementById(
+                "escalated"
+            ).innerText =
+                data.escalated;
+
+
+            document.getElementById(
+                "pendingReply"
+            ).innerText =
+                data.pendingReply;
+
+
+            document.getElementById(
+                "csat"
+            ).innerText =
+                data.csat;
+
+
+
+            /* Trend */
+
+            trendChart.updateOptions({
+
+                xaxis: {
+
+                    categories:
+                        data.trendCategories
+
+                }
+
+            });
+
+
+            trendChart.updateSeries([
+
+                {
+
+                    name: "Created",
+
+                    data:
+                        data.createdTrend
+
+                },
+
+                {
+
+                    name: "Resolved",
+
+                    data:
+                        data.resolvedTrend
+
+                }
+
+            ]);
+
+
+
+            /* Status */
+
+            statusChart.updateSeries(
+                data.status
+            );
+
+
+
+            /* Priority */
+
+            priorityChart.updateSeries([
+
+                {
+
+                    name: "Tickets",
+
+                    data:
+                        data.priority
+
+                }
+
+            ]);
+
+
+
+            /* Category */
+
+            categoryChart.updateOptions({
+
+                xaxis: {
+
+                    categories:
+                        data.categories
+
+                }
+
+            });
+
+
+            categoryChart.updateSeries([
+
+                {
+
+                    name: "Tickets",
+
+                    data:
+                        data.categoryValues
+
+                }
+
+            ]);
+
+
+
+            /* Category title */
+
+            if (
+                currentType ===
+                "software"
+            ) {
+
+                document.getElementById(
+                    "categoryChartTitle"
+                ).innerText =
+                    "Software Module-wise Tickets";
+
+
+                document.getElementById(
+                    "categoryChartSubtitle"
+                ).innerText =
+                    "DSS, eServices, Eravana, APIs and database issues";
+
+            }
+
+            else if (
+                currentType ===
+                "hardware"
+            ) {
+
+                document.getElementById(
+                    "categoryChartTitle"
+                ).innerText =
+                    "Hardware Category-wise Tickets";
+
+
+                document.getElementById(
+                    "categoryChartSubtitle"
+                ).innerText =
+                    "Checkgate, weighbridge, RFID, camera and network issues";
+
+            }
+
+            else {
+
+                document.getElementById(
+                    "categoryChartTitle"
+                ).innerText =
+                    "Software + Hardware Distribution";
+
+
+                document.getElementById(
+                    "categoryChartSubtitle"
+                ).innerText =
+                    "Combined support ticket distribution";
+
+            }
+
+
+
+            /* SLA */
+
+            data.slaLevels.forEach(
+                function(value, index) {
+
+
+                    const number =
+                        index + 1;
+
+
+                    document.getElementById(
+                        "sla" +
+                        number +
+                        "Text"
+                    ).innerText =
+                        value + "%";
+
+
+                    document.getElementById(
+                        "sla" +
+                        number +
+                        "Bar"
+                    ).style.width =
+                        value + "%";
+
+                }
+            );
+
+
+
+            /* Age */
+
+            data.ageing.forEach(
+                function(value, index) {
+
+
+                    document.getElementById(
+                        "age" +
+                        (
+                            index + 1
+                        )
+                    ).innerText =
+                        value;
+
+                }
+            );
+
+
+            renderAgents();
+
+            renderTickets();
+
+            updateFilterText();
+
+        }
+
+
+
+        /* =========================================================
+           TIME FILTER
+        ========================================================== */
+
+        document
+            .querySelectorAll(
+                ".range-btn"
+            )
+            .forEach(
+                function(button) {
+
+
+                    button.addEventListener(
+                        "click",
+                        function() {
+
+
+                            document
+                                .querySelectorAll(
+                                    ".range-btn"
+                                )
+                                .forEach(
+                                    function(btn) {
+
+                                        btn.classList.remove(
+                                            "active"
+                                        );
+
+                                    }
+                                );
+
+
+                            this.classList.add(
+                                "active"
+                            );
+
+
+                            currentRange =
+                                this.getAttribute(
+                                    "data-range"
+                                );
+
+
+                            updateDashboard();
+
+                        }
+                    );
+
+
+                }
+            );
+
+
+
+        /* =========================================================
+           SOFTWARE / HARDWARE FILTER
+        ========================================================== */
+
+        document
+            .querySelectorAll(
+                ".type-btn"
+            )
+            .forEach(
+                function(button) {
+
+
+                    button.addEventListener(
+                        "click",
+                        function() {
+
+
+                            document
+                                .querySelectorAll(
+                                    ".type-btn"
+                                )
+                                .forEach(
+                                    function(btn) {
+
+                                        btn.classList.remove(
+                                            "active"
+                                        );
+
+                                    }
+                                );
+
+
+                            this.classList.add(
+                                "active"
+                            );
+
+
+                            currentType =
+                                this.getAttribute(
+                                    "data-type"
+                                );
+
+
+                            updateDashboard();
+
+                        }
+                    );
+
+
+                }
+            );
+
+
+
+        /* =========================================================
+           INITIAL DATA
+        ========================================================== */
+
+        updateDashboard();
+
+
+    }
+);
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,1065 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    :root {
+        --ticket-primary: #0f2f5f;
+        --ticket-primary-2: #174b8f;
+        --ticket-accent: #2563eb;
+        --ticket-bg: #f5f7fb;
+        --ticket-card: #ffffff;
+        --ticket-text: #182230;
+        --ticket-muted: #667085;
+        --ticket-border: #e4e7ec;
+        --ticket-soft: #f8fafc;
+        --ticket-danger: #dc2626;
+        --ticket-success: #16a34a;
+        --ticket-radius: 18px;
+    }
+
+    .ticket-page {
+        padding-bottom: 32px;
+    }
+
+    .ticket-hero {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 24px;
+        padding: 28px 30px;
+        border-radius: 22px;
+        background:
+            radial-gradient(circle at 88% 22%, rgba(255,255,255,.18) 0 70px, transparent 71px),
+            radial-gradient(circle at 95% 88%, rgba(255,255,255,.10) 0 120px, transparent 121px),
+            linear-gradient(135deg, #0b2348 0%, #123d76 55%, #1b5aae 100%);
+        color: #fff;
+        box-shadow: 0 16px 40px rgba(15, 47, 95, .16);
+    }
+
+    .ticket-hero::after {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        top: -80px;
+        right: 180px;
+        border: 1px solid rgba(255,255,255,.16);
+        border-radius: 50%;
+    }
+
+    .ticket-hero-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .ticket-hero-title {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .ticket-hero-icon {
+        width: 52px;
+        height: 52px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 52px;
+        border: 1px solid rgba(255,255,255,.22);
+        border-radius: 15px;
+        background: rgba(255,255,255,.12);
+        backdrop-filter: blur(8px);
+        font-size: 24px;
+    }
+
+    .ticket-hero h3 {
+        margin: 0 0 5px;
+        color: #fff;
+        font-size: 25px;
+        font-weight: 750;
+        letter-spacing: -.25px;
+    }
+
+    .ticket-hero p {
+        margin: 0;
+        color: rgba(255,255,255,.76);
+        font-size: 13px;
+    }
+
+    .hero-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 13px;
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 999px;
+        background: rgba(255,255,255,.10);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .hero-status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4ade80;
+        box-shadow: 0 0 0 4px rgba(74,222,128,.14);
+    }
+
+    .ticket-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 285px;
+        gap: 22px;
+        align-items: start;
+    }
+
+    .ticket-card {
+        border: 1px solid var(--ticket-border);
+        border-radius: var(--ticket-radius);
+        background: var(--ticket-card);
+        box-shadow: 0 10px 34px rgba(16, 24, 40, .06);
+        overflow: hidden;
+    }
+
+    .ticket-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px 24px;
+        border-bottom: 1px solid #edf0f4;
+        background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+    }
+
+    .ticket-card-header-left {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .ticket-card-header-icon {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 11px;
+        background: #eef4ff;
+        color: var(--ticket-primary-2);
+        font-size: 18px;
+    }
+
+    .ticket-card-header h4 {
+        margin: 0;
+        color: #132238;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .ticket-card-header p {
+        margin: 3px 0 0;
+        color: var(--ticket-muted);
+        font-size: 12px;
+    }
+
+    .required-note {
+        color: #98a2b3;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .ticket-card-body {
+        padding: 24px;
+    }
+
+    .form-section {
+        margin-bottom: 26px;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .section-number {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 28px;
+        border-radius: 8px;
+        background: #eef4ff;
+        color: var(--ticket-primary-2);
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .section-heading h5 {
+        margin: 0;
+        color: #1d2939;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .section-heading span {
+        display: block;
+        margin-top: 2px;
+        color: #98a2b3;
+        font-size: 11px;
+        font-weight: 400;
+    }
+
+    .ticket-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+    }
+
+    .form-label {
+        margin-bottom: 7px;
+        color: #344054;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+    .required-star {
+        color: var(--ticket-danger);
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 46px;
+        border: 1px solid #d9dee7;
+        border-radius: 10px;
+        background-color: #fff;
+        color: #25324a;
+        font-size: 13px;
+        box-shadow: none;
+        transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+
+    .form-control {
+        padding: 10px 13px;
+    }
+
+    .form-select {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .form-control::placeholder {
+        color: #a3acba;
+    }
+
+    .form-control:hover,
+    .form-select:hover {
+        border-color: #c5ccd7;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #6f9ce0;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, .08);
+    }
+
+    textarea.form-control {
+        min-height: 145px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    .module-box {
+        display: none;
+        position: relative;
+        margin-top: 16px;
+        padding: 17px;
+        border: 1px solid #dfe7f3;
+        border-radius: 13px;
+        background: linear-gradient(135deg, #f8fbff 0%, #f4f8fd 100%);
+        overflow: hidden;
+    }
+
+    .module-box::after {
+        content: "";
+        position: absolute;
+        width: 95px;
+        height: 95px;
+        right: -32px;
+        bottom: -38px;
+        border-radius: 50%;
+        background: rgba(37, 99, 235, .05);
+    }
+
+    .module-title {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 13px;
+        color: #234269;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .module-title i {
+        font-size: 15px;
+    }
+
+    .module-content {
+        position: relative;
+        z-index: 2;
+        max-width: 420px;
+    }
+
+    .hardware-fields-grid {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 15px;
+    }
+
+    .issue-grid {
+        display: grid;
+        gap: 15px;
+    }
+
+    .attachment-box {
+        position: relative;
+        min-height: 112px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px;
+        border: 1.5px dashed #cbd5e1;
+        border-radius: 13px;
+        background: #fbfcfe;
+        transition: .2s ease;
+    }
+
+    .attachment-box:hover {
+        border-color: #8fb0df;
+        background: #f8fbff;
+    }
+
+    .attachment-icon {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 44px;
+        border-radius: 12px;
+        background: #eef4ff;
+        color: var(--ticket-primary-2);
+        font-size: 20px;
+    }
+
+    .attachment-content {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .attachment-content strong {
+        display: block;
+        margin-bottom: 3px;
+        color: #344054;
+        font-size: 12px;
+    }
+
+    .attachment-content small {
+        color: #98a2b3;
+        font-size: 11px;
+    }
+
+    .attachment-file-name {
+        display: block;
+        max-width: 100%;
+        margin-top: 5px;
+        overflow: hidden;
+        color: #5a6a82;
+        font-size: 11px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .attachment-box input[type="file"] {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .ticket-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        margin: 2px -24px -24px;
+        padding: 18px 24px;
+        border-top: 1px solid #edf0f4;
+        background: #fbfcfd;
+    }
+
+    .btn-ticket-reset,
+    .btn-ticket-submit {
+        min-height: 43px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-radius: 10px;
+        padding: 10px 17px;
+        font-size: 12px;
+        font-weight: 700;
+        transition: .22s ease;
+    }
+
+    .btn-ticket-reset {
+        border: 1px solid #d8dee8;
+        background: #fff;
+        color: #5f6c80;
+    }
+
+    .btn-ticket-reset:hover {
+        border-color: #c8d0dc;
+        background: #f8fafc;
+        color: #344054;
+    }
+
+    .btn-ticket-submit {
+        min-width: 150px;
+        border: 1px solid transparent;
+        background: linear-gradient(135deg, #0f2f5f 0%, #184f96 100%);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(15, 47, 95, .16);
+    }
+
+    .btn-ticket-submit:hover {
+        transform: translateY(-1px);
+        color: #fff;
+        box-shadow: 0 10px 24px rgba(15, 47, 95, .22);
+    }
+
+    .ticket-sidebar {
+        display: grid;
+        gap: 16px;
+        position: sticky;
+        top: 16px;
+    }
+
+    .sidebar-card {
+        padding: 19px;
+        border: 1px solid var(--ticket-border);
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 8px 26px rgba(16, 24, 40, .045);
+    }
+
+    .sidebar-card-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 14px;
+        color: #1f3553;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+    .sidebar-card-title i {
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border-radius: 9px;
+        background: #eef4ff;
+        color: var(--ticket-primary-2);
+    }
+
+    .ticket-step {
+        position: relative;
+        display: flex;
+        gap: 11px;
+        padding-bottom: 15px;
+    }
+
+    .ticket-step:last-child {
+        padding-bottom: 0;
+    }
+
+    .ticket-step:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        left: 13px;
+        top: 28px;
+        bottom: 2px;
+        width: 1px;
+        background: #e6eaf0;
+    }
+
+    .ticket-step-number {
+        width: 27px;
+        height: 27px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 27px;
+        border: 1px solid #d9e4f4;
+        border-radius: 50%;
+        background: #f8fbff;
+        color: #315e96;
+        font-size: 10px;
+        font-weight: 800;
+    }
+
+    .ticket-step strong {
+        display: block;
+        margin-bottom: 2px;
+        color: #344054;
+        font-size: 11px;
+    }
+
+    .ticket-step p {
+        margin: 0;
+        color: #8a94a6;
+        font-size: 10px;
+        line-height: 1.55;
+    }
+
+    .info-mini {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        padding: 12px;
+        border-radius: 11px;
+        background: #f8fafc;
+        color: #697586;
+        font-size: 10px;
+        line-height: 1.55;
+    }
+
+    .info-mini i {
+        margin-top: 1px;
+        color: #5378a8;
+        font-size: 13px;
+    }
+
+    .ticket-alert {
+        border: 0;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(16,24,40,.05);
+        font-size: 12px;
+    }
+
+    @media (max-width: 1199px) {
+        .ticket-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .ticket-sidebar {
+            grid-template-columns: 1fr 1fr;
+            position: static;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .ticket-meta-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .ticket-hero {
+            padding: 22px 20px;
+            border-radius: 16px;
+        }
+
+        .ticket-hero-content {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .ticket-hero h3 {
+            font-size: 21px;
+        }
+
+        .ticket-card-header {
+            align-items: flex-start;
+            flex-direction: column;
+            padding: 18px;
+        }
+
+        .ticket-card-body {
+            padding: 18px;
+        }
+
+        .ticket-meta-grid,
+        .ticket-sidebar,
+        .hardware-fields-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ticket-actions {
+            margin: 0 -18px -18px;
+            padding: 16px 18px;
+            flex-direction: column-reverse;
+        }
+
+        .btn-ticket-reset,
+        .btn-ticket-submit {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="ticket-page">
+
+    <div class="ticket-hero">
+        <div class="ticket-hero-content">
+            <div class="ticket-hero-title">
+                <div class="ticket-hero-icon">
+                    <i class="bi bi-headset"></i>
+                </div>
+                <div>
+                    <h3>Raise Support Ticket</h3>
+                    <p>Submit a new issue to the support team with complete details.</p>
+                </div>
+            </div>
+
+            <div class="hero-status">
+                <span class="hero-status-dot"></span>
+                Support Portal Active
+            </div>
+        </div>
+    </div>
+    <div class="ticket-layout">
+
+        <div class="ticket-card">
+
+            <div class="ticket-card-header">
+                <div class="ticket-card-header-left">
+                    <div class="ticket-card-header-icon">
+                        <i class="bi bi-ticket-perforated"></i>
+                    </div>
+                    <div>
+                        <h4>Create New Ticket</h4>
+                        <p>Provide accurate details so the issue can be routed correctly.</p>
+                    </div>
+                </div>
+
+                <div class="required-note">
+                    <span class="required-star">*</span> Required fields
+                </div>
+            </div>
+
+            <div class="ticket-card-body">
+
+                <form method="POST" enctype="multipart/form-data" id="raiseTicketForm">
+                    {% csrf_token %}
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+                            <div class="section-number">01</div>
+                            <div>
+                                <h5>Ticket Information</h5>
+                                <span>Select ticket classification and assignee.</span>
+                            </div>
+                        </div>
+
+                        <div class="ticket-meta-grid">
+
+                            <div>
+                                <label for="ticket_type" class="form-label">
+                                    Ticket Type <span class="required-star">*</span>
+                                </label>
+
+                                <select name="ticket_type" id="ticket_type" class="form-select" required>
+                                    <option value="">Select Ticket Type</option>
+
+                                    {% for ticket_type in ticket_types %}
+                                        <option
+                                            value="{{ ticket_type.id }}"
+                                            data-code="{{ ticket_type.code|upper }}"
+                                        >
+                                            {{ ticket_type.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="priority" class="form-label">
+                                    Priority <span class="required-star">*</span>
+                                </label>
+
+                                <select name="priority" id="priority" class="form-select" required>
+                                    <option value="">Select Priority</option>
+
+                                    {% for priority in priorities %}
+                                        <option value="{{ priority.id }}">
+                                            {{ priority.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="assigned_to" class="form-label">
+                                    Assigned To <span class="required-star">*</span>
+                                </label>
+
+                                <select name="assigned_to" id="assigned_to" class="form-select" required>
+                                    <option value="">Select Assignee</option>
+
+                                    {% for assigned in assigned_users %}
+                                        <option value="{{ assigned.id }}">
+                                            {{ assigned.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="module-box" id="softwareModuleSection">
+                            <div class="module-title">
+                                <i class="bi bi-code-square"></i>
+                                Software Information
+                            </div>
+
+                            <div class="module-content">
+                                <label for="software_module" class="form-label">
+                                    Software Module <span class="required-star">*</span>
+                                </label>
+
+                                <select
+                                    name="software_module"
+                                    id="software_module"
+                                    class="form-select"
+                                >
+                                    <option value="">Select Software Module</option>
+
+                                    {% for module in software_modules %}
+                                        <option value="{{ module.id }}">
+                                            {{ module.moduleName }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="module-box" id="hardwareModuleSection">
+                            <div class="module-title">
+                                <i class="bi bi-cpu"></i>
+                                Hardware Information
+                            </div>
+
+                            <div class="hardware-fields-grid">
+
+                                <div>
+                                    <label for="gate" class="form-label">
+                                        Gate <span class="required-star">*</span>
+                                    </label>
+
+                                    <select
+                                        name="gate"
+                                        id="gate"
+                                        class="form-select"
+                                    >
+                                        <option value="">Select Gate</option>
+
+                                        {% for gate in gates %}
+                                            <option value="{{ gate.id }}">
+                                                {{ gate.gate_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="hardware_module" class="form-label">
+                                        Hardware Module <span class="required-star">*</span>
+                                    </label>
+
+                                    <select
+                                        name="hardware_module"
+                                        id="hardware_module"
+                                        class="form-select"
+                                    >
+                                        <option value="">Select Hardware Module</option>
+
+                                        {% for module in hardware_modules %}
+                                            <option value="{{ module.id }}">
+                                                {{ module.moduleName }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+                            <div class="section-number">02</div>
+                            <div>
+                                <h5>Issue Details</h5>
+                                <span>Explain the problem clearly for faster resolution.</span>
+                            </div>
+                        </div>
+
+                        <div class="issue-grid">
+
+                            <div>
+                                <label for="subject" class="form-label">
+                                    Subject <span class="required-star">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="subject"
+                                    id="subject"
+                                    class="form-control"
+                                    placeholder="Enter a short and clear issue subject"
+                                    maxlength="255"
+                                    required
+                                >
+                            </div>
+
+                            <div>
+                                <label for="description" class="form-label">
+                                    Description <span class="required-star">*</span>
+                                </label>
+
+                                <textarea
+                                    name="description"
+                                    id="description"
+                                    class="form-control"
+                                    rows="6"
+                                    placeholder="Describe the issue, what you were doing, and what happened..."
+                                    required
+                                ></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+                            <div class="section-number">03</div>
+                            <div>
+                                <h5>Supporting Attachment</h5>
+                                <span>Add a screenshot or supporting document if available.</span>
+                            </div>
+                        </div>
+
+                        <label for="attachment" class="attachment-box">
+                            <div class="attachment-icon">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                            </div>
+
+                            <div class="attachment-content">
+                                <strong>Choose a file to attach</strong>
+                                <small>Screenshot, image, PDF or other supporting document</small>
+                                <span class="attachment-file-name" id="attachmentFileName">
+                                    No file selected
+                                </span>
+                            </div>
+
+                            <input
+                                type="file"
+                                name="attachment"
+                                id="attachment"
+                            >
+                        </label>
+                    </div>
+
+                    <div class="ticket-actions">
+                        <button
+                            type="reset"
+                            class="btn-ticket-reset"
+                            id="resetTicketButton"
+                        >
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                            Reset
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn-ticket-submit"
+                        >
+                            <i class="bi bi-send"></i>
+                            Raise Ticket
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <aside class="ticket-sidebar">
+
+            <div class="sidebar-card">
+                <div class="sidebar-card-title">
+                    <i class="bi bi-list-check"></i>
+                    Before You Submit
+                </div>
+
+                <div class="ticket-step">
+                    <div class="ticket-step-number">1</div>
+                    <div>
+                        <strong>Select Ticket Type</strong>
+                        <p>Choose Software or Hardware to display the relevant module.</p>
+                    </div>
+                </div>
+
+                <div class="ticket-step">
+                    <div class="ticket-step-number">2</div>
+                    <div>
+                        <strong>Set Priority & Assignee</strong>
+                        <p>Select the correct urgency and support owner.</p>
+                    </div>
+                </div>
+
+                <div class="ticket-step">
+                    <div class="ticket-step-number">3</div>
+                    <div>
+                        <strong>Describe the Issue</strong>
+                        <p>Add enough context so the support team can act quickly.</p>
+                    </div>
+                </div>
+
+                <div class="ticket-step">
+                    <div class="ticket-step-number">4</div>
+                    <div>
+                        <strong>Add Evidence</strong>
+                        <p>Attach screenshots or documents whenever they are useful.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-card-title">
+                    <i class="bi bi-info-circle"></i>
+                    Helpful Tip
+                </div>
+
+                <div class="info-mini">
+                    <i class="bi bi-lightbulb"></i>
+                    <div>
+                        A clear subject, exact module, and detailed description help reduce back-and-forth during ticket resolution.
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const ticketType = document.getElementById("ticket_type");
+    const softwareSection = document.getElementById("softwareModuleSection");
+    const hardwareSection = document.getElementById("hardwareModuleSection");
+    const softwareModule = document.getElementById("software_module");
+    const hardwareModule = document.getElementById("hardware_module");
+    const gate = document.getElementById("gate");
+    const resetButton = document.getElementById("resetTicketButton");
+    const attachment = document.getElementById("attachment");
+    const attachmentFileName = document.getElementById("attachmentFileName");
+
+    function handleTicketTypeChange() {
+
+        const selectedOption = ticketType.options[ticketType.selectedIndex];
+
+        if (!selectedOption) {
+            return;
+        }
+
+        const ticketCode = (
+            selectedOption.getAttribute("data-code") || ""
+        ).trim().toUpperCase();
+
+        if (ticketCode === "SOFTWARE") {
+
+            softwareSection.style.display = "block";
+            hardwareSection.style.display = "none";
+
+            softwareModule.required = true;
+            hardwareModule.required = false;
+            gate.required = false;
+
+            hardwareModule.value = "";
+            gate.value = "";
+
+        } else if (ticketCode === "HARDWARE") {
+
+            hardwareSection.style.display = "block";
+            softwareSection.style.display = "none";
+
+            hardwareModule.required = true;
+            gate.required = true;
+            softwareModule.required = false;
+
+            softwareModule.value = "";
+
+        } else {
+
+            softwareSection.style.display = "none";
+            hardwareSection.style.display = "none";
+
+            softwareModule.required = false;
+            hardwareModule.required = false;
+            gate.required = false;
+
+            softwareModule.value = "";
+            hardwareModule.value = "";
+            gate.value = "";
+        }
+    }
+
+    ticketType.addEventListener("change", handleTicketTypeChange);
+
+    if (attachment) {
+        attachment.addEventListener("change", function () {
+            if (this.files && this.files.length > 0) {
+                attachmentFileName.textContent = this.files[0].name;
+            } else {
+                attachmentFileName.textContent = "No file selected";
+            }
+        });
+    }
+
+    resetButton.addEventListener("click", function () {
+        setTimeout(function () {
+            handleTicketTypeChange();
+
+            if (attachmentFileName) {
+                attachmentFileName.textContent = "No file selected";
+            }
+        }, 20);
+    });
+
+    handleTicketTypeChange();
+});
+</script>
+
+{% endblock %}

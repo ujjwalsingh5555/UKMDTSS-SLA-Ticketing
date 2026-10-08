@@ -1,0 +1,564 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    /* =========================================
+       PAGE
+    ========================================= */
+
+    .user-page {
+        width: 100%;
+    }
+
+    .user-card {
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(0, 33, 82, 0.08);
+        overflow: hidden;
+    }
+
+    .user-card .card-header {
+        padding: 20px 25px;
+        background: #ffffff;
+        border-bottom: 1px solid #edf0f5;
+    }
+
+    .user-card .card-header h4 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        color: #002152;
+    }
+
+    .user-card .card-body {
+        padding: 25px;
+    }
+
+
+    /* =========================================
+       LABEL
+    ========================================= */
+
+    .form-label {
+        margin-bottom: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #334155;
+    }
+
+
+    /* =========================================
+       INPUT
+    ========================================= */
+
+    .form-control,
+    .form-select {
+        min-height: 46px;
+        border: 1px solid #dce3ec;
+        border-radius: 9px;
+        font-size: 14px;
+        padding-left: 14px;
+        transition: all .2s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #002152;
+        box-shadow: 0 0 0 3px rgba(0, 33, 82, .08);
+    }
+
+
+    /* =========================================
+       PASSWORD BUTTON
+    ========================================= */
+
+    .password-btn {
+        min-width: 48px;
+        border: 1px solid #dce3ec;
+        background: #f8fafc;
+        color: #64748b;
+    }
+
+    .password-btn:hover {
+        background: #eef2f7;
+        color: #002152;
+    }
+
+
+    /* =========================================
+       STATUS BOX
+    ========================================= */
+
+    .status-box {
+        min-height: 46px;
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        border: 1px solid #dce3ec;
+        border-radius: 9px;
+        background: #fafcff;
+    }
+
+    .status-box .form-check {
+        margin: 0;
+    }
+
+
+    /* =========================================
+       BUTTON
+    ========================================= */
+
+    .btn-create {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        min-width: 180px;
+        padding: 12px 24px;
+
+        font-size: 14px;
+        font-weight: 600;
+
+        color: #ffffff;
+
+        border: none;
+        border-radius: 9px;
+
+        background: linear-gradient(
+            135deg,
+            #002152 0%,
+            #0b3d85 100%
+        );
+
+        box-shadow: 0 4px 12px rgba(0, 33, 82, .20);
+
+        transition: all .25s ease;
+    }
+
+    .btn-create:hover {
+        color: #ffffff;
+
+        background: linear-gradient(
+            135deg,
+            #0b3d85 0%,
+            #002152 100%
+        );
+
+        transform: translateY(-2px);
+
+        box-shadow: 0 8px 18px rgba(0, 33, 82, .28);
+    }
+
+
+    /* =========================================
+       RESPONSIVE
+    ========================================= */
+
+    @media (max-width: 768px) {
+
+        .user-card .card-body {
+            padding: 18px;
+        }
+
+        .btn-create {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<!-- ============================================ -->
+<!-- PAGE HEADING -->
+<!-- ============================================ -->
+
+<div class="page-heading">
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <div>
+
+            <h3>
+                User Management
+            </h3>
+
+            <p class="text-muted mb-0">
+                Create and manage system users
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ============================================ -->
+<!-- PAGE CONTENT -->
+<!-- ============================================ -->
+
+<div class="page-content user-page">
+
+    <section class="row">
+
+        <!-- FULL SCREEN WIDTH -->
+
+        <div class="col-12">
+
+            <div class="card user-card">
+
+                <!-- ======================================== -->
+                <!-- CARD HEADER -->
+                <!-- ======================================== -->
+
+                <div class="card-header">
+
+                    <h4>
+
+                        <i class="bi bi-person-plus me-2"></i>
+
+                        Create User
+
+                    </h4>
+
+                </div>
+
+
+                <!-- ======================================== -->
+                <!-- CARD BODY -->
+                <!-- ======================================== -->
+
+                <div class="card-body">
+
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <div class="row">
+
+
+                            <!-- ================================= -->
+                            <!-- ROLE -->
+                            <!-- ================================= -->
+
+                            <div class="col-12 col-md-6 mb-4">
+
+                                <label
+                                    for="role"
+                                    class="form-label"
+                                >
+
+                                    Role
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <select
+                                    id="role"
+                                    name="role"
+                                    class="form-select"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select Role
+                                    </option>
+
+
+                                    {% for role in roles %}
+
+                                        <option value="{{ role.id }}">
+
+                                            {{ role.name }}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- ================================= -->
+                            <!-- NAME -->
+                            <!-- ================================= -->
+
+                            <div class="col-12 col-md-6 mb-4">
+
+                                <label
+                                    for="name"
+                                    class="form-label"
+                                >
+
+                                    User Name
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    class="form-control"
+                                    placeholder="Enter User Name"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- ================================= -->
+                            <!-- EMAIL -->
+                            <!-- ================================= -->
+
+                            <div class="col-12 col-md-6 mb-4">
+
+                                <label
+                                    for="email"
+                                    class="form-label"
+                                >
+
+                                    Email Address
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="form-control"
+                                    placeholder="Enter Email Address"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- ================================= -->
+                            <!-- MOBILE -->
+                            <!-- ================================= -->
+
+                            <div class="col-12 col-md-6 mb-4">
+
+                                <label
+                                    for="mobile"
+                                    class="form-label"
+                                >
+
+                                    Mobile Number
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    id="mobile"
+                                    name="mobile"
+                                    class="form-control"
+                                    placeholder="Enter Mobile Number"
+                                    maxlength="15"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- ================================= -->
+                            <!-- PASSWORD -->
+                            <!-- ================================= -->
+
+                            <div class="col-12 col-md-6 mb-4">
+
+                                <label
+                                    for="password"
+                                    class="form-label"
+                                >
+
+                                    Password
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        class="form-control"
+                                        placeholder="Enter Password"
+                                        required
+                                    >
+
+
+                                    <button
+                                        type="button"
+                                        class="btn password-btn"
+                                        onclick="togglePassword()"
+                                    >
+
+                                        <i
+                                            class="bi bi-eye"
+                                            id="passwordIcon"
+                                        ></i>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- ================================= -->
+                            <!-- STATUS -->
+                            <!-- ================================= -->
+
+                            <div class="col-12 col-md-6 mb-4">
+
+                                <label
+                                    class="form-label"
+                                >
+
+                                    Status
+
+                                </label>
+
+
+                                <div class="status-box">
+
+                                    <div class="form-check form-switch">
+
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            id="is_active"
+                                            name="is_active"
+                                            checked
+                                        >
+
+
+                                        <label
+                                            class="form-check-label"
+                                            for="is_active"
+                                        >
+
+                                            Active User
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- ================================= -->
+                        <!-- BUTTON -->
+                        <!-- ================================= -->
+
+                        <div
+                            class="
+                                d-flex
+                                justify-content-end
+                                align-items-center
+                                mt-2
+                            "
+                        >
+
+
+                            <button
+                                type="submit"
+                                class="btn-create"
+                            >
+
+                                <i class="bi bi-person-plus"></i>
+
+                                Create User
+
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+
+<!-- ============================================ -->
+<!-- PASSWORD SHOW / HIDE -->
+<!-- ============================================ -->
+
+<script>
+
+    function togglePassword() {
+
+        const password =
+            document.getElementById("password");
+
+        const icon =
+            document.getElementById("passwordIcon");
+
+
+        if (password.type === "password") {
+
+            password.type = "text";
+
+            icon.classList.remove("bi-eye");
+
+            icon.classList.add("bi-eye-slash");
+
+        }
+
+        else {
+
+            password.type = "password";
+
+            icon.classList.remove("bi-eye-slash");
+
+            icon.classList.add("bi-eye");
+
+        }
+
+    }
+
+</script>
+
+
+{% endblock %}

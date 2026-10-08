@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+    .menu-page-header {margin-bottom: 20px;}
+    .menu-page-header h3 {margin-bottom: 4px;color: #25396f;font-size: 24px;font-weight: 700;}
+    .menu-page-header p {margin: 0;color: #94a3b8;font-size: 13px;}
+    .menu-card {width: 100%;
+        border: 1px solid #edf0f5;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(37,57,111,.05);
+        background: #ffffff;
+    }
+
+    .menu-card .card-header {
+        padding: 17px 20px;
+        background: #ffffff;
+        border-bottom: 1px solid #edf0f5;
+    }
+
+    .menu-card .card-header h4 {
+        margin: 0;
+        color: #25396f;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+    }
+
+    .menu-card .card-body {
+        padding: 24px;
+    }
+
+    .form-label {
+        margin-bottom: 7px;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 44px;
+        border: 1px solid #dfe5ed;
+        border-radius: 8px;
+        background: #f8fafc;
+        font-size: 13px;
+        color: #334155;
+        transition: all .2s ease;
+    }
+
+    .form-control::placeholder {
+        color: #94a3b8;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        background: #ffffff;
+        border-color: #435ebe;
+        box-shadow: 0 0 0 3px rgba(67,94,190,.08);
+        outline: none;
+    }
+
+    .parent-option {
+        font-weight: 700;
+        color: #25396f;
+    }
+
+    .menu-info {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 13px 15px;
+        margin-top: 5px;
+        border-radius: 8px;
+        background: #f8fafc;
+        border: 1px solid #edf0f5;
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .menu-info i {
+        margin-top: 2px;
+        color: #435ebe;
+        font-size: 14px;
+    }
+
+    .btn-create {
+        min-width: 180px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 11px 20px;
+        border: none;
+        border-radius: 9px;
+        background: #435ebe;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+
+    .btn-create:hover {
+        background: #334ca3;
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 15px rgba(67,94,190,.22);
+    }
+
+    .btn-create:active {
+        transform: translateY(0);
+    }
+
+    .button-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 22px;
+    }
+
+    @media (max-width: 767px) {
+
+        .menu-card .card-body {
+            padding: 18px;
+        }
+
+        .menu-page-header h3 {
+            font-size: 21px;
+        }
+
+        .button-wrapper {
+            justify-content: stretch;
+        }
+
+        .btn-create {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<div class="page-heading menu-page-header">
+
+    <h3>
+        Menu Master
+    </h3>
+
+    <p>
+        Create parent menu and submenu
+    </p>
+
+</div>
+
+
+<div class="page-content">
+
+    <section class="row">
+
+        <div class="col-12">
+
+            <div class="card menu-card">
+
+                <div class="card-header">
+
+                    <h4>
+                        <i class="bi bi-list me-2"></i>
+                        Create Menu
+                    </h4>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <div class="row g-3">
+
+
+                            <div class="col-12 col-md-4">
+
+                                <label
+                                    for="name"
+                                    class="form-label"
+                                >
+                                    Menu Name
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    class="form-control"
+                                    placeholder="Enter Menu Name"
+                                    autocomplete="off"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="col-12 col-md-4">
+
+                                <label
+                                    for="url_name"
+                                    class="form-label"
+                                >
+                                    URL Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="url_name"
+                                    name="url_name"
+                                    class="form-control"
+                                    placeholder="Example: user_master"
+                                    autocomplete="off"
+                                >
+
+                            </div>
+
+
+                            <div class="col-12 col-md-4">
+
+                                <label
+                                    for="parent"
+                                    class="form-label"
+                                >
+                                    Parent Menu
+                                </label>
+
+                                <select
+                                    id="parent"
+                                    name="parent"
+                                    class="form-select"
+                                >
+
+                                    <option value="">
+                                        -- Main Menu --
+                                    </option>
+
+
+                                    {% for menu in menus %}
+
+                                        {% if not menu.parent %}
+
+                                            <option
+                                                value="{{ menu.id }}"
+                                                class="parent-option"
+                                            >
+                                                ★ {{ menu.name }}
+                                            </option>
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="menu-info mt-3">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            <div>
+
+                                If you select
+                                <strong>Main Menu</strong>,
+                                this menu will be created as a parent menu.
+
+                                <br>
+
+                                If you select any existing parent menu,
+                                the new menu will be created as its submenu.
+
+                                <br>
+
+                                <strong>URL Name</strong>
+                                should match Django URL name.
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="button-wrapper">
+
+                            <button
+                                type="submit"
+                                class="btn-create"
+                            >
+
+                                <i class="bi bi-plus-circle"></i>
+
+                                Create Menu
+
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

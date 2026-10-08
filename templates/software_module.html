@@ -1,0 +1,863 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    /* =====================================================
+       ACTION BUTTONS
+    ====================================================== */
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+
+        padding: 6px 12px;
+
+        font-size: 12px;
+        font-weight: 600;
+
+        line-height: 1;
+
+        border-radius: 7px;
+        border: 1px solid transparent;
+
+        background: transparent;
+
+        text-decoration: none;
+
+        transition: all .2s ease;
+
+        white-space: nowrap;
+    }
+
+
+    /* EDIT */
+
+    .action-btn-edit {
+        color: #435ebe;
+        border-color: rgba(67, 94, 190, .25);
+        background: rgba(67, 94, 190, .06);
+    }
+
+    .action-btn-edit:hover {
+        color: #ffffff;
+        background: #435ebe;
+        border-color: #435ebe;
+    }
+
+
+    /* DELETE */
+
+    .action-btn-delete {
+        color: #dc3545;
+        border-color: rgba(220, 53, 69, .25);
+        background: rgba(220, 53, 69, .05);
+    }
+
+    .action-btn-delete:hover {
+        color: #ffffff;
+        background: #dc3545;
+        border-color: #dc3545;
+    }
+
+
+    /* =====================================================
+       CREATE BUTTON
+    ====================================================== */
+
+    .btn-create {
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        padding: 11px 18px;
+
+        border: none;
+        border-radius: 9px;
+
+        background: #435ebe;
+
+        color: #ffffff;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        transition: all .2s ease;
+    }
+
+    .btn-create:hover {
+        color: #ffffff;
+        background: #334ca3;
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 6px 15px rgba(67, 94, 190, .22);
+    }
+
+
+    /* =====================================================
+       CARD
+    ====================================================== */
+
+    .master-card {
+        height: 100%;
+
+        border: 1px solid #edf0f5;
+        border-radius: 12px;
+
+        box-shadow:
+            0 4px 16px rgba(37, 57, 111, .05);
+
+        overflow: hidden;
+    }
+
+    .master-card .card-header {
+        padding: 17px 20px;
+
+        background: #ffffff;
+
+        border-bottom: 1px solid #edf0f5;
+    }
+
+    .master-card .card-header h4 {
+        margin: 0;
+
+        color: #25396f;
+
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .master-card .card-body {
+        padding: 20px;
+    }
+
+
+    /* =====================================================
+       INPUTS
+    ====================================================== */
+
+    .form-label {
+        margin-bottom: 6px;
+
+        color: #475569;
+
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .form-control {
+        min-height: 44px;
+
+        border: 1px solid #dfe5ed;
+        border-radius: 8px;
+
+        font-size: 13px;
+
+        background: #f8fafc;
+
+        transition: all .2s ease;
+    }
+
+    .form-control:focus {
+        background: #ffffff;
+
+        border-color: #435ebe;
+
+        box-shadow:
+            0 0 0 3px rgba(67, 94, 190, .08);
+    }
+
+    textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+
+    /* =====================================================
+       TABLE
+    ====================================================== */
+
+    .data-table-wrap {
+        border: 1px solid #edf0f5;
+        border-radius: 10px;
+
+        overflow: hidden;
+    }
+
+    .data-table {
+        width: 100%;
+
+        margin: 0;
+
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .data-table thead th {
+        padding: 12px 14px;
+
+        background: #f8fafc;
+
+        color: #64748b;
+
+        font-size: 10.5px;
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        letter-spacing: .5px;
+
+        border-bottom: 1px solid #e8edf4;
+
+        white-space: nowrap;
+    }
+
+    .data-table tbody td {
+        padding: 12px 14px;
+
+        color: #475569;
+
+        font-size: 12.5px;
+
+        border-bottom: 1px solid #f1f5f9;
+
+        vertical-align: middle;
+    }
+
+    .data-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .data-table tbody tr:hover td {
+        background: #fafbff;
+    }
+
+
+    /* =====================================================
+       MODULE ICON
+    ====================================================== */
+
+    .module-name-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .module-icon {
+        width: 34px;
+        height: 34px;
+
+        min-width: 34px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 8px;
+
+        background: #eef2ff;
+        color: #435ebe;
+
+        font-size: 15px;
+    }
+
+    .module-name {
+        margin: 0;
+
+        color: #334155;
+
+        font-weight: 700;
+    }
+
+
+    /* =====================================================
+       STATUS
+    ====================================================== */
+
+    .status-active {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+
+        padding: 4px 8px;
+
+        border-radius: 20px;
+
+        color: #198754;
+        background: #ecfdf3;
+
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    .status-inactive {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+
+        padding: 4px 8px;
+
+        border-radius: 20px;
+
+        color: #dc3545;
+        background: #fff1f2;
+
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+
+    /* =====================================================
+       COUNT BADGE
+    ====================================================== */
+
+    .count-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+
+        padding: 5px 10px;
+
+        border-radius: 20px;
+
+        background: #eef2ff;
+        color: #435ebe;
+
+        font-size: 10.5px;
+        font-weight: 700;
+    }
+
+
+    /* =====================================================
+       EMPTY
+    ====================================================== */
+
+    .table-empty {
+        padding: 45px 15px !important;
+
+        text-align: center;
+    }
+
+    .table-empty i {
+        display: block;
+
+        margin-bottom: 8px;
+
+        color: #cbd5e1;
+
+        font-size: 34px;
+    }
+
+</style>
+
+
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
+
+<div class="page-heading">
+
+    <h3>
+        Software Module Master
+    </h3>
+
+    <p class="text-muted">
+        Create and manage software modules
+    </p>
+
+</div>
+
+
+<div class="page-content">
+
+    <section class="row g-3">
+
+
+        <!-- =================================================
+             CREATE SOFTWARE MODULE
+        ================================================== -->
+
+        <div class="col-12 col-lg-4">
+
+            <div class="card master-card">
+
+                <div class="card-header">
+
+                    <h4>
+
+                        <i class="bi bi-code-square me-2"></i>
+
+                        Create Software Module
+
+                    </h4>
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <!-- MODULE NAME -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="moduleName"
+                                class="form-label"
+                            >
+
+                                Module Name
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                id="moduleName"
+                                name="moduleName"
+                                class="form-control"
+                                placeholder="Enter Software Module Name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="description"
+                                class="form-label"
+                            >
+
+                                Description
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                class="form-control"
+                                placeholder="Enter Module Description"
+                                maxlength="100"
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- BUTTON -->
+
+                        <div class="mt-4">
+
+                            <button
+                                type="submit"
+                                class="btn-create"
+                            >
+
+                                <i class="bi bi-plus-circle"></i>
+
+                                Create Software Module
+
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             SOFTWARE MODULE LIST
+        ================================================== -->
+
+        <div class="col-12 col-lg-8">
+
+            <div class="card master-card">
+
+                <div class="card-header">
+
+                    <div
+                        class="
+                            d-flex
+                            justify-content-between
+                            align-items-center
+                        "
+                    >
+
+                        <h4>
+
+                            <i class="bi bi-list-ul me-2"></i>
+
+                            Software Module List
+
+                        </h4>
+
+
+                        <span class="count-badge">
+
+                            <i class="bi bi-code-square"></i>
+
+                            Total:
+                            {{ software_count }}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <div class="table-responsive data-table-wrap">
+
+
+                        <table class="data-table">
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th style="width:60px;">
+                                        #
+                                    </th>
+
+                                    <th>
+                                        Module Name
+                                    </th>
+
+                                    <th>
+                                        Description
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th style="width:160px;">
+                                        Action
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                                {% for software in software_modules %}
+
+
+                                <tr>
+
+
+                                    <!-- NUMBER -->
+
+                                    <td>
+
+                                        {{ forloop.counter }}
+
+                                    </td>
+
+
+
+                                    <!-- MODULE -->
+
+                                    <td>
+
+
+                                        <div class="module-name-wrap">
+
+
+                                            <div class="module-icon">
+
+                                                <i class="bi bi-code-square"></i>
+
+                                            </div>
+
+
+                                            <p class="module-name">
+
+                                                {{ software.moduleName }}
+
+                                            </p>
+
+
+                                        </div>
+
+
+                                    </td>
+
+
+
+                                    <!-- DESCRIPTION -->
+
+                                    <td>
+
+                                        {{ software.description }}
+
+                                    </td>
+
+
+
+                                    <!-- STATUS -->
+
+                                    <td>
+
+
+                                        {% if software.is_active %}
+
+
+                                            <span class="status-active">
+
+                                                <i class="bi bi-check-circle"></i>
+
+                                                Active
+
+                                            </span>
+
+
+                                        {% else %}
+
+
+                                            <span class="status-inactive">
+
+                                                <i class="bi bi-x-circle"></i>
+
+                                                Inactive
+
+                                            </span>
+
+
+                                        {% endif %}
+
+
+                                    </td>
+
+
+
+                                    <!-- ACTION -->
+
+                                    <td>
+
+
+                                        <div class="d-flex gap-2">
+
+
+                                            <!-- EDIT -->
+
+                                            <a
+                                                href="{% url 'software_module_update' software.id %}"
+                                                class="action-btn action-btn-edit"
+                                            >
+
+                                                <i class="bi bi-pencil-square"></i>
+
+                                                Edit
+
+                                            </a>
+
+
+                                            <!-- DELETE -->
+
+                                            <button
+                                                type="button"
+                                                class="action-btn action-btn-delete"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteSoftware{{ software.id }}"
+                                            >
+
+                                                <i class="bi bi-trash"></i>
+
+                                                Delete
+
+                                            </button>
+
+
+                                        </div>
+
+
+                                    </td>
+
+
+                                </tr>
+
+
+
+                                <!-- =================================================
+                                     DELETE MODAL
+                                ================================================== -->
+
+                                <div
+                                    class="modal fade"
+                                    id="deleteSoftware{{ software.id }}"
+                                    tabindex="-1"
+                                >
+
+                                    <div class="modal-dialog modal-dialog-centered">
+
+                                        <div class="modal-content">
+
+
+                                            <div class="modal-header">
+
+                                                <h5 class="modal-title">
+
+                                                    Delete Software Module
+
+                                                </h5>
+
+
+                                                <button
+                                                    type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                ></button>
+
+                                            </div>
+
+
+                                            <div class="modal-body">
+
+                                                <p class="mb-0">
+
+                                                    Are you sure you want to delete
+
+                                                    <strong>
+                                                        {{ software.moduleName }}
+                                                    </strong>
+
+                                                    ?
+
+                                                </p>
+
+                                            </div>
+
+
+                                            <div class="modal-footer">
+
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-light-secondary"
+                                                    data-bs-dismiss="modal"
+                                                >
+
+                                                    Cancel
+
+                                                </button>
+
+
+                                                <form
+                                                    method="POST"
+                                                    action="{% url 'software_module_delete' software.id %}"
+                                                >
+
+                                                    {% csrf_token %}
+
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-danger"
+                                                    >
+
+                                                        <i class="bi bi-trash me-1"></i>
+
+                                                        Delete
+
+                                                    </button>
+
+
+                                                </form>
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                {% empty %}
+
+
+                                <tr>
+
+                                    <td
+                                        colspan="5"
+                                        class="table-empty"
+                                    >
+
+                                        <i class="bi bi-code-square"></i>
+
+                                        <p class="text-muted mb-0">
+
+                                            No Software Module Found
+
+                                        </p>
+
+                                    </td>
+
+                                </tr>
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</div>
+
+
+{% endblock %}

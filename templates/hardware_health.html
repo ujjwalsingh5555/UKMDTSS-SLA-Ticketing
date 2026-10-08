@@ -1,0 +1,1667 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+
+    :root {
+        --gate-primary: #0f2f5f;
+        --gate-primary-2: #174b8f;
+        --gate-accent: #2563eb;
+
+        --gate-bg: #f5f7fb;
+        --gate-card: #ffffff;
+
+        --gate-text: #182230;
+        --gate-muted: #667085;
+
+        --gate-border: #e4e7ec;
+
+        --gate-success: #15803d;
+        --gate-danger: #dc2626;
+        --gate-warning: #d97706;
+    }
+
+
+    /* ==========================================
+       PAGE
+    ========================================== */
+
+    .gate-health-page {
+        padding-bottom: 40px;
+    }
+
+
+    /* ==========================================
+       HERO
+    ========================================== */
+
+    .gate-health-hero {
+
+        position: relative;
+        overflow: hidden;
+
+        padding: 28px 30px;
+        margin-bottom: 22px;
+
+        border-radius: 22px;
+
+        background:
+            radial-gradient(
+                circle at 88% 22%,
+                rgba(255,255,255,.18) 0 75px,
+                transparent 76px
+            ),
+            linear-gradient(
+                135deg,
+                #0b2348 0%,
+                #123d76 55%,
+                #1b5aae 100%
+            );
+
+        color: white;
+
+        box-shadow:
+            0 16px 40px rgba(15,47,95,.16);
+    }
+
+
+    .gate-health-hero-content {
+
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+    }
+
+
+    .gate-health-hero-left {
+
+        display: flex;
+        align-items: center;
+
+        gap: 16px;
+    }
+
+
+    .gate-health-hero-icon {
+
+        width: 58px;
+        height: 58px;
+
+        display: grid;
+        place-items: center;
+
+        flex: 0 0 58px;
+
+        border-radius: 16px;
+
+        background:
+            rgba(255,255,255,.12);
+
+        border:
+            1px solid rgba(255,255,255,.20);
+
+        font-size: 25px;
+    }
+
+
+    .gate-health-hero h3 {
+
+        margin: 0 0 6px;
+
+        color: white;
+
+        font-size: 25px;
+        font-weight: 750;
+    }
+
+
+    .gate-health-hero p {
+
+        margin: 0;
+
+        color:
+            rgba(255,255,255,.78);
+
+        font-size: 13px;
+    }
+
+
+    .total-gate-pill {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        padding: 9px 14px;
+
+        border-radius: 999px;
+
+        background:
+            rgba(255,255,255,.10);
+
+        border:
+            1px solid rgba(255,255,255,.18);
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        white-space: nowrap;
+    }
+
+
+    /* ==========================================
+       SUMMARY
+    ========================================== */
+
+    .gate-summary-grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 15px;
+
+        margin-bottom: 22px;
+    }
+
+
+    .gate-summary-card {
+
+        padding: 18px;
+
+        border:
+            1px solid var(--gate-border);
+
+        border-radius: 17px;
+
+        background: white;
+
+        box-shadow:
+            0 8px 26px rgba(16,24,40,.045);
+
+        transition:
+            transform .2s ease,
+            box-shadow .2s ease;
+    }
+
+
+    .gate-summary-card:hover {
+
+        transform:
+            translateY(-3px);
+
+        box-shadow:
+            0 12px 30px rgba(16,24,40,.08);
+    }
+
+
+    .gate-summary-content {
+
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 15px;
+    }
+
+
+    .gate-summary-label {
+
+        margin-bottom: 7px;
+
+        color: #7a8699;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .5px;
+    }
+
+
+    .gate-summary-value {
+
+        margin: 0;
+
+        color: #172b4d;
+
+        font-size: 28px;
+
+        font-weight: 800;
+    }
+
+
+    .gate-summary-icon {
+
+        width: 45px;
+        height: 45px;
+
+        display: grid;
+
+        place-items: center;
+
+        border-radius: 13px;
+
+        font-size: 19px;
+    }
+
+
+    .gate-summary-total .gate-summary-icon {
+
+        color: #174b8f;
+
+        background: #edf4ff;
+    }
+
+
+    .gate-summary-active .gate-summary-icon {
+
+        color: #15803d;
+
+        background: #ecfdf3;
+    }
+
+
+    .gate-summary-inactive .gate-summary-icon {
+
+        color: #dc2626;
+
+        background: #fff0f0;
+    }
+
+
+    /* ==========================================
+       MAIN PANEL
+    ========================================== */
+
+    .gate-panel {
+
+        border:
+            1px solid var(--gate-border);
+
+        border-radius: 19px;
+
+        background: white;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 8px 28px rgba(16,24,40,.05);
+    }
+
+
+    .gate-panel-header {
+
+        display: flex;
+
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 18px 21px;
+
+        border-bottom:
+            1px solid #edf0f4;
+    }
+
+
+    .gate-panel-title {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 11px;
+    }
+
+
+    .gate-panel-icon {
+
+        width: 40px;
+        height: 40px;
+
+        display: grid;
+
+        place-items: center;
+
+        border-radius: 11px;
+
+        background: #eef4ff;
+
+        color: #174b8f;
+
+        font-size: 18px;
+    }
+
+
+    .gate-panel-title h4 {
+
+        margin: 0;
+
+        color: #1f2f46;
+
+        font-size: 15px;
+
+        font-weight: 750;
+    }
+
+
+    .gate-panel-title p {
+
+        margin: 3px 0 0;
+
+        color: #98a2b3;
+
+        font-size: 10px;
+    }
+
+
+    .gate-panel-count {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        padding: 8px 12px;
+
+        border-radius: 999px;
+
+        color: #174b8f;
+
+        background: #edf4ff;
+
+        border:
+            1px solid #dce8f7;
+
+        font-size: 11px;
+
+        font-weight: 700;
+    }
+
+
+    .gate-panel-body {
+
+        padding: 21px;
+    }
+
+
+    /* ==========================================
+       GRID
+    ========================================== */
+
+    .gate-grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 16px;
+    }
+
+
+    /* ==========================================
+       GATE CARD
+    ========================================== */
+
+    .gate-card {
+
+        position: relative;
+
+        overflow: hidden;
+
+        padding: 18px;
+
+        border:
+            1px solid #e5eaf1;
+
+        border-radius: 16px;
+
+        background: white;
+
+        box-shadow:
+            0 5px 18px rgba(16,24,40,.04);
+
+        transition:
+            transform .2s ease,
+            box-shadow .2s ease,
+            border-color .2s ease;
+    }
+
+
+    .gate-card:hover {
+
+        transform:
+            translateY(-3px);
+
+        border-color:
+            #cbd9ec;
+
+        box-shadow:
+            0 12px 28px rgba(16,24,40,.08);
+    }
+
+
+    .gate-card::after {
+
+        content: "";
+
+        position: absolute;
+
+        width: 100px;
+        height: 100px;
+
+        right: -45px;
+        bottom: -45px;
+
+        border-radius: 50%;
+
+        background: #2563eb;
+
+        opacity: .035;
+    }
+
+
+    /* ==========================================
+       CARD HEADER
+    ========================================== */
+
+    .gate-card-header {
+
+        position: relative;
+
+        z-index: 2;
+
+        display: flex;
+
+        align-items: flex-start;
+        justify-content: space-between;
+
+        gap: 12px;
+
+        margin-bottom: 17px;
+    }
+
+
+    .gate-card-left {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 11px;
+
+        min-width: 0;
+    }
+
+
+    .gate-card-icon {
+
+        width: 44px;
+        height: 44px;
+
+        display: grid;
+
+        place-items: center;
+
+        flex: 0 0 44px;
+
+        border-radius: 12px;
+
+        color: #174b8f;
+
+        background: #edf4ff;
+
+        font-size: 19px;
+    }
+
+
+    .gate-card-title {
+
+        min-width: 0;
+    }
+
+
+    .gate-card-title h5 {
+
+        margin: 0 0 5px;
+
+        color: #1f2f46;
+
+        font-size: 14px;
+
+        font-weight: 750;
+    }
+
+
+    .gate-card-title p {
+
+        margin: 0;
+
+        color: #98a2b3;
+
+        font-size: 10px;
+
+        line-height: 1.5;
+    }
+
+
+    /* ==========================================
+       STATUS
+    ========================================== */
+
+    .gate-status {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 5px;
+
+        padding: 5px 8px;
+
+        border-radius: 999px;
+
+        font-size: 9px;
+
+        font-weight: 750;
+
+        white-space: nowrap;
+    }
+
+
+    .gate-status::before {
+
+        content: "";
+
+        width: 6px;
+        height: 6px;
+
+        border-radius: 50%;
+
+        background: currentColor;
+    }
+
+
+    .gate-status-active {
+
+        color: #16803b;
+
+        background: #edf9f0;
+    }
+
+
+    .gate-status-inactive {
+
+        color: #c73737;
+
+        background: #fff0f0;
+    }
+
+
+    /* ==========================================
+       LOCATION INFO
+    ========================================== */
+
+    .gate-location {
+
+        position: relative;
+
+        z-index: 2;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 8px;
+
+        margin-bottom: 15px;
+    }
+
+
+    .gate-location-box {
+
+        padding: 10px 11px;
+
+        border-radius: 10px;
+
+        background: #f8fafc;
+
+        border:
+            1px solid #edf1f5;
+    }
+
+
+    .gate-location-label {
+
+        margin-bottom: 4px;
+
+        color: #98a2b3;
+
+        font-size: 8px;
+
+        font-weight: 750;
+
+        text-transform: uppercase;
+    }
+
+
+    .gate-location-value {
+
+        color: #344054;
+
+        font-size: 10px;
+
+        font-weight: 700;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+    }
+
+
+    /* ==========================================
+       HEALTH METRICS
+    ========================================== */
+
+    .gate-metrics {
+
+        position: relative;
+
+        z-index: 2;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 8px;
+
+        margin-top: 14px;
+    }
+
+
+    .gate-metric-box {
+
+        padding: 12px 6px;
+
+        border-radius: 10px;
+
+        text-align: center;
+    }
+
+
+    .gate-metric-label {
+
+        margin-bottom: 5px;
+
+        font-size: 8px;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+    }
+
+
+    .gate-metric-value {
+
+        font-size: 15px;
+
+        font-weight: 800;
+    }
+
+
+    .gate-uptime {
+
+        color: #15803d;
+
+        background: #ecfdf3;
+    }
+
+
+    .gate-availability {
+
+        color: #2563eb;
+
+        background: #eef4ff;
+    }
+
+
+    .gate-downtime {
+
+        color: #dc2626;
+
+        background: #fff1f1;
+    }
+
+
+    /* ==========================================
+       PROGRESS
+    ========================================== */
+
+    .gate-progress-section {
+
+        position: relative;
+
+        z-index: 2;
+
+        margin-top: 17px;
+    }
+
+
+    .gate-progress-title {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        gap: 10px;
+
+        margin-bottom: 7px;
+
+        color: #667085;
+
+        font-size: 9.5px;
+
+        font-weight: 650;
+    }
+
+
+    .gate-progress {
+
+        height: 7px;
+
+        overflow: hidden;
+
+        border-radius: 999px;
+
+        background: #edf1f6;
+    }
+
+
+    .gate-progress-bar {
+
+        height: 100%;
+
+        border-radius: 999px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #16803b,
+                #22c55e
+            );
+    }
+
+
+    /* ==========================================
+       FOOTER
+    ========================================== */
+
+    .gate-card-footer {
+
+        position: relative;
+
+        z-index: 2;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 10px;
+
+        margin-top: 17px;
+
+        padding-top: 14px;
+
+        border-top:
+            1px solid #edf0f4;
+    }
+
+
+    .gate-card-footer small {
+
+        color: #98a2b3;
+
+        font-size: 9px;
+    }
+
+
+    .gate-details-btn {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 5px;
+
+        color: #174b8f;
+
+        font-size: 10px;
+
+        font-weight: 700;
+
+        text-decoration: none;
+    }
+
+
+    .gate-details-btn:hover {
+
+        color: #0f2f5f;
+    }
+
+
+    /* ==========================================
+       EMPTY
+    ========================================== */
+
+    .no-gates {
+
+        grid-column:
+            1 / -1;
+
+        padding:
+            55px 20px;
+
+        text-align: center;
+
+        color: #98a2b3;
+    }
+
+
+    .no-gates i {
+
+        display: block;
+
+        margin-bottom: 10px;
+
+        color: #cbd5e1;
+
+        font-size: 38px;
+    }
+
+
+    .no-gates strong {
+
+        display: block;
+
+        color: #667085;
+
+        margin-bottom: 5px;
+    }
+
+
+    .no-gates p {
+
+        margin: 0;
+
+        font-size: 11px;
+    }
+
+
+    /* ==========================================
+       RESPONSIVE
+    ========================================== */
+
+    @media(max-width:1199px) {
+
+        .gate-grid {
+
+            grid-template-columns:
+                repeat(2, minmax(0,1fr));
+        }
+
+    }
+
+
+    @media(max-width:767px) {
+
+        .gate-health-hero {
+
+            padding: 22px 20px;
+
+            border-radius: 16px;
+        }
+
+
+        .gate-health-hero-content {
+
+            flex-direction: column;
+
+            align-items: flex-start;
+        }
+
+
+        .gate-summary-grid {
+
+            grid-template-columns: 1fr;
+        }
+
+
+        .gate-grid {
+
+            grid-template-columns: 1fr;
+        }
+
+
+        .gate-panel-header {
+
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+
+        .gate-panel-body {
+
+            padding: 15px;
+        }
+
+    }
+
+
+    @media(max-width:450px) {
+
+        .gate-metrics {
+
+            grid-template-columns: 1fr;
+        }
+
+
+        .gate-location {
+
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+
+
+
+<div class="gate-health-page">
+
+
+    <!-- ==========================================
+         HERO
+    =========================================== -->
+
+    <div class="gate-health-hero">
+
+        <div class="gate-health-hero-content">
+
+
+            <div class="gate-health-hero-left">
+
+
+                <div class="gate-health-hero-icon">
+
+                    <i class="bi bi-signpost-2-fill"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Checkgate Health Monitoring
+                    </h3>
+
+                    <p>
+                        Monitor checkgate uptime, availability,
+                        downtime and operational health.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="total-gate-pill">
+
+                <i class="bi bi-hdd-network"></i>
+
+                {{ total_gates }}
+
+                Total Checkgates
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         SUMMARY CARDS
+    =========================================== -->
+
+    <div class="gate-summary-grid">
+
+
+        <!-- TOTAL -->
+
+        <div class="
+            gate-summary-card
+            gate-summary-total
+        ">
+
+            <div class="gate-summary-content">
+
+
+                <div>
+
+                    <div class="gate-summary-label">
+
+                        Total Checkgates
+
+                    </div>
+
+
+                    <h3 class="gate-summary-value">
+
+                        {{ total_gates }}
+
+                    </h3>
+
+                </div>
+
+
+                <div class="gate-summary-icon">
+
+                    <i class="bi bi-signpost-2-fill"></i>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ACTIVE -->
+
+        <div class="
+            gate-summary-card
+            gate-summary-active
+        ">
+
+            <div class="gate-summary-content">
+
+
+                <div>
+
+                    <div class="gate-summary-label">
+
+                        Active Checkgates
+
+                    </div>
+
+
+                    <h3 class="gate-summary-value">
+
+                        {{ active_gates }}
+
+                    </h3>
+
+                </div>
+
+
+                <div class="gate-summary-icon">
+
+                    <i class="bi bi-check-circle-fill"></i>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- INACTIVE -->
+
+        <div class="
+            gate-summary-card
+            gate-summary-inactive
+        ">
+
+            <div class="gate-summary-content">
+
+
+                <div>
+
+                    <div class="gate-summary-label">
+
+                        Inactive Checkgates
+
+                    </div>
+
+
+                    <h3 class="gate-summary-value">
+
+                        {{ inactive_gates }}
+
+                    </h3>
+
+                </div>
+
+
+                <div class="gate-summary-icon">
+
+                    <i class="bi bi-x-circle-fill"></i>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ==========================================
+         GATE PANEL
+    =========================================== -->
+
+    <div class="gate-panel">
+
+
+        <!-- HEADER -->
+
+        <div class="gate-panel-header">
+
+
+            <div class="gate-panel-title">
+
+
+                <div class="gate-panel-icon">
+
+                    <i class="bi bi-router-fill"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h4>
+                        Checkgate Monitoring
+                    </h4>
+
+                    <p>
+                        Individual checkgate operational health
+                        and availability status.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="gate-panel-count">
+
+                <i class="bi bi-signpost-split-fill"></i>
+
+                {{ total_gates }}
+
+                Checkgates
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- BODY -->
+
+        <div class="gate-panel-body">
+
+
+            <div class="gate-grid">
+
+
+                {% for gate in gates %}
+
+
+                <!-- ==========================================
+                     SINGLE GATE CARD
+                =========================================== -->
+
+                <div class="gate-card">
+
+
+                    <!-- CARD HEADER -->
+
+                    <div class="gate-card-header">
+
+
+                        <div class="gate-card-left">
+
+
+                            <div class="gate-card-icon">
+
+                                <i class="bi bi-signpost-2-fill"></i>
+
+                            </div>
+
+
+                            <div class="gate-card-title">
+
+
+                                <h5>
+
+                                    {{ gate.gate_name }}
+
+                                </h5>
+
+
+                                <p>
+
+                                    Checkgate ID:
+                                    {{ gate.id }}
+
+                                </p>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- STATUS -->
+
+                        {% if gate.is_active %}
+
+
+                            <span class="
+                                gate-status
+                                gate-status-active
+                            ">
+
+                                Active
+
+                            </span>
+
+
+                        {% else %}
+
+
+                            <span class="
+                                gate-status
+                                gate-status-inactive
+                            ">
+
+                                Inactive
+
+                            </span>
+
+
+                        {% endif %}
+
+
+                    </div>
+
+
+
+                    <!-- ======================================
+                         LOCATION DETAILS
+                    ======================================= -->
+
+                    <div class="gate-location">
+
+
+                        <div class="gate-location-box">
+
+
+                            <div class="gate-location-label">
+
+                                State
+
+                            </div>
+
+
+                            <div class="gate-location-value">
+
+                                {{ gate.StateMaster.name }}
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div class="gate-location-box">
+
+
+                            <div class="gate-location-label">
+
+                                District
+
+                            </div>
+
+
+                            <div class="gate-location-value">
+
+                                {{ gate.district.name }}
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ======================================
+                         HEALTH METRICS
+                    ======================================= -->
+
+                    <div class="gate-metrics">
+
+
+                        <!-- UPTIME -->
+
+                        <div class="
+                            gate-metric-box
+                            gate-uptime
+                        ">
+
+
+                            <div class="gate-metric-label">
+
+                                Uptime
+
+                            </div>
+
+
+                            <div class="gate-metric-value">
+
+                                {% if gate.uptime_percentage %}
+
+                                    {{ gate.uptime_percentage }}%
+
+                                {% else %}
+
+                                    --
+
+                                {% endif %}
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- AVAILABILITY -->
+
+                        <div class="
+                            gate-metric-box
+                            gate-availability
+                        ">
+
+
+                            <div class="gate-metric-label">
+
+                                Availability
+
+                            </div>
+
+
+                            <div class="gate-metric-value">
+
+                                {% if gate.availability_percentage %}
+
+                                    {{ gate.availability_percentage }}%
+
+                                {% else %}
+
+                                    --
+
+                                {% endif %}
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- DOWNTIME -->
+
+                        <div class="
+                            gate-metric-box
+                            gate-downtime
+                        ">
+
+
+                            <div class="gate-metric-label">
+
+                                Downtime
+
+                            </div>
+
+
+                            <div class="gate-metric-value">
+
+                                {% if gate.downtime_percentage %}
+
+                                    {{ gate.downtime_percentage }}%
+
+                                {% else %}
+
+                                    --
+
+                                {% endif %}
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ======================================
+                         AVAILABILITY PROGRESS
+                    ======================================= -->
+
+                    <div class="gate-progress-section">
+
+
+                        <div class="gate-progress-title">
+
+
+                            <span>
+
+                                Overall Availability
+
+                            </span>
+
+
+                            <span>
+
+                                {% if gate.availability_percentage %}
+
+                                    {{ gate.availability_percentage }}%
+
+                                {% else %}
+
+                                    0%
+
+                                {% endif %}
+
+                            </span>
+
+
+                        </div>
+
+
+
+                        <div class="gate-progress">
+
+
+                            <div
+                                class="gate-progress-bar"
+
+                                {% if gate.availability_percentage %}
+
+                                    style="
+                                        width:
+                                        {{ gate.availability_percentage }}%;
+                                    "
+
+                                {% else %}
+
+                                    style="width:0%;"
+
+                                {% endif %}
+                            >
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ======================================
+                         FOOTER
+                    ======================================= -->
+
+                    <div class="gate-card-footer">
+
+
+                        <small>
+
+
+                            {% if gate.is_active %}
+
+                                <i class="bi bi-check-circle"></i>
+
+                                Checkgate operational
+
+
+                            {% else %}
+
+
+                                <i class="bi bi-exclamation-circle"></i>
+
+                                Checkgate inactive
+
+
+                            {% endif %}
+
+
+                        </small>
+
+
+
+                        <a
+                            href="#"
+                            class="gate-details-btn"
+                        >
+
+                            View Details
+
+                            <i class="bi bi-arrow-right"></i>
+
+                        </a>
+
+
+                    </div>
+
+
+                </div>
+
+
+                {% empty %}
+
+
+                    <!-- ======================================
+                         NO DATA
+                    ======================================= -->
+
+                    <div class="no-gates">
+
+
+                        <i class="bi bi-signpost-2"></i>
+
+
+                        <strong>
+
+                            No Checkgates Found
+
+                        </strong>
+
+
+                        <p>
+
+                            No checkgate records are currently
+                            available in Gate Master.
+
+                        </p>
+
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

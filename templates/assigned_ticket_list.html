@@ -1,0 +1,2552 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    /* =====================================================
+       PAGE HEADER
+    ====================================================== */
+
+    .page-heading {
+        margin-bottom: 20px;
+    }
+
+    .page-heading h3 {
+        margin-bottom: 4px;
+        color: #25396f;
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .page-heading p {
+        margin-bottom: 0;
+        font-size: 13px;
+    }
+
+
+    /* =====================================================
+       CARD
+    ====================================================== */
+
+    .master-card {
+        border: 1px solid #edf0f5;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(37, 57, 111, .05);
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .master-card .card-header {
+        padding: 17px 20px;
+        background: #fff;
+        border-bottom: 1px solid #edf0f5;
+    }
+
+    .master-card .card-header h4 {
+        margin: 0;
+        color: #25396f;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .master-card .card-body {
+        padding: 20px;
+    }
+
+
+    /* =====================================================
+       COUNT BADGE
+    ====================================================== */
+
+    .count-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 11px;
+        border-radius: 20px;
+        background: #eef2ff;
+        color: #435ebe;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+
+    /* =====================================================
+       TABLE
+    ====================================================== */
+
+    .data-table-wrap {
+        width: 100%;
+        overflow-x: auto;
+        border: 1px solid #edf0f5;
+        border-radius: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .data-table {
+        width: 100%;
+        min-width: 2050px;
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .data-table thead th {
+        padding: 12px 14px;
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        border-bottom: 1px solid #e8edf4;
+        white-space: nowrap;
+    }
+
+    .data-table tbody td {
+        padding: 13px 14px;
+        color: #475569;
+        font-size: 12.5px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    .data-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .data-table tbody tr:hover td {
+        background: #fafbff;
+    }
+
+
+    /* =====================================================
+       TICKET
+    ====================================================== */
+
+    .ticket-no {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #435ebe;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .ticket-subject {
+        margin: 0;
+        max-width: 220px;
+        color: #334155;
+        font-size: 12.5px;
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* =====================================================
+       BADGES
+    ====================================================== */
+
+    .type-badge,
+    .status-badge,
+    .priority-badge,
+    .response-time-badge,
+    .resolution-time-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .type-badge {
+        border-radius: 6px;
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+
+    /* =====================================================
+       MODULE / USER
+    ====================================================== */
+
+    .module-name-wrap,
+    .user-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 135px;
+    }
+
+    .module-icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: #eef2ff;
+        color: #435ebe;
+        font-size: 14px;
+    }
+
+    .module-name,
+    .user-name {
+        margin: 0;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .user-avatar {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #eef2ff;
+        color: #435ebe;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+
+    /* =====================================================
+       PRIORITY
+    ====================================================== */
+
+    .priority-low {
+        color: #198754;
+        background: #ecfdf3;
+    }
+
+    .priority-medium {
+        color: #d97706;
+        background: #fff7ed;
+    }
+
+    .priority-high {
+        color: #dc3545;
+        background: #fff1f2;
+    }
+
+    .priority-critical {
+        color: #fff;
+        background: #dc3545;
+    }
+
+    .priority-default {
+        color: #475569;
+        background: #f1f5f9;
+    }
+
+
+    /* =====================================================
+       STATUS
+    ====================================================== */
+
+    .status-open {
+        color: #435ebe;
+        background: #eef2ff;
+    }
+
+    .status-in-progress {
+        color: #0369a1;
+        background: #e0f2fe;
+    }
+
+    .status-pending {
+        color: #d97706;
+        background: #fff7ed;
+    }
+
+    .status-approved {
+        color: #198754;
+        background: #ecfdf3;
+    }
+
+    .status-rejected {
+        color: #dc3545;
+        background: #fff1f2;
+    }
+
+    .status-closed {
+        color: #475569;
+        background: #e2e8f0;
+    }
+
+    .status-default {
+        color: #475569;
+        background: #f1f5f9;
+    }
+
+
+    /* =====================================================
+       RESPONSE / RESOLUTION TIME
+    ====================================================== */
+
+    .response-time-badge {
+        background: #eef2ff;
+        color: #435ebe;
+    }
+
+    .response-time-pending {
+        background: #fff7ed;
+        color: #d97706;
+    }
+
+    .resolution-time-badge {
+        background: #ecfdf3;
+        color: #198754;
+    }
+
+    .resolution-time-pending {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+
+
+    /* =====================================================
+       ACTION BUTTONS
+    ====================================================== */
+
+    .ticket-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+    }
+
+    .ticket-actions form {
+        margin: 0;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        min-height: 32px;
+        padding: 7px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1;
+        border-radius: 7px;
+        border: 1px solid transparent;
+        text-decoration: none;
+        transition: all .2s ease;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .action-btn-view {
+        color: #435ebe;
+        border-color: rgba(67,94,190,.25);
+        background: rgba(67,94,190,.06);
+    }
+
+    .action-btn-view:hover {
+        color: #fff;
+        background: #435ebe;
+        border-color: #435ebe;
+    }
+
+    .action-btn-accept {
+        color: #198754;
+        border-color: rgba(25,135,84,.25);
+        background: #ecfdf3;
+    }
+
+    .action-btn-accept:hover {
+        color: #fff;
+        background: #198754;
+        border-color: #198754;
+    }
+
+    .action-btn-reject {
+        color: #dc3545;
+        border-color: rgba(220,53,69,.25);
+        background: #fff1f2;
+    }
+
+    .action-btn-reject:hover {
+        color: #fff;
+        background: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .action-btn-chat {
+        color: #0f766e;
+        border-color: #99f6e4;
+        background: #f0fdfa;
+    }
+
+    .action-btn-chat:hover {
+        color: #fff;
+        background: #0f766e;
+        border-color: #0f766e;
+    }
+
+    .action-btn-close-ticket {
+        color: #b42318;
+        border-color: #fecaca;
+        background: #fff7f7;
+    }
+
+    .action-btn-close-ticket:hover {
+        color: #fff;
+        background: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .action-btn-history {
+        color: #475569;
+        border-color: #cbd5e1;
+        background: #f8fafc;
+    }
+
+    .action-btn-history:hover {
+        color: #fff;
+        background: #64748b;
+        border-color: #64748b;
+    }
+
+
+    /* =====================================================
+       DATE
+    ====================================================== */
+
+    .date-main {
+        display: block;
+        color: #475569;
+        font-size: 11.5px;
+        font-weight: 600;
+    }
+
+    .date-time {
+        display: block;
+        margin-top: 2px;
+        color: #94a3b8;
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+       MODAL
+    ====================================================== */
+
+    .ticket-modal .modal-content,
+    .reject-modal .modal-content,
+    .close-ticket-modal .modal-content {
+        border: none;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 14px 45px rgba(15,23,42,.18);
+    }
+
+    .ticket-modal .modal-header,
+    .reject-modal .modal-header,
+    .close-ticket-modal .modal-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #edf0f5;
+    }
+
+    .ticket-modal .modal-title,
+    .reject-modal .modal-title,
+    .close-ticket-modal .modal-title {
+        margin: 0;
+        color: #25396f;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .ticket-modal .modal-body,
+    .reject-modal .modal-body,
+    .close-ticket-modal .modal-body {
+        padding: 20px;
+    }
+
+    .detail-box {
+        height: 100%;
+        padding: 12px 14px;
+        border: 1px solid #edf0f5;
+        border-radius: 8px;
+        background: #f8fafc;
+    }
+
+    .detail-label {
+        display: block;
+        margin-bottom: 5px;
+        color: #94a3b8;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+    }
+
+    .detail-value {
+        margin: 0;
+        color: #334155;
+        font-size: 12.5px;
+        font-weight: 600;
+        word-break: break-word;
+    }
+
+    .description-box {
+        padding: 14px;
+        border: 1px solid #edf0f5;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #475569;
+        font-size: 12.5px;
+        line-height: 1.7;
+    }
+
+    .rejection-reason-box {
+        padding: 14px;
+        border: 1px solid #fecdd3;
+        border-radius: 8px;
+        background: #fff1f2;
+        color: #9f1239;
+        font-size: 12.5px;
+        line-height: 1.7;
+    }
+
+    .closed-info-box {
+        padding: 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #475569;
+        font-size: 12.5px;
+        line-height: 1.7;
+    }
+
+
+    /* =====================================================
+       CLOSE MODAL
+    ====================================================== */
+
+    .close-ticket-modal .modal-header {
+        background: #fff7f7;
+        border-bottom-color: #fee2e2;
+    }
+
+    .close-ticket-modal .modal-title {
+        color: #b42318;
+    }
+
+    .close-ticket-warning {
+        display: flex;
+        gap: 10px;
+        padding: 12px 14px;
+        margin-bottom: 16px;
+        border: 1px solid #fed7aa;
+        border-radius: 9px;
+        background: #fff7ed;
+        color: #9a3412;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .close-ticket-modal textarea,
+    .reject-modal textarea {
+        min-height: 120px;
+        border: 1px solid #dbe2ea;
+        border-radius: 9px;
+        font-size: 12.5px;
+        resize: vertical;
+    }
+
+
+    /* =====================================================
+       EMPTY
+    ====================================================== */
+
+    .table-empty {
+        padding: 55px 15px !important;
+        text-align: center;
+    }
+
+    .table-empty i {
+        display: block;
+        margin-bottom: 10px;
+        color: #cbd5e1;
+        font-size: 40px;
+    }
+
+    .table-empty h6 {
+        margin-bottom: 4px;
+        color: #475569;
+        font-weight: 700;
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ====================================================== */
+
+    @media (max-width: 576px) {
+
+        .master-card .card-body {
+            padding: 12px;
+        }
+
+        .page-heading h3 {
+            font-size: 19px;
+        }
+
+    }
+
+</style>
+
+
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
+
+<div class="page-heading">
+
+    <h3>
+        Assigned Tickets
+    </h3>
+
+    <p class="text-muted">
+        Accept tickets, communicate with the reporter and close resolved tickets.
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     DJANGO MESSAGES
+====================================================== -->
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div class="
+            alert
+            {% if message.tags == 'success' %}
+                alert-success
+            {% elif message.tags == 'warning' %}
+                alert-warning
+            {% elif message.tags == 'error' %}
+                alert-danger
+            {% else %}
+                alert-info
+            {% endif %}
+            alert-dismissible
+            fade
+            show
+        ">
+
+            {{ message }}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+
+<div class="page-content">
+
+    <section class="row">
+
+        <div class="col-12">
+
+            <div class="card master-card">
+
+
+                <!-- =====================================================
+                     HEADER
+                ====================================================== -->
+
+                <div class="card-header">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <h4>
+                            <i class="bi bi-person-check me-2"></i>
+                            My Assigned Tickets
+                        </h4>
+
+                        <span class="count-badge">
+
+                            <i class="bi bi-ticket-perforated"></i>
+
+                            Total: {{ tickets|length }}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================================================
+                     BODY
+                ====================================================== -->
+
+                <div class="card-body">
+
+                    <div class="data-table-wrap">
+
+                        <table class="data-table">
+
+
+                            <!-- =================================================
+                                 TABLE HEADER
+                            ================================================== -->
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>#</th>
+
+                                    <th>Ticket No.</th>
+
+                                    <th>Subject</th>
+
+                                    <th>Type</th>
+
+                                    <th>Module</th>
+
+                                    <th>Priority</th>
+
+                                    <th>Raised By</th>
+
+                                    <th>Ticket Status</th>
+
+                                    <th>Assignment</th>
+
+                                    <th>Created</th>
+
+                                    <th>Response Time</th>
+
+                                    <!-- NEW -->
+                                    <th>Resolution Time</th>
+
+                                    <th>Chat</th>
+
+                                    <th>Action</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                            {% for ticket in tickets %}
+
+
+                                <tr>
+
+
+                                    <!-- =================================================
+                                         SERIAL
+                                    ================================================== -->
+
+                                    <td>
+
+                                        {{ forloop.counter }}
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         TICKET NUMBER
+                                    ================================================== -->
+
+                                    <td>
+
+                                        <span class="ticket-no">
+
+                                            <i class="bi bi-ticket-perforated"></i>
+
+                                            {{ ticket.ticket_no }}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         SUBJECT
+                                    ================================================== -->
+
+                                    <td>
+
+                                        <p
+                                            class="ticket-subject"
+                                            title="{{ ticket.subject }}"
+                                        >
+
+                                            {{ ticket.subject }}
+
+                                        </p>
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         TYPE
+                                    ================================================== -->
+
+                                    <td>
+
+                                        <span class="type-badge">
+
+
+                                            {% if ticket.ticket_type.name|lower == "software" %}
+
+                                                <i class="bi bi-code-square"></i>
+
+                                            {% elif ticket.ticket_type.name|lower == "hardware" %}
+
+                                                <i class="bi bi-cpu"></i>
+
+                                            {% else %}
+
+                                                <i class="bi bi-ticket"></i>
+
+                                            {% endif %}
+
+
+                                            {{ ticket.ticket_type.name }}
+
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         MODULE
+                                    ================================================== -->
+
+                                    <td>
+
+                                        <div class="module-name-wrap">
+
+
+                                            <div class="module-icon">
+
+
+                                                {% if ticket.software_module %}
+
+                                                    <i class="bi bi-code-square"></i>
+
+                                                {% elif ticket.hardware_module %}
+
+                                                    <i class="bi bi-cpu"></i>
+
+                                                {% else %}
+
+                                                    <i class="bi bi-dash"></i>
+
+                                                {% endif %}
+
+
+                                            </div>
+
+
+                                            <p class="module-name">
+
+
+                                                {% if ticket.software_module %}
+
+                                                    {{ ticket.software_module.moduleName }}
+
+                                                {% elif ticket.hardware_module %}
+
+                                                    {{ ticket.hardware_module.moduleName }}
+
+                                                {% else %}
+
+                                                    N/A
+
+                                                {% endif %}
+
+
+                                            </p>
+
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         PRIORITY
+                                    ================================================== -->
+
+                                    <td>
+
+
+                                        {% with priority=ticket.priority.name|lower %}
+
+
+                                            {% if priority == "low" %}
+
+                                                <span class="priority-badge priority-low">
+
+                                                    <i class="bi bi-arrow-down-circle"></i>
+
+                                                    {{ ticket.priority.name }}
+
+                                                </span>
+
+
+                                            {% elif priority == "medium" %}
+
+                                                <span class="priority-badge priority-medium">
+
+                                                    <i class="bi bi-dash-circle"></i>
+
+                                                    {{ ticket.priority.name }}
+
+                                                </span>
+
+
+                                            {% elif priority == "high" %}
+
+                                                <span class="priority-badge priority-high">
+
+                                                    <i class="bi bi-arrow-up-circle"></i>
+
+                                                    {{ ticket.priority.name }}
+
+                                                </span>
+
+
+                                            {% elif priority == "critical" %}
+
+                                                <span class="priority-badge priority-critical">
+
+                                                    <i class="bi bi-exclamation-triangle"></i>
+
+                                                    {{ ticket.priority.name }}
+
+                                                </span>
+
+
+                                            {% else %}
+
+                                                <span class="priority-badge priority-default">
+
+                                                    {{ ticket.priority.name }}
+
+                                                </span>
+
+                                            {% endif %}
+
+
+                                        {% endwith %}
+
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         RAISED BY
+                                    ================================================== -->
+
+                                    <td>
+
+                                        <div class="user-wrap">
+
+
+                                            <div class="user-avatar">
+
+                                                {{ ticket.created_by.name|slice:":1"|upper }}
+
+                                            </div>
+
+
+                                            <p class="user-name">
+
+                                                {{ ticket.created_by.name }}
+
+                                            </p>
+
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         TICKET STATUS
+                                    ================================================== -->
+
+                                    <td>
+
+
+                                        {% with current_status=ticket.status|lower %}
+
+
+                                            {% if current_status == "open" %}
+
+                                                <span class="status-badge status-open">
+
+                                                    <i class="bi bi-folder2-open"></i>
+
+                                                    OPEN
+
+                                                </span>
+
+
+                                            {% elif current_status == "in_progress" %}
+
+                                                <span class="status-badge status-in-progress">
+
+                                                    <i class="bi bi-arrow-repeat"></i>
+
+                                                    IN PROGRESS
+
+                                                </span>
+
+
+                                            {% elif current_status == "closed" %}
+
+                                                <span class="status-badge status-closed">
+
+                                                    <i class="bi bi-lock-fill"></i>
+
+                                                    CLOSED
+
+                                                </span>
+
+
+                                            {% elif current_status == "rejected" %}
+
+                                                <span class="status-badge status-rejected">
+
+                                                    <i class="bi bi-x-circle-fill"></i>
+
+                                                    REJECTED
+
+                                                </span>
+
+
+                                            {% else %}
+
+                                                <span class="status-badge status-default">
+
+                                                    {{ ticket.status }}
+
+                                                </span>
+
+                                            {% endif %}
+
+
+                                        {% endwith %}
+
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         ASSIGNMENT STATUS
+                                    ================================================== -->
+
+                                    <td>
+
+
+                                        {% if ticket.assignment_status == "PENDING" %}
+
+                                            <span class="status-badge status-pending">
+
+                                                <i class="bi bi-clock-history"></i>
+
+                                                Pending
+
+                                            </span>
+
+
+                                        {% elif ticket.assignment_status == "APPROVED" %}
+
+                                            <span class="status-badge status-approved">
+
+                                                <i class="bi bi-check-circle-fill"></i>
+
+                                                Accepted
+
+                                            </span>
+
+
+                                        {% elif ticket.assignment_status == "REJECTED" %}
+
+                                            <span class="status-badge status-rejected">
+
+                                                <i class="bi bi-x-circle-fill"></i>
+
+                                                Rejected
+
+                                            </span>
+
+
+                                        {% else %}
+
+                                            <span class="status-badge status-default">
+
+                                                {{ ticket.assignment_status }}
+
+                                            </span>
+
+                                        {% endif %}
+
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         CREATED AT
+                                    ================================================== -->
+
+                                    <td>
+
+                                        <span class="date-main">
+
+                                            {{ ticket.created_at|date:"d M Y" }}
+
+                                        </span>
+
+
+                                        <span class="date-time">
+
+                                            {{ ticket.created_at|date:"h:i A" }}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         RESPONSE TIME
+                                    ================================================== -->
+
+                                    <td>
+
+
+                                        {% if ticket.assignment_responded_at %}
+
+                                            <span class="response-time-badge">
+
+                                                <i class="bi bi-stopwatch"></i>
+
+                                                {{ ticket.formatted_response_time }}
+
+                                            </span>
+
+
+                                        {% else %}
+
+                                            <span class="response-time-badge response-time-pending">
+
+                                                <i class="bi bi-hourglass-split"></i>
+
+                                                Pending
+
+                                            </span>
+
+                                        {% endif %}
+
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         RESOLUTION TIME
+                                         DATABASE VALUE
+                                    ================================================== -->
+
+                                    <td>
+
+
+                                        {% if ticket.resolution_time %}
+
+                                            <span class="resolution-time-badge">
+
+                                                <i class="bi bi-clock-history"></i>
+
+                                                {{ ticket.resolution_time }}
+
+                                            </span>
+
+
+                                        {% else %}
+
+                                            <span class="
+                                                resolution-time-badge
+                                                resolution-time-pending
+                                            ">
+
+                                                <i class="bi bi-hourglass-split"></i>
+
+                                                Pending
+
+                                            </span>
+
+                                        {% endif %}
+
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         CHAT
+                                    ================================================== -->
+
+                                    <td>
+
+
+                                        {% if ticket.assignment_status == "APPROVED" %}
+
+                                            {% if ticket.status == "CLOSED" %}
+                                                <a
+                                                    href="{% url 'ticket_chat' ticket.id %}"
+                                                    class="action-btn action-btn-history"
+                                                >
+
+                                                    <i class="bi bi-clock-history"></i>
+
+                                                    Chat History
+
+                                                </a>
+
+
+                                            {% else %}
+
+
+                                                <a
+                                                    href="{% url 'ticket_chat' ticket.id %}"
+                                                    class="action-btn action-btn-chat"
+                                                >
+
+                                                    <i class="bi bi-chat-dots-fill"></i>
+
+                                                    Open Chat
+
+                                                </a>
+
+
+                                            {% endif %}
+
+
+                                        {% else %}
+
+
+                                            <span class="text-muted small">
+
+
+                                                {% if ticket.assignment_status == "PENDING" %}
+
+                                                    Available after accept
+
+                                                {% else %}
+
+                                                    Not available
+
+                                                {% endif %}
+
+
+                                            </span>
+
+
+                                        {% endif %}
+
+
+                                    </td>
+
+
+                                    <!-- =================================================
+                                         ACTION
+                                    ================================================== -->
+
+                                    <td>
+
+
+                                        <div class="ticket-actions">
+
+
+                                            <!-- VIEW -->
+
+                                            <button
+                                                type="button"
+                                                class="action-btn action-btn-view"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#ticketModal{{ ticket.id }}"
+                                            >
+
+                                                <i class="bi bi-eye"></i>
+
+                                                View
+
+                                            </button>
+
+
+                                            <!-- PENDING -->
+
+                                            {% if ticket.assignment_status == "PENDING" %}
+
+
+                                                <form
+                                                    method="POST"
+                                                    action="{% url 'assigner_action' ticket.id %}"
+                                                    onsubmit="return confirm('Are you sure you want to accept this ticket?');"
+                                                >
+
+                                                    {% csrf_token %}
+
+
+                                                    <input
+                                                        type="hidden"
+                                                        name="action"
+                                                        value="accept"
+                                                    >
+
+
+                                                    <button
+                                                        type="submit"
+                                                        class="action-btn action-btn-accept"
+                                                    >
+
+                                                        <i class="bi bi-check-circle"></i>
+
+                                                        Accept
+
+                                                    </button>
+
+
+                                                </form>
+
+
+                                                <button
+                                                    type="button"
+                                                    class="action-btn action-btn-reject"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#rejectModal{{ ticket.id }}"
+                                                >
+
+                                                    <i class="bi bi-x-circle"></i>
+
+                                                    Reject
+
+                                                </button>
+
+
+                                            <!-- APPROVED -->
+
+                                            {% elif ticket.assignment_status == "APPROVED" %}
+
+
+                                                {% if ticket.status == "CLOSED" %}
+
+
+                                                    <span class="status-badge status-closed">
+
+                                                        <i class="bi bi-lock-fill"></i>
+
+                                                        Closed
+
+                                                    </span>
+
+
+                                                {% else %}
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="action-btn action-btn-close-ticket"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#closeTicketModal{{ ticket.id }}"
+                                                    >
+
+                                                        <i class="bi bi-lock"></i>
+
+                                                        Close Ticket
+
+                                                    </button>
+
+
+                                                {% endif %}
+
+
+                                            <!-- REJECTED -->
+
+                                            {% elif ticket.assignment_status == "REJECTED" %}
+
+
+                                                <span class="status-badge status-rejected">
+
+                                                    <i class="bi bi-x-circle-fill"></i>
+
+                                                    Rejected
+
+                                                </span>
+
+
+                                            {% endif %}
+
+
+                                        </div>
+
+
+                                    </td>
+
+
+                                </tr>
+
+
+                                <!-- =====================================================
+                                     TICKET DETAILS MODAL
+                                ====================================================== -->
+
+                                <div
+                                    class="modal fade ticket-modal"
+                                    id="ticketModal{{ ticket.id }}"
+                                    tabindex="-1"
+                                    aria-hidden="true"
+                                >
+
+
+                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+
+                                        <div class="modal-content">
+
+
+                                            <div class="modal-header">
+
+                                                <h5 class="modal-title">
+
+                                                    <i class="bi bi-ticket-detailed me-2"></i>
+
+                                                    Ticket Details
+
+                                                </h5>
+
+
+                                                <button
+                                                    type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal">
+                                                </button>
+
+                                            </div>
+
+
+                                            <div class="modal-body">
+
+
+                                                <div class="row g-3">
+
+
+                                                    <!-- Ticket Number -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Ticket Number
+                                                            </span>
+
+                                                            <p class="detail-value">
+                                                                {{ ticket.ticket_no }}
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Ticket Type -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Ticket Type
+                                                            </span>
+
+                                                            <p class="detail-value">
+                                                                {{ ticket.ticket_type.name }}
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Priority -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Priority
+                                                            </span>
+
+                                                            <p class="detail-value">
+                                                                {{ ticket.priority.name }}
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Module -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Module
+                                                            </span>
+
+                                                            <p class="detail-value">
+
+
+                                                                {% if ticket.software_module %}
+
+                                                                    {{ ticket.software_module.moduleName }}
+
+                                                                {% elif ticket.hardware_module %}
+
+                                                                    {{ ticket.hardware_module.moduleName }}
+
+                                                                {% else %}
+
+                                                                    N/A
+
+                                                                {% endif %}
+
+
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Raised By -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Raised By
+                                                            </span>
+
+                                                            <p class="detail-value">
+                                                                {{ ticket.created_by.name }}
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Assigned To -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Assigned To
+                                                            </span>
+
+                                                            <p class="detail-value">
+                                                                {{ ticket.assigned_to.name|default:"Not Assigned" }}
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Status -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Ticket Status
+                                                            </span>
+
+                                                            <p class="detail-value">
+                                                                {{ ticket.status }}
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Assignment -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Assignment Status
+                                                            </span>
+
+                                                            <p class="detail-value">
+                                                                {{ ticket.assignment_status }}
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Created -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Created
+                                                            </span>
+
+                                                            <p class="detail-value">
+
+                                                                {{ ticket.created_at|date:"d M Y h:i A" }}
+
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Response Time -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Response Time
+                                                            </span>
+
+                                                            <p class="detail-value">
+
+                                                                {% if ticket.assignment_responded_at %}
+
+                                                                    {{ ticket.formatted_response_time }}
+
+                                                                {% else %}
+
+                                                                    Pending
+
+                                                                {% endif %}
+
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- =====================================
+                                                         RESOLUTION TIME
+                                                         DIRECT FROM DATABASE
+                                                    ====================================== -->
+
+                                                    <div class="col-md-4">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+
+                                                                Resolution Time
+
+                                                            </span>
+
+                                                            <p class="detail-value">
+
+
+                                                                {% if ticket.resolution_time %}
+
+                                                                    {{ ticket.resolution_time }}
+
+                                                                {% else %}
+
+                                                                    Pending
+
+                                                                {% endif %}
+
+
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Subject -->
+
+                                                    <div class="col-12">
+
+                                                        <div class="detail-box">
+
+                                                            <span class="detail-label">
+                                                                Subject
+                                                            </span>
+
+                                                            <p class="detail-value">
+
+                                                                {{ ticket.subject }}
+
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Description -->
+
+                                                    <div class="col-12">
+
+                                                        <span class="detail-label">
+
+                                                            Description
+
+                                                        </span>
+
+
+                                                        <div class="description-box">
+
+                                                            {{ ticket.description|default:"No description available."|linebreaksbr }}
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- Rejection -->
+
+                                                    {% if ticket.assignment_status == "REJECTED" %}
+
+
+                                                        <div class="col-12">
+
+
+                                                            <span class="detail-label">
+
+                                                                Rejection Reason
+
+                                                            </span>
+
+
+                                                            <div class="rejection-reason-box">
+
+                                                                {{ ticket.rejection_reason|default:"No rejection reason available."|linebreaksbr }}
+
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                    {% endif %}
+
+
+                                                    <!-- =================================================
+                                                         CLOSED INFORMATION
+                                                    ================================================== -->
+
+                                                    {% if ticket.status == "CLOSED" %}
+
+
+                                                        <!-- Closed By -->
+
+                                                        <div class="col-md-4">
+
+                                                            <div class="detail-box">
+
+                                                                <span class="detail-label">
+
+                                                                    Closed By
+
+                                                                </span>
+
+
+                                                                <p class="detail-value">
+
+
+                                                                    {% if ticket.closed_by %}
+
+                                                                        {{ ticket.closed_by.name }}
+
+                                                                    {% else %}
+
+                                                                        -
+
+                                                                    {% endif %}
+
+
+                                                                </p>
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <!-- Closed At -->
+
+                                                        <div class="col-md-4">
+
+                                                            <div class="detail-box">
+
+                                                                <span class="detail-label">
+
+                                                                    Closed At
+
+                                                                </span>
+
+
+                                                                <p class="detail-value">
+
+
+                                                                    {% if ticket.closed_at %}
+
+                                                                        {{ ticket.closed_at|date:"d M Y h:i A" }}
+
+                                                                    {% else %}
+
+                                                                        -
+
+                                                                    {% endif %}
+
+
+                                                                </p>
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <!-- Resolution Time -->
+
+                                                        <div class="col-md-4">
+
+                                                            <div class="detail-box">
+
+                                                                <span class="detail-label">
+
+                                                                    Resolution Time
+
+                                                                </span>
+
+
+                                                                <p class="detail-value">
+
+
+                                                                    {% if ticket.resolution_time %}
+
+                                                                        {{ ticket.resolution_time }}
+
+                                                                    {% else %}
+
+                                                                        -
+
+                                                                    {% endif %}
+
+
+                                                                </p>
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <!-- Close Remark -->
+
+                                                        <div class="col-12">
+
+                                                            <span class="detail-label">
+
+                                                                Close Remark
+
+                                                            </span>
+
+
+                                                            <div class="closed-info-box">
+
+                                                                {{ ticket.close_remark|default:"No close remark available."|linebreaksbr }}
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    {% endif %}
+
+
+                                                    <!-- Attachment -->
+
+                                                    {% if ticket.attachment %}
+
+
+                                                        <div class="col-12">
+
+
+                                                            <span class="detail-label">
+
+                                                                Attachment
+
+                                                            </span>
+
+
+                                                            <a
+                                                                href="{{ ticket.attachment.url }}"
+                                                                target="_blank"
+                                                                class="action-btn action-btn-view mt-1"
+                                                            >
+
+                                                                <i class="bi bi-paperclip"></i>
+
+                                                                View Attachment
+
+                                                            </a>
+
+
+                                                        </div>
+
+
+                                                    {% endif %}
+
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                            <!-- =================================================
+                                                 MODAL FOOTER
+                                            ================================================== -->
+
+                                            <div class="modal-footer">
+
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-light-secondary"
+                                                    data-bs-dismiss="modal"
+                                                >
+
+                                                    Close
+
+                                                </button>
+
+
+                                                {% if ticket.assignment_status == "PENDING" %}
+
+
+                                                    <form
+                                                        method="POST"
+                                                        action="{% url 'assigner_action' ticket.id %}"
+                                                        onsubmit="return confirm('Are you sure you want to accept this ticket?');"
+                                                    >
+
+
+                                                        {% csrf_token %}
+
+
+                                                        <input
+                                                            type="hidden"
+                                                            name="action"
+                                                            value="accept"
+                                                        >
+
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-success"
+                                                        >
+
+                                                            <i class="bi bi-check-circle me-1"></i>
+
+                                                            Accept Ticket
+
+                                                        </button>
+
+
+                                                    </form>
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        onclick="switchModal(
+                                                            'ticketModal{{ ticket.id }}',
+                                                            'rejectModal{{ ticket.id }}'
+                                                        )"
+                                                    >
+
+                                                        <i class="bi bi-x-circle me-1"></i>
+
+                                                        Reject Ticket
+
+                                                    </button>
+
+
+                                                {% elif ticket.assignment_status == "APPROVED" %}
+
+
+                                                    <a
+                                                        href="{% url 'ticket_chat' ticket.id %}"
+                                                        class="btn btn-primary"
+                                                    >
+
+                                                        <i class="bi bi-chat-dots me-1"></i>
+
+
+                                                        {% if ticket.status == "CLOSED" %}
+
+                                                            View Chat History
+
+                                                        {% else %}
+
+                                                            Open Chat
+
+                                                        {% endif %}
+
+
+                                                    </a>
+
+
+                                                    {% if ticket.status != "CLOSED" %}
+
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-danger"
+                                                            onclick="switchModal(
+                                                                'ticketModal{{ ticket.id }}',
+                                                                'closeTicketModal{{ ticket.id }}'
+                                                            )"
+                                                        >
+
+                                                            <i class="bi bi-lock me-1"></i>
+
+                                                            Close Ticket
+
+                                                        </button>
+
+
+                                                    {% endif %}
+
+
+                                                {% endif %}
+
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <!-- =====================================================
+                                     REJECT TICKET MODAL
+                                ====================================================== -->
+
+                                <div
+                                    class="modal fade reject-modal"
+                                    id="rejectModal{{ ticket.id }}"
+                                    tabindex="-1"
+                                    aria-hidden="true"
+                                >
+
+
+                                    <div class="modal-dialog modal-dialog-centered">
+
+
+                                        <div class="modal-content">
+
+
+                                            <div
+                                                class="modal-header"
+                                                style="
+                                                    background:#fff7f7;
+                                                    border-bottom-color:#fee2e2;
+                                                "
+                                            >
+
+
+                                                <h5
+                                                    class="modal-title"
+                                                    style="color:#b42318;"
+                                                >
+
+                                                    <i class="bi bi-x-circle-fill me-2"></i>
+
+                                                    Reject Ticket
+
+                                                </h5>
+
+
+                                                <button
+                                                    type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal">
+                                                </button>
+
+
+                                            </div>
+
+
+                                            <form
+                                                method="POST"
+                                                action="{% url 'assigner_action' ticket.id %}"
+                                            >
+
+
+                                                {% csrf_token %}
+
+
+                                                <input
+                                                    type="hidden"
+                                                    name="action"
+                                                    value="reject"
+                                                >
+
+
+                                                <div class="modal-body">
+
+
+                                                    <div class="detail-box mb-3">
+
+
+                                                        <span class="detail-label">
+
+                                                            Ticket
+
+                                                        </span>
+
+
+                                                        <p class="detail-value">
+
+                                                            {{ ticket.ticket_no }}
+                                                            —
+                                                            {{ ticket.subject }}
+
+                                                        </p>
+
+
+                                                    </div>
+
+
+                                                    <label class="form-label fw-bold">
+
+                                                        Rejection Reason
+
+                                                        <span class="text-danger">*</span>
+
+                                                    </label>
+
+
+                                                    <textarea
+                                                        name="rejection_reason"
+                                                        class="form-control"
+                                                        rows="5"
+                                                        maxlength="1000"
+                                                        placeholder="Enter the reason for rejecting this ticket..."
+                                                        required
+                                                    ></textarea>
+
+
+                                                </div>
+
+
+                                                <div class="modal-footer">
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-light-secondary"
+                                                        data-bs-dismiss="modal"
+                                                    >
+
+                                                        Cancel
+
+                                                    </button>
+
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-danger"
+                                                    >
+
+                                                        <i class="bi bi-x-circle me-1"></i>
+
+                                                        Confirm Reject
+
+                                                    </button>
+
+
+                                                </div>
+
+
+                                            </form>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <!-- =====================================================
+                                     CLOSE TICKET MODAL
+                                ====================================================== -->
+
+                                <div
+                                    class="modal fade close-ticket-modal"
+                                    id="closeTicketModal{{ ticket.id }}"
+                                    tabindex="-1"
+                                    aria-hidden="true"
+                                >
+
+
+                                    <div class="modal-dialog modal-dialog-centered">
+
+
+                                        <div class="modal-content">
+
+
+                                            <div class="modal-header">
+
+
+                                                <h5 class="modal-title">
+
+                                                    <i class="bi bi-lock-fill me-2"></i>
+
+                                                    Close Ticket
+
+                                                </h5>
+
+
+                                                <button
+                                                    type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal">
+                                                </button>
+
+
+                                            </div>
+
+
+                                            <form
+                                                method="POST"
+                                                action="{% url 'close_ticket' ticket.id %}"
+                                            >
+
+
+                                                {% csrf_token %}
+
+
+                                                <div class="modal-body">
+
+
+                                                    <div class="close-ticket-warning">
+
+
+                                                        <i class="bi bi-exclamation-triangle-fill"></i>
+
+
+                                                        <div>
+
+                                                            Closing this ticket will also close the chat.
+
+                                                            Previous messages will remain visible as history,
+
+                                                            but no new messages can be sent.
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+                                                    <div class="detail-box mb-3">
+
+
+                                                        <span class="detail-label">
+
+                                                            Ticket
+
+                                                        </span>
+
+
+                                                        <p class="detail-value">
+
+                                                            {{ ticket.ticket_no }}
+                                                            —
+                                                            {{ ticket.subject }}
+
+                                                        </p>
+
+
+                                                    </div>
+
+
+                                                    <label class="form-label fw-bold">
+
+                                                        Close Remark
+
+                                                        <span class="text-danger">*</span>
+
+                                                    </label>
+
+
+                                                    <textarea
+                                                        name="close_remark"
+                                                        class="form-control"
+                                                        rows="5"
+                                                        maxlength="1500"
+                                                        placeholder="Enter resolution / closing remark..."
+                                                        required
+                                                    ></textarea>
+
+
+                                                </div>
+
+
+                                                <div class="modal-footer">
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-light-secondary"
+                                                        data-bs-dismiss="modal"
+                                                    >
+
+                                                        Cancel
+
+                                                    </button>
+
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-danger"
+                                                        onclick="return confirm(
+                                                            'Close this ticket and end the chat?'
+                                                        );"
+                                                    >
+
+                                                        <i class="bi bi-lock-fill me-1"></i>
+
+                                                        Close Ticket
+
+                                                    </button>
+
+
+                                                </div>
+
+
+                                            </form>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                            {% empty %}
+
+
+                                <tr>
+
+
+                                    <!-- 14 columns now -->
+
+                                    <td
+                                        colspan="14"
+                                        class="table-empty"
+                                    >
+
+
+                                        <i class="bi bi-inbox"></i>
+
+
+                                        <h6>
+
+                                            No Assigned Tickets Found
+
+                                        </h6>
+
+
+                                        <p class="text-muted">
+
+                                            Currently, no tickets have been assigned to you.
+
+                                        </p>
+
+
+                                    </td>
+
+
+                                </tr>
+
+
+                            {% endfor %}
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+    function switchModal(
+        currentModalId,
+        nextModalId
+    ) {
+
+        const currentElement =
+            document.getElementById(
+                currentModalId
+            );
+
+        const nextElement =
+            document.getElementById(
+                nextModalId
+            );
+
+
+        if (!nextElement) {
+
+            return;
+
+        }
+
+
+        if (currentElement) {
+
+
+            const currentModal =
+                bootstrap.Modal.getInstance(
+                    currentElement
+                )
+                ||
+                new bootstrap.Modal(
+                    currentElement
+                );
+
+
+            currentModal.hide();
+
+
+            currentElement.addEventListener(
+                'hidden.bs.modal',
+                function showNext() {
+
+
+                    bootstrap.Modal
+                        .getOrCreateInstance(
+                            nextElement
+                        )
+                        .show();
+
+
+                    currentElement
+                        .removeEventListener(
+                            'hidden.bs.modal',
+                            showNext
+                        );
+
+
+                }
+            );
+
+
+        } else {
+
+
+            bootstrap.Modal
+                .getOrCreateInstance(
+                    nextElement
+                )
+                .show();
+
+
+        }
+
+    }
+
+</script>
+
+
+{% endblock %}

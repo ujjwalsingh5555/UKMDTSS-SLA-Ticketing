@@ -1,0 +1,254 @@
+```html
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .page-header {
+        margin-bottom: 20px;
+    }
+
+    .page-header h3 {
+        margin: 0;
+        color: #25396f;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .page-header p {
+        margin: 5px 0 0;
+        color: #94a3b8;
+        font-size: 13px;
+    }
+
+    .url-card {
+        background: #ffffff;
+        border: 1px solid #edf0f5;
+        border-radius: 14px;
+        box-shadow: 0 6px 20px rgba(37, 57, 111, 0.07);
+        overflow: hidden;
+    }
+
+    .url-card-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #edf0f5;
+        background: #ffffff;
+    }
+
+    .url-card-header h4 {
+        margin: 0;
+        color: #25396f;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .url-card-body {
+        padding: 22px;
+    }
+
+    .form-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 7px;
+    }
+
+    .form-select,
+    .form-control {
+        height: 45px;
+        border: 1px solid #dfe5ec;
+        border-radius: 9px;
+        font-size: 14px;
+    }
+
+    .form-select:focus,
+    .form-control:focus {
+        border-color: #435ebe;
+        box-shadow: 0 0 0 0.15rem rgba(67, 94, 190, 0.12);
+    }
+
+    .save-btn {
+        height: 45px;
+        width: 100%;
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .helper-text {
+        font-size: 11px;
+        color: #94a3b8;
+        margin-top: 6px;
+    }
+
+    .divider {
+        margin: 20px 0;
+        border-color: #edf0f5;
+    }
+
+    @media (max-width: 767px) {
+        .url-card-body {
+            padding: 16px;
+        }
+
+        .page-header h3 {
+            font-size: 21px;
+        }
+    }
+</style>
+
+
+<div class="container-fluid">
+
+    <div class="page-header">
+        <h3>Submenu URL Mapping</h3>
+        <p>Select parent menu, submenu and assign URL.</p>
+    </div>
+
+
+    <div class="url-card">
+
+        <div class="url-card-header">
+            <h4>Configure URL Mapping</h4>
+        </div>
+
+
+        <div class="url-card-body">
+
+
+            <!-- Parent Menu -->
+            <form method="GET">
+
+                <div class="row">
+
+                    <div class="col-lg-4 col-md-6 col-12">
+
+                        <label class="form-label">
+                            Parent Menu
+                        </label>
+
+                        <select
+                            name="parent_id"
+                            class="form-select"
+                            onchange="this.form.submit()"
+                        >
+
+                            <option value="">
+                                -- Select Parent Menu --
+                            </option>
+
+                            {% for menu in parent_menus %}
+
+                                <option
+                                    value="{{ menu.id }}"
+                                    {% if selected_parent_id == menu.id|stringformat:"s" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ menu.name }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <div class="helper-text">
+                            Select parent menu to load submenu.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+
+            <hr class="divider">
+
+
+            <!-- URL Save Form -->
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row g-3 align-items-end">
+
+
+                    <!-- Sub Menu -->
+                    <div class="col-lg-3 col-md-6 col-12">
+
+                        <label class="form-label">
+                            Sub Menu
+                        </label>
+
+                        <select
+                            name="submenu_id"
+                            class="form-select"
+                            required
+                            {% if not selected_parent_id %}
+                                disabled
+                            {% endif %}
+                        >
+
+                            <option value="">
+                                -- Select Sub Menu --
+                            </option>
+
+                            {% for submenu in submenus %}
+
+                                <option value="{{ submenu.id }}">
+                                    {{ submenu.name }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- URL -->
+                    <div class="col-lg-6 col-md-6 col-12">
+
+                        <label class="form-label">
+                            URL Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="url_name"
+                            class="form-control"
+                            placeholder="Example: user-master"
+                            required
+                            {% if not selected_parent_id %}
+                                disabled
+                            {% endif %}
+                        >
+
+                    </div>
+
+
+                    <!-- Button -->
+                    <div class="col-lg-3 col-md-12 col-12">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary save-btn"
+                            {% if not selected_parent_id %}
+                                disabled
+                            {% endif %}
+                        >
+                            Save URL
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

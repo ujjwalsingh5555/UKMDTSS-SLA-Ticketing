@@ -1,0 +1,2687 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    /* =====================================================
+       PAGE
+    ====================================================== */
+
+    .chat-page {
+        padding-bottom: 30px;
+    }
+
+
+    /* =====================================================
+       HERO HEADER
+    ====================================================== */
+
+    .ticket-chat-hero {
+        position: relative;
+        overflow: hidden;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+
+        padding: 24px 26px;
+        margin-bottom: 20px;
+
+        border-radius: 18px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #294681 0%,
+                #4f6ed4 100%
+            );
+
+        box-shadow:
+            0 12px 30px rgba(37, 57, 111, .15);
+    }
+
+
+    .ticket-chat-hero::before {
+        content: "";
+
+        position: absolute;
+
+        width: 170px;
+        height: 170px;
+
+        right: -45px;
+        top: -75px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(255, 255, 255, .06);
+    }
+
+
+    .ticket-chat-hero::after {
+        content: "";
+
+        position: absolute;
+
+        width: 120px;
+        height: 120px;
+
+        right: 130px;
+        bottom: -80px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(255, 255, 255, .05);
+    }
+
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+
+    .hero-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        margin-bottom: 12px;
+
+        color: #ffffff !important;
+
+        font-size: 11px;
+        font-weight: 800;
+
+        letter-spacing: .8px;
+        text-transform: uppercase;
+    }
+
+
+    .hero-eyebrow i {
+        color: #ffffff !important;
+    }
+
+
+    .hero-title-row {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+
+    .hero-ticket-icon {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+
+        background:
+            rgba(255, 255, 255, .14);
+
+        border:
+            1px solid rgba(255, 255, 255, .17);
+
+        color: #ffffff !important;
+
+        font-size: 18px;
+    }
+
+
+    .hero-ticket-icon i {
+        color: #ffffff !important;
+    }
+
+
+    .hero-title {
+        margin: 0;
+
+        color: #ffffff !important;
+
+        font-size: 23px;
+        font-weight: 800;
+    }
+
+
+    .hero-title span,
+    .hero-title i {
+        color: #ffffff !important;
+    }
+
+
+    .hero-subject {
+        margin: 5px 0 0;
+
+        color: rgba(255, 255, 255, .90) !important;
+
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+
+    /* =====================================================
+       HERO ACTIONS
+    ====================================================== */
+
+    .hero-actions {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        flex-wrap: wrap;
+    }
+
+
+    .chat-status-pill,
+    .hero-back-btn {
+        min-height: 44px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+
+        padding: 8px 15px;
+
+        border-radius: 22px;
+
+        color: #ffffff !important;
+
+        font-size: 11px;
+        font-weight: 750;
+
+        text-decoration: none;
+
+        transition: all .2s ease;
+    }
+
+
+    .chat-status-pill {
+        border:
+            1px solid rgba(255, 255, 255, .12);
+
+        background:
+            rgba(28, 51, 113, .40);
+    }
+
+
+    .hero-back-btn {
+        border:
+            1px solid rgba(255, 255, 255, .25);
+
+        background:
+            rgba(255, 255, 255, .10);
+    }
+
+
+    .hero-back-btn:hover {
+        color: #ffffff !important;
+
+        background:
+            rgba(255, 255, 255, .18);
+
+        transform:
+            translateY(-1px);
+    }
+
+
+    .hero-action-icon {
+        width: 26px;
+        height: 26px;
+        min-width: 26px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background:
+            rgba(255, 255, 255, .11);
+    }
+
+
+    .hero-action-icon i,
+    .chat-status-pill i,
+    .hero-back-btn i {
+        color: #ffffff !important;
+    }
+
+
+    /* =====================================================
+       CHAT LAYOUT
+    ====================================================== */
+
+    .chat-layout {
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr) 315px;
+
+        gap: 18px;
+    }
+
+
+    /* =====================================================
+       CHAT CARD
+    ====================================================== */
+
+    .chat-card {
+        border:
+            1px solid #e7ebf2;
+
+        border-radius: 17px;
+
+        background: #ffffff;
+
+        box-shadow:
+            0 7px 22px rgba(37, 57, 111, .06);
+
+        overflow: hidden;
+    }
+
+
+    /* =====================================================
+       CHAT HEADER
+    ====================================================== */
+
+    .chat-card-header {
+        display: grid;
+
+        grid-template-columns:
+            1fr auto 1fr;
+
+        align-items: center;
+
+        gap: 15px;
+
+        padding: 15px 18px;
+
+        border-bottom:
+            1px solid #edf0f5;
+
+        background:
+            linear-gradient(
+                180deg,
+                #ffffff,
+                #fafbff
+            );
+    }
+
+
+    .participant-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+
+    .participant-wrap.right {
+        justify-content: flex-end;
+        text-align: right;
+    }
+
+
+    .participant-avatar {
+        position: relative;
+
+        width: 40px;
+        height: 40px;
+
+        min-width: 40px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eef2ff,
+                #dfe7ff
+            );
+
+        color: #435ebe;
+
+        font-size: 13px;
+        font-weight: 800;
+
+        border:
+            1px solid #dce3ff;
+    }
+
+
+    .participant-online {
+        position: absolute;
+
+        right: -1px;
+        bottom: 1px;
+
+        width: 10px;
+        height: 10px;
+
+        border-radius: 50%;
+
+        background: #20c997;
+
+        border:
+            2px solid #ffffff;
+    }
+
+
+    .participant-name {
+        margin: 0;
+
+        color: #334155;
+
+        font-size: 12px;
+        font-weight: 750;
+    }
+
+
+    .participant-role {
+        margin: 2px 0 0;
+
+        color: #94a3b8;
+
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+
+    .participant-arrow {
+        width: 36px;
+        height: 36px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        color: #7c8db5;
+
+        background: #f4f6fb;
+    }
+
+
+    /* =====================================================
+       MESSAGE AREA
+    ====================================================== */
+
+    .messages-area {
+        height: 510px;
+
+        padding: 22px;
+
+        overflow-y: auto;
+
+        background:
+            linear-gradient(
+                180deg,
+                #f8fafc 0%,
+                #f4f7fb 100%
+            );
+    }
+
+
+    .messages-area::-webkit-scrollbar {
+        width: 6px;
+    }
+
+
+    .messages-area::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+
+        border-radius: 10px;
+    }
+
+
+    /* =====================================================
+       MESSAGE ROW
+    ====================================================== */
+
+    .message-row {
+        display: flex;
+
+        margin-bottom: 14px;
+    }
+
+
+    .message-row.mine {
+        justify-content: flex-end;
+    }
+
+
+    .message-row.other {
+        justify-content: flex-start;
+    }
+
+
+    /* =====================================================
+       MESSAGE BUBBLE
+    ====================================================== */
+
+    .message-bubble {
+        position: relative;
+
+        max-width:
+            min(72%, 620px);
+
+        padding:
+            11px 13px;
+
+        border-radius: 14px;
+
+        font-size: 12.5px;
+
+        line-height: 1.6;
+
+        box-shadow:
+            0 2px 7px rgba(15, 23, 42, .05);
+    }
+
+
+    .message-row.mine
+    .message-bubble {
+        color: #ffffff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #435ebe,
+                #566fd0
+            );
+
+        border-bottom-right-radius: 4px;
+    }
+
+
+    .message-row.other
+    .message-bubble {
+        color: #334155;
+
+        background: #ffffff;
+
+        border:
+            1px solid #e5eaf1;
+
+        border-bottom-left-radius: 4px;
+    }
+
+
+    .message-sender {
+        margin-bottom: 4px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        opacity: .85;
+    }
+
+
+    .message-text {
+        word-break: break-word;
+    }
+
+
+    .message-meta {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: flex-end;
+
+        gap: 4px;
+
+        margin-top: 6px;
+
+        font-size: 9.5px;
+
+        opacity: .78;
+    }
+
+
+    /* =====================================================
+       MESSAGE ATTACHMENT
+    ====================================================== */
+
+    .message-attachment {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        margin-top: 8px;
+
+        padding:
+            6px 9px;
+
+        border-radius: 8px;
+
+        text-decoration: none;
+
+        font-size: 10px;
+
+        font-weight: 700;
+    }
+
+
+    .message-row.mine
+    .message-attachment {
+        color: #ffffff;
+
+        background:
+            rgba(255, 255, 255, .15);
+    }
+
+
+    .message-row.other
+    .message-attachment {
+        color: #435ebe;
+
+        background: #eef2ff;
+    }
+
+
+    /* =====================================================
+       NO MESSAGE
+    ====================================================== */
+
+    .no-messages {
+        padding:
+            100px 15px;
+
+        text-align: center;
+
+        color: #94a3b8;
+    }
+
+
+    .no-messages-icon {
+        width: 65px;
+        height: 65px;
+
+        margin:
+            0 auto 14px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: #eaf0ff;
+
+        color: #435ebe;
+
+        font-size: 26px;
+    }
+
+
+    .no-messages h6 {
+        color: #475569;
+
+        font-size: 13px;
+
+        font-weight: 750;
+    }
+
+
+    /* =====================================================
+       CHAT COMPOSER
+    ====================================================== */
+
+    .chat-composer {
+        padding:
+            15px 17px;
+
+        border-top:
+            1px solid #edf0f5;
+
+        background: #ffffff;
+    }
+
+
+    .composer-row {
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+    }
+
+
+    .message-input-wrap {
+        flex: 1;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        padding:
+            5px 7px 5px 13px;
+
+        border:
+            1px solid #dbe2ea;
+
+        border-radius: 15px;
+
+        background: #f8fafc;
+
+        transition: all .2s ease;
+    }
+
+
+    .message-input-wrap:focus-within {
+        border-color: #8da3eb;
+
+        box-shadow:
+            0 0 0 .16rem rgba(67, 94, 190, .09);
+
+        background: #ffffff;
+    }
+
+
+    .message-input-wrap textarea {
+        flex: 1;
+
+        min-height: 42px;
+
+        max-height: 120px;
+
+        padding:
+            10px 4px;
+
+        border: none;
+
+        outline: none;
+
+        resize: none;
+
+        background: transparent;
+
+        color: #334155;
+
+        font-size: 12.5px;
+
+        box-shadow: none !important;
+    }
+
+
+    /* =====================================================
+       FILE BUTTON
+    ====================================================== */
+
+    .file-btn {
+        width: 40px;
+        height: 40px;
+
+        min-width: 40px;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 11px;
+
+        background: transparent;
+
+        color: #64748b;
+
+        cursor: pointer;
+
+        transition: all .2s ease;
+    }
+
+
+    .file-btn:hover {
+        color: #435ebe;
+
+        background: #eef2ff;
+    }
+
+
+    .file-btn i {
+        font-size: 18px;
+    }
+
+
+    /* =====================================================
+       SEND BUTTON
+       Bootstrap Icon:
+       bi bi-send
+    ====================================================== */
+
+    .send-icon-btn {
+        width: 50px;
+        height: 50px;
+
+        min-width: 50px;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        padding: 0;
+
+        border: none;
+
+        border-radius: 50%;
+
+        background: #111111;
+
+        color: #ffffff;
+
+        cursor: pointer;
+
+        transition:
+            all .2s ease;
+
+        box-shadow:
+            0 6px 14px rgba(0, 0, 0, .16);
+    }
+
+
+    .send-icon-btn i {
+        color: #ffffff !important;
+
+        font-size: 20px;
+
+        line-height: 1;
+
+        transform:
+            translateX(1px);
+    }
+
+
+    .send-icon-btn:hover {
+        background: #000000;
+
+        transform:
+            translateY(-2px)
+            scale(1.04);
+
+        box-shadow:
+            0 9px 20px rgba(0, 0, 0, .22);
+    }
+
+
+    .send-icon-btn:active {
+        transform:
+            scale(.96);
+    }
+
+
+    /* =====================================================
+       SELECTED FILE
+    ====================================================== */
+
+    .selected-file {
+        min-height: 14px;
+
+        margin:
+            7px 0 0 4px;
+
+        color: #64748b;
+
+        font-size: 10px;
+
+        font-weight: 600;
+    }
+
+
+    /* =====================================================
+       CHAT CLOSED
+    ====================================================== */
+
+    .chat-closed-banner {
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        padding:
+            15px 17px;
+
+        border-top:
+            1px solid #e2e8f0;
+
+        background: #f8fafc;
+
+        color: #475569;
+
+        font-size: 12px;
+
+        font-weight: 600;
+    }
+
+
+    .closed-icon {
+        width: 34px;
+        height: 34px;
+
+        min-width: 34px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: #e2e8f0;
+
+        color: #475569;
+    }
+
+
+    /* =====================================================
+       TICKET SIDE CARD
+    ====================================================== */
+
+    .ticket-side-card {
+        position: sticky;
+
+        top: 15px;
+
+        align-self: start;
+
+        border:
+            1px solid #e7ebf2;
+
+        border-radius: 17px;
+
+        background: #ffffff;
+
+        box-shadow:
+            0 7px 22px rgba(37, 57, 111, .06);
+
+        overflow: hidden;
+    }
+
+
+    .side-card-header {
+        padding: 17px;
+
+        background:
+            linear-gradient(
+                180deg,
+                #fbfcff,
+                #f8faff
+            );
+
+        border-bottom:
+            1px solid #edf0f5;
+    }
+
+
+    .side-title {
+        margin: 0;
+
+        color: #25396f;
+
+        font-size: 14px;
+
+        font-weight: 800;
+    }
+
+
+    .side-body {
+        padding:
+            16px 18px 18px;
+    }
+
+
+    .side-item {
+        padding:
+            11px 0;
+
+        border-bottom:
+            1px solid #f0f2f5;
+    }
+
+
+    .side-item:last-child {
+        border-bottom: none;
+    }
+
+
+    .side-label {
+        display: block;
+
+        margin-bottom: 4px;
+
+        color: #94a3b8;
+
+        font-size: 9.5px;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .4px;
+    }
+
+
+    .side-value {
+        margin: 0;
+
+        color: #475569;
+
+        font-size: 11.5px;
+
+        font-weight: 650;
+
+        word-break: break-word;
+    }
+
+
+    /* =====================================================
+       STATUS
+    ====================================================== */
+
+    .side-status {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        padding:
+            5px 9px;
+
+        border-radius: 20px;
+
+        font-size: 10px;
+
+        font-weight: 750;
+    }
+
+
+    .side-status-progress {
+        color: #2563eb;
+
+        background: #eff6ff;
+    }
+
+
+    .side-status-closed {
+        color: #198754;
+
+        background: #ecfdf3;
+    }
+
+
+    /* =====================================================
+       CLOSE BUTTON
+    ====================================================== */
+
+    .close-btn {
+        width: 100%;
+
+        min-height: 44px;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        margin-top: 15px;
+
+        padding:
+            10px 13px;
+
+        border:
+            1px solid #fecaca;
+
+        border-radius: 10px;
+
+        background: #fff7f7;
+
+        color: #b42318;
+
+        font-size: 11px;
+
+        font-weight: 750;
+
+        transition: all .2s ease;
+    }
+
+
+    .close-btn:hover {
+        color: #ffffff;
+
+        background: #dc3545;
+
+        border-color: #dc3545;
+
+        transform:
+            translateY(-1px);
+
+        box-shadow:
+            0 7px 16px rgba(220, 53, 69, .15);
+    }
+
+
+    /* =====================================================
+       CLOSE SUMMARY
+    ====================================================== */
+
+    .close-summary {
+        margin-top: 15px;
+
+        padding: 13px;
+
+        border:
+            1px solid #d8dee8;
+
+        border-radius: 10px;
+
+        background: #f8fafc;
+    }
+
+
+    /* =====================================================
+       CLOSE MODAL
+    ====================================================== */
+
+    .close-ticket-modal
+    .modal-content {
+        border: none;
+
+        border-radius: 16px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 18px 55px rgba(15, 23, 42, .20);
+    }
+
+
+    .close-ticket-modal
+    .modal-header {
+        padding:
+            17px 20px;
+
+        background: #fff7f7;
+
+        border-bottom:
+            1px solid #fee2e2;
+    }
+
+
+    .close-modal-title {
+        display: flex;
+
+        align-items: center;
+
+        gap: 9px;
+
+        margin: 0;
+
+        color: #b42318;
+
+        font-size: 16px;
+
+        font-weight: 750;
+    }
+
+
+    .close-modal-icon {
+        width: 32px;
+        height: 32px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 9px;
+
+        background: #fee2e2;
+
+        color: #dc3545;
+    }
+
+
+    .close-warning {
+        display: flex;
+
+        gap: 10px;
+
+        padding: 12px;
+
+        margin-bottom: 16px;
+
+        border:
+            1px solid #fde68a;
+
+        border-radius: 9px;
+
+        background: #fffbeb;
+
+        color: #92400e;
+
+        font-size: 11px;
+
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ====================================================== */
+
+    @media (max-width: 991px) {
+
+        .chat-layout {
+            grid-template-columns:
+                1fr;
+        }
+
+
+        .ticket-side-card {
+            position: static;
+
+            order: -1;
+        }
+    }
+
+
+    @media (max-width: 767px) {
+
+        .ticket-chat-hero {
+            flex-direction: column;
+
+            align-items: flex-start;
+        }
+
+
+        .hero-actions {
+            width: 100%;
+        }
+
+
+        .chat-card-header {
+            grid-template-columns:
+                1fr;
+
+            text-align: left;
+        }
+
+
+        .participant-wrap.right {
+            justify-content: flex-start;
+
+            text-align: left;
+        }
+
+
+        .participant-arrow {
+            transform:
+                rotate(90deg);
+        }
+    }
+
+
+    @media (max-width: 576px) {
+
+        .ticket-chat-hero {
+            padding: 20px;
+        }
+
+
+        .hero-title {
+            font-size: 17px;
+        }
+
+
+        .messages-area {
+            height: 430px;
+
+            padding: 13px;
+        }
+
+
+        .message-bubble {
+            max-width: 88%;
+        }
+
+
+        .send-icon-btn {
+            width: 48px;
+            height: 48px;
+
+            min-width: 48px;
+        }
+    }
+
+</style>
+
+
+
+<div class="chat-page">
+
+
+    <!-- =====================================================
+         DJANGO MESSAGES
+    ====================================================== -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div
+                class="
+                    alert
+                    {% if message.tags == 'success' %}
+                        alert-success
+                    {% elif message.tags == 'warning' %}
+                        alert-warning
+                    {% elif message.tags == 'error' %}
+                        alert-danger
+                    {% else %}
+                        alert-info
+                    {% endif %}
+                    alert-dismissible
+                    fade
+                    show
+                "
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         HERO HEADER
+    ====================================================== -->
+
+    <div class="ticket-chat-hero">
+
+
+        <div class="hero-content">
+
+
+            <div class="hero-eyebrow">
+
+                <i class="bi bi-headset"></i>
+
+                Support Conversation
+
+            </div>
+
+
+            <div class="hero-title-row">
+
+
+                <div class="hero-ticket-icon">
+
+                    <i class="bi bi-chat-dots-fill"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h3 class="hero-title">
+
+                        {{ ticket.ticket_no }}
+
+                    </h3>
+
+
+                    <p class="hero-subject">
+
+                        {{ ticket.subject }}
+
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             HEADER ACTIONS
+        ================================================== -->
+
+        <div class="hero-actions">
+
+
+            {% if chat_active %}
+
+                <span class="chat-status-pill">
+
+                    <span class="hero-action-icon">
+
+                        <i class="bi bi-chat-dots-fill"></i>
+
+                    </span>
+
+                    Chat Open
+
+                </span>
+
+            {% else %}
+
+                <span class="chat-status-pill">
+
+                    <span class="hero-action-icon">
+
+                        <i class="bi bi-lock-fill"></i>
+
+                    </span>
+
+                    Chat Closed
+
+                </span>
+
+            {% endif %}
+
+
+
+            {% if is_assigner %}
+
+                <a
+                    href="/raise/assined_ticket/"
+                    class="hero-back-btn"
+                >
+
+                    <span class="hero-action-icon">
+
+                        <i class="bi bi-arrow-left"></i>
+
+                    </span>
+
+                    Back
+
+                </a>
+
+            {% else %}
+
+                <a
+                    href="/raise/Viewticket_report/"
+                    class="hero-back-btn"
+                >
+
+                    <span class="hero-action-icon">
+
+                        <i class="bi bi-arrow-left"></i>
+
+                    </span>
+
+                    Back
+
+                </a>
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CHAT LAYOUT
+    ====================================================== -->
+
+    <div class="chat-layout">
+
+
+        <!-- =================================================
+             CHAT CARD
+        ================================================== -->
+
+        <div class="chat-card">
+
+
+            <!-- =============================================
+                 PARTICIPANTS
+            ============================================== -->
+
+            <div class="chat-card-header">
+
+
+                <!-- REPORTER -->
+
+                <div class="participant-wrap">
+
+
+                    <div class="participant-avatar">
+
+                        {{ ticket.created_by.name|slice:":1"|upper }}
+
+                        <span class="participant-online"></span>
+
+                    </div>
+
+
+                    <div>
+
+                        <p class="participant-name">
+
+                            {{ ticket.created_by.name }}
+
+                        </p>
+
+
+                        <p class="participant-role">
+
+                            <i class="bi bi-person me-1"></i>
+
+                            Reporter
+
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- ARROW -->
+
+                <div class="participant-arrow">
+
+                    <i class="bi bi-arrow-left-right"></i>
+
+                </div>
+
+
+
+                <!-- ASSIGNER -->
+
+                <div class="participant-wrap right">
+
+
+                    <div>
+
+                        <p class="participant-name">
+
+                            {{ ticket.assigned_to.name }}
+
+                        </p>
+
+
+                        <p class="participant-role">
+
+                            <i class="bi bi-headset me-1"></i>
+
+                            Assigner
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="participant-avatar">
+
+                        {{ ticket.assigned_to.name|slice:":1"|upper }}
+
+                        <span class="participant-online"></span>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =============================================
+                 MESSAGES
+            ============================================== -->
+
+            <div
+                class="messages-area"
+                id="messagesArea"
+            >
+
+
+                {% for chat in chat_messages %}
+
+
+                    <div
+                        class="
+                            message-row
+                            {% if chat.sender_id == current_user.id %}
+                                mine
+                            {% else %}
+                                other
+                            {% endif %}
+                        "
+                    >
+
+
+                        <div class="message-bubble">
+
+
+                            <!-- SENDER -->
+
+                            <div class="message-sender">
+
+                                {% if chat.sender_id == current_user.id %}
+
+                                    You
+
+                                {% else %}
+
+                                    {{ chat.sender.name }}
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- MESSAGE -->
+
+                            {% if chat.message %}
+
+                                <div class="message-text">
+
+                                    {{ chat.message|linebreaksbr }}
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            <!-- ATTACHMENT -->
+
+                            {% if chat.attachment %}
+
+                                <a
+                                    href="{{ chat.attachment.url }}"
+                                    target="_blank"
+                                    class="message-attachment"
+                                >
+
+                                    <i class="bi bi-paperclip"></i>
+
+                                    View Attachment
+
+                                </a>
+
+                            {% endif %}
+
+
+
+                            <!-- META -->
+
+                            <div class="message-meta">
+
+
+                                {{ chat.created_at|date:"d M Y, h:i A" }}
+
+
+                                {% if chat.sender_id == current_user.id %}
+
+
+                                    {% if chat.is_read %}
+
+                                        <i
+                                            class="bi bi-check2-all"
+                                            title="Read"
+                                        ></i>
+
+                                    {% else %}
+
+                                        <i
+                                            class="bi bi-check2"
+                                            title="Sent"
+                                        ></i>
+
+                                    {% endif %}
+
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                {% empty %}
+
+
+                    <div class="no-messages">
+
+
+                        <div class="no-messages-icon">
+
+                            <i class="bi bi-chat-square-dots"></i>
+
+                        </div>
+
+
+                        <h6>
+
+                            No messages yet
+
+                        </h6>
+
+
+                        <div>
+
+                            Start the conversation about this ticket.
+
+                        </div>
+
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+
+            <!-- =============================================
+                 CHAT INPUT
+            ============================================== -->
+
+            {% if chat_active %}
+
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="chat-composer"
+                    id="chatForm"
+                >
+
+                    {% csrf_token %}
+
+
+                    <div class="composer-row">
+
+
+                        <!-- MESSAGE INPUT -->
+
+                        <div class="message-input-wrap">
+
+
+                            <textarea
+                                name="message"
+                                id="chatMessage"
+                                rows="1"
+                                placeholder="Type your message..."
+                            ></textarea>
+
+
+
+                            <!-- ATTACHMENT -->
+
+                            <label
+                                class="file-btn"
+                                title="Attach File"
+                            >
+
+                                <i class="bi bi-paperclip"></i>
+
+
+                                <input
+                                    type="file"
+                                    name="attachment"
+                                    id="chatAttachment"
+                                    class="d-none"
+                                >
+
+                            </label>
+
+
+                        </div>
+
+
+
+                        <!-- =================================
+                             SEND BUTTON
+                        ================================== -->
+
+                        <button
+                            type="submit"
+                            class="send-icon-btn"
+                            title="Send Message"
+                        >
+
+                            <i class="bi bi-send"></i>
+
+                        </button>
+
+
+                    </div>
+
+
+
+                    <!-- SELECTED FILE -->
+
+                    <div
+                        id="selectedFile"
+                        class="selected-file"
+                    ></div>
+
+
+                </form>
+
+
+            {% else %}
+
+
+                <!-- =========================================
+                     CLOSED CHAT
+                ========================================== -->
+
+                <div class="chat-closed-banner">
+
+
+                    <div class="closed-icon">
+
+                        <i class="bi bi-lock-fill"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Conversation Closed
+                        </strong>
+
+
+                        <div class="mt-1">
+
+                            This ticket is closed.
+                            Chat history is read-only and
+                            no new messages can be sent.
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             TICKET INFORMATION
+        ================================================== -->
+
+        <div class="ticket-side-card">
+
+
+            <div class="side-card-header">
+
+                <h5 class="side-title">
+
+                    <i class="bi bi-ticket-detailed me-2"></i>
+
+                    Ticket Information
+
+                </h5>
+
+            </div>
+
+
+            <div class="side-body">
+
+
+                <!-- STATUS -->
+
+                <div class="side-item">
+
+                    <span class="side-label">
+
+                        Ticket Status
+
+                    </span>
+
+
+                    {% if ticket.status == "CLOSED" %}
+
+                        <span class="side-status side-status-closed">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            {{ ticket.status }}
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="side-status side-status-progress">
+
+                            <i class="bi bi-arrow-repeat"></i>
+
+                            {{ ticket.status }}
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- ASSIGNMENT STATUS -->
+
+                <div class="side-item">
+
+                    <span class="side-label">
+
+                        Assignment Status
+
+                    </span>
+
+
+                    <p class="side-value">
+
+                        {{ ticket.assignment_status }}
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- TYPE -->
+
+                <div class="side-item">
+
+                    <span class="side-label">
+
+                        Ticket Type
+
+                    </span>
+
+
+                    <p class="side-value">
+
+                        {% if ticket.software_module %}
+
+                            <i class="bi bi-code-square me-1"></i>
+
+                        {% elif ticket.hardware_module %}
+
+                            <i class="bi bi-cpu me-1"></i>
+
+                        {% endif %}
+
+                        {{ ticket.ticket_type.name }}
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- MODULE -->
+
+                <div class="side-item">
+
+                    <span class="side-label">
+
+                        Module
+
+                    </span>
+
+
+                    <p class="side-value">
+
+
+                        {% if ticket.software_module %}
+
+                            {{ ticket.software_module.moduleName }}
+
+                        {% elif ticket.hardware_module %}
+
+                            {{ ticket.hardware_module.moduleName }}
+
+                        {% else %}
+
+                            N/A
+
+                        {% endif %}
+
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- PRIORITY -->
+
+                <div class="side-item">
+
+                    <span class="side-label">
+
+                        Priority
+
+                    </span>
+
+
+                    <p class="side-value">
+
+                        <i class="bi bi-flag-fill me-1"></i>
+
+                        {{ ticket.priority.name }}
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- RAISED BY -->
+
+                <div class="side-item">
+
+                    <span class="side-label">
+
+                        Raised By
+
+                    </span>
+
+
+                    <p class="side-value">
+
+                        <i class="bi bi-person me-1"></i>
+
+                        {{ ticket.created_by.name }}
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- ASSIGNED TO -->
+
+                <div class="side-item">
+
+                    <span class="side-label">
+
+                        Assigned To
+
+                    </span>
+
+
+                    <p class="side-value">
+
+                        <i class="bi bi-person-check me-1"></i>
+
+                        {{ ticket.assigned_to.name }}
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- CREATED AT -->
+
+                <div class="side-item">
+
+                    <span class="side-label">
+
+                        Raised At
+
+                    </span>
+
+
+                    <p class="side-value">
+
+                        <i class="bi bi-calendar3 me-1"></i>
+
+                        {{ ticket.created_at|date:"d M Y h:i A" }}
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CLOSED DETAILS
+                ================================================== -->
+
+                {% if ticket.status == "CLOSED" %}
+
+
+                    <div class="close-summary">
+
+
+                        <span class="side-label">
+
+                            Closed By
+
+                        </span>
+
+
+                        <p class="side-value">
+
+                            {% if ticket.closed_by %}
+
+                                <i class="bi bi-person-check me-1"></i>
+
+                                {{ ticket.closed_by.name }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </p>
+
+
+
+                        <span class="side-label mt-3">
+
+                            Closed At
+
+                        </span>
+
+
+                        <p class="side-value">
+
+                            {% if ticket.closed_at %}
+
+                                <i class="bi bi-clock me-1"></i>
+
+                                {{ ticket.closed_at|date:"d M Y h:i A" }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </p>
+
+
+
+                        <span class="side-label mt-3">
+
+                            Close Remark
+
+                        </span>
+
+
+                        <p class="side-value">
+
+                            {{ ticket.close_remark|default:"-"|linebreaksbr }}
+
+                        </p>
+
+
+                    </div>
+
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                     CLOSE TICKET
+                ================================================== -->
+
+                {% if is_assigner and chat_active %}
+
+
+                    <button
+                        type="button"
+                        class="close-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#closeTicketModal"
+                    >
+
+                        <i class="bi bi-lock-fill"></i>
+
+                        Close Ticket
+
+                    </button>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     CLOSE TICKET MODAL
+========================================================== -->
+
+{% if is_assigner and chat_active %}
+
+
+<div
+    class="modal fade close-ticket-modal"
+    id="closeTicketModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+
+    <div class="modal-dialog modal-dialog-centered">
+
+
+        <div class="modal-content">
+
+
+            <!-- HEADER -->
+
+            <div class="modal-header">
+
+
+                <h5 class="close-modal-title">
+
+
+                    <span class="close-modal-icon">
+
+                        <i class="bi bi-lock-fill"></i>
+
+                    </span>
+
+
+                    Close Ticket
+
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+
+            </div>
+
+
+
+            <!-- FORM -->
+
+            <form
+                method="POST"
+                action="{% url 'close_ticket' ticket.id %}"
+            >
+
+
+                {% csrf_token %}
+
+
+                <div class="modal-body p-4">
+
+
+                    <!-- WARNING -->
+
+                    <div class="close-warning">
+
+
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+
+
+                        <div>
+
+                            Closing this ticket will also close
+                            the conversation.
+
+                            Existing messages will remain visible
+                            as read-only history.
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- TICKET INFO -->
+
+                    <div
+                        class="p-3 mb-3"
+                        style="
+                            background:#f8fafc;
+                            border:1px solid #edf0f5;
+                            border-radius:10px;
+                        "
+                    >
+
+
+                        <small
+                            class="text-muted d-block mb-1"
+                            style="font-size:10px;"
+                        >
+
+                            Ticket
+
+                        </small>
+
+
+                        <strong
+                            style="
+                                color:#334155;
+                                font-size:12px;
+                            "
+                        >
+
+                            {{ ticket.ticket_no }}
+
+                        </strong>
+
+
+                        <small
+                            class="text-muted d-block mt-2 mb-1"
+                            style="font-size:10px;"
+                        >
+
+                            Subject
+
+                        </small>
+
+
+                        <span
+                            style="
+                                color:#475569;
+                                font-size:11px;
+                            "
+                        >
+
+                            {{ ticket.subject }}
+
+                        </span>
+
+
+                    </div>
+
+
+
+                    <!-- CLOSE REMARK -->
+
+                    <label
+                        class="form-label fw-bold"
+                        style="
+                            font-size:12px;
+                            color:#334155;
+                        "
+                    >
+
+                        Close Remark
+
+                        <span class="text-danger">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <textarea
+                        name="close_remark"
+                        class="form-control"
+                        rows="5"
+                        maxlength="1500"
+                        placeholder="Enter resolution / closing remark..."
+                        required
+                        style="
+                            font-size:12px;
+                            border-radius:10px;
+                            resize:vertical;
+                        "
+                    ></textarea>
+
+
+                    <small
+                        class="text-muted"
+                        style="font-size:10px;"
+                    >
+
+                        Mention the final resolution before
+                        closing this ticket.
+
+                    </small>
+
+
+                </div>
+
+
+
+                <!-- FOOTER -->
+
+                <div class="modal-footer">
+
+
+                    <button
+                        type="button"
+                        class="btn btn-light-secondary"
+                        data-bs-dismiss="modal"
+                    >
+
+                        <i class="bi bi-x-lg me-1"></i>
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                        onclick="
+                            return confirm(
+                                'Are you sure you want to close this ticket?'
+                            );
+                        "
+                    >
+
+                        <i class="bi bi-lock-fill me-1"></i>
+
+                        Close Ticket
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{% endif %}
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+
+<script>
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+
+            // ===============================================
+            // AUTO SCROLL TO LAST MESSAGE
+            // ===============================================
+
+            const messagesArea =
+                document.getElementById(
+                    "messagesArea"
+                );
+
+
+            if (messagesArea) {
+
+                messagesArea.scrollTop =
+                    messagesArea.scrollHeight;
+
+            }
+
+
+
+            // ===============================================
+            // FILE ATTACHMENT
+            // ===============================================
+
+            const fileInput =
+                document.getElementById(
+                    "chatAttachment"
+                );
+
+
+            const selectedFile =
+                document.getElementById(
+                    "selectedFile"
+                );
+
+
+            if (
+                fileInput
+                &&
+                selectedFile
+            ) {
+
+
+                fileInput.addEventListener(
+                    "change",
+                    function () {
+
+
+                        if (
+                            this.files
+                            &&
+                            this.files.length
+                        ) {
+
+                            selectedFile.innerHTML =
+                                '<i class="bi bi-paperclip me-1"></i>'
+                                +
+                                'Attached: '
+                                +
+                                this.files[0].name;
+
+                        }
+
+                        else {
+
+                            selectedFile.innerHTML =
+                                "";
+
+                        }
+
+
+                    }
+                );
+
+
+            }
+
+
+
+            // ===============================================
+            // ENTER = SEND
+            // SHIFT + ENTER = NEW LINE
+            // ===============================================
+
+            const messageInput =
+                document.getElementById(
+                    "chatMessage"
+                );
+
+
+            const chatForm =
+                document.getElementById(
+                    "chatForm"
+                );
+
+
+            if (
+                messageInput
+                &&
+                chatForm
+            ) {
+
+
+                messageInput.addEventListener(
+                    "keydown",
+                    function (event) {
+
+
+                        if (
+                            event.key === "Enter"
+                            &&
+                            !event.shiftKey
+                        ) {
+
+
+                            event.preventDefault();
+
+
+                            const hasMessage =
+                                this.value.trim()
+                                !== "";
+
+
+                            const hasFile =
+                                fileInput
+                                &&
+                                fileInput.files
+                                &&
+                                fileInput.files.length > 0;
+
+
+                            if (
+                                hasMessage
+                                ||
+                                hasFile
+                            ) {
+
+                                chatForm.submit();
+
+                            }
+
+
+                        }
+
+
+                    }
+                );
+
+
+            }
+
+
+
+            // ===============================================
+            // AUTO RESIZE TEXTAREA
+            // ===============================================
+
+            if (messageInput) {
+
+
+                messageInput.addEventListener(
+                    "input",
+                    function () {
+
+
+                        this.style.height =
+                            "auto";
+
+
+                        this.style.height =
+                            Math.min(
+                                this.scrollHeight,
+                                120
+                            )
+                            +
+                            "px";
+
+
+                    }
+                );
+
+
+            }
+
+
+        }
+    );
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,2955 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    :root {
+        --sh-primary: #1d4ed8;
+        --sh-primary-dark: #163a72;
+        --sh-primary-light: #eff6ff;
+
+        --sh-success: #16a34a;
+        --sh-success-light: #f0fdf4;
+
+        --sh-danger: #dc2626;
+        --sh-danger-light: #fef2f2;
+
+        --sh-warning: #d97706;
+        --sh-warning-light: #fffbeb;
+
+        --sh-bg: #f6f8fc;
+        --sh-card: #ffffff;
+        --sh-border: #e6eaf0;
+
+        --sh-text: #172033;
+        --sh-muted: #768195;
+    }
+
+
+    /* ==========================================================
+       PAGE
+    ========================================================== */
+
+    .software-health-page {
+        padding-bottom: 40px;
+    }
+
+
+    /* ==========================================================
+       HERO
+    ========================================================== */
+
+    .health-hero {
+        position: relative;
+        overflow: hidden;
+
+        margin-bottom: 22px;
+        padding: 28px 30px;
+
+        border-radius: 20px;
+
+        background:
+            radial-gradient(
+                circle at 90% 20%,
+                rgba(255,255,255,.18) 0 70px,
+                transparent 72px
+            ),
+            radial-gradient(
+                circle at 75% 130%,
+                rgba(255,255,255,.10) 0 120px,
+                transparent 122px
+            ),
+            linear-gradient(
+                135deg,
+                #0c2855 0%,
+                #174b8f 48%,
+                #2563eb 100%
+            );
+
+        box-shadow:
+            0 15px 40px rgba(15, 47, 95, .15);
+
+        color: #fff;
+    }
+
+
+    .health-hero-inner {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+    }
+
+
+    .health-hero-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+
+    .health-hero-icon {
+        width: 58px;
+        height: 58px;
+
+        flex: 0 0 58px;
+
+        display: grid;
+        place-items: center;
+
+        border-radius: 17px;
+
+        background: rgba(255,255,255,.13);
+
+        border:
+            1px solid rgba(255,255,255,.22);
+
+        backdrop-filter: blur(8px);
+
+        font-size: 25px;
+    }
+
+
+    .health-hero-title {
+        margin: 0 0 5px;
+
+        color: #fff;
+
+        font-size: 25px;
+        font-weight: 800;
+    }
+
+
+    .health-hero-subtitle {
+        margin: 0;
+
+        color: rgba(255,255,255,.75);
+
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+
+    .hero-module-count {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+
+        padding: 10px 15px;
+
+        border-radius: 50px;
+
+        background: rgba(255,255,255,.12);
+
+        border:
+            1px solid rgba(255,255,255,.20);
+
+        backdrop-filter: blur(10px);
+
+        color: #fff;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        white-space: nowrap;
+    }
+
+
+    .hero-module-count strong {
+        font-size: 16px;
+    }
+
+
+
+    /* ==========================================================
+       SUMMARY CARDS
+    ========================================================== */
+
+    .health-summary-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 16px;
+
+        margin-bottom: 22px;
+    }
+
+
+    .summary-card {
+        position: relative;
+        overflow: hidden;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 19px 20px;
+
+        background: #fff;
+
+        border:
+            1px solid var(--sh-border);
+
+        border-radius: 16px;
+
+        box-shadow:
+            0 6px 22px rgba(16, 24, 40, .045);
+
+        transition:
+            transform .2s ease,
+            box-shadow .2s ease;
+    }
+
+
+    .summary-card:hover {
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 12px 28px rgba(16, 24, 40, .08);
+    }
+
+
+    .summary-card::before {
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        top: 0;
+        bottom: 0;
+
+        width: 4px;
+
+        border-radius:
+            4px 0 0 4px;
+    }
+
+
+    .summary-total::before {
+        background: #2563eb;
+    }
+
+
+    .summary-active::before {
+        background: #16a34a;
+    }
+
+
+    .summary-inactive::before {
+        background: #dc2626;
+    }
+
+
+    .summary-label {
+        margin-bottom: 5px;
+
+        color: var(--sh-muted);
+
+        font-size: 10px;
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .6px;
+    }
+
+
+    .summary-value {
+        margin: 0;
+
+        color: var(--sh-text);
+
+        font-size: 29px;
+        font-weight: 800;
+
+        line-height: 1;
+    }
+
+
+    .summary-icon {
+        width: 48px;
+        height: 48px;
+
+        display: grid;
+        place-items: center;
+
+        border-radius: 14px;
+
+        font-size: 20px;
+    }
+
+
+    .summary-total .summary-icon {
+        color: #2563eb;
+        background: #eff6ff;
+    }
+
+
+    .summary-active .summary-icon {
+        color: #16a34a;
+        background: #f0fdf4;
+    }
+
+
+    .summary-inactive .summary-icon {
+        color: #dc2626;
+        background: #fef2f2;
+    }
+
+
+
+    /* ==========================================================
+       MAIN PANEL
+    ========================================================== */
+
+    .health-panel {
+        overflow: hidden;
+
+        background: #fff;
+
+        border:
+            1px solid var(--sh-border);
+
+        border-radius: 19px;
+
+        box-shadow:
+            0 8px 28px rgba(16, 24, 40, .05);
+    }
+
+
+    .health-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 18px 21px;
+
+        border-bottom:
+            1px solid #edf0f4;
+
+        background:
+            linear-gradient(
+                180deg,
+                #ffffff,
+                #fbfcfe
+            );
+    }
+
+
+    .health-panel-title {
+        display: flex;
+        align-items: center;
+
+        gap: 11px;
+    }
+
+
+    .health-panel-icon {
+        width: 40px;
+        height: 40px;
+
+        display: grid;
+        place-items: center;
+
+        flex: 0 0 40px;
+
+        border-radius: 11px;
+
+        color: #1d4ed8;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eff6ff,
+                #dbeafe
+            );
+
+        font-size: 17px;
+    }
+
+
+    .health-panel-header h4 {
+        margin: 0;
+
+        color: #1e293b;
+
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+
+    .health-panel-header p {
+        margin: 3px 0 0;
+
+        color: #94a3b8;
+
+        font-size: 10px;
+    }
+
+
+    .panel-count {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 7px;
+
+        padding: 7px 12px;
+
+        border-radius: 50px;
+
+        color: #1d4ed8;
+
+        background: #eff6ff;
+
+        border:
+            1px solid #dbeafe;
+
+        font-size: 10px;
+        font-weight: 750;
+    }
+
+
+    .health-panel-body {
+        padding: 20px;
+    }
+
+
+
+    /* ==========================================================
+       MODULE GRID
+    ========================================================== */
+
+    .module-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 17px;
+    }
+
+
+
+    /* ==========================================================
+       MODULE CARD
+    ========================================================== */
+
+    .module-card {
+        position: relative;
+        overflow: hidden;
+
+        padding: 18px;
+
+        border:
+            1px solid #e5eaf1;
+
+        border-radius: 16px;
+
+        background: #fff;
+
+        box-shadow:
+            0 5px 18px rgba(16,24,40,.035);
+
+        transition:
+            .22s ease;
+    }
+
+
+    .module-card:hover {
+        transform:
+            translateY(-4px);
+
+        border-color:
+            #c8d7ec;
+
+        box-shadow:
+            0 14px 30px rgba(15, 47, 95, .10);
+    }
+
+
+    .module-card::before {
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        top: 0;
+
+        width: 100%;
+        height: 3px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #174b8f,
+                #2563eb,
+                #60a5fa
+            );
+    }
+
+
+    .module-card::after {
+        content: "";
+
+        position: absolute;
+
+        width: 120px;
+        height: 120px;
+
+        right: -65px;
+        bottom: -65px;
+
+        border-radius: 50%;
+
+        background: #2563eb;
+
+        opacity: .035;
+    }
+
+
+
+    /* ==========================================================
+       CARD HEADER
+    ========================================================== */
+
+    .module-card-header {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        gap: 10px;
+
+        margin-bottom: 18px;
+    }
+
+
+    .module-card-left {
+        display: flex;
+        align-items: center;
+
+        gap: 11px;
+
+        min-width: 0;
+    }
+
+
+    .module-icon {
+        width: 44px;
+        height: 44px;
+
+        flex: 0 0 44px;
+
+        display: grid;
+        place-items: center;
+
+        border-radius: 13px;
+
+        color: #1d4ed8;
+
+        background:
+            linear-gradient(
+                145deg,
+                #eff6ff,
+                #dbeafe
+            );
+
+        font-size: 18px;
+    }
+
+
+    .module-title {
+        min-width: 0;
+    }
+
+
+    .module-title h5 {
+        margin: 0 0 4px;
+
+        color: #1e293b;
+
+        font-size: 14px;
+        font-weight: 800;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+    }
+
+
+    .module-title p {
+        margin: 0;
+
+        color: #94a3b8;
+
+        font-size: 9.5px;
+
+        line-height: 1.45;
+
+        display: -webkit-box;
+
+        -webkit-line-clamp: 2;
+
+        -webkit-box-orient: vertical;
+
+        overflow: hidden;
+    }
+
+
+
+    /* ==========================================================
+       STATUS BADGE
+    ========================================================== */
+
+    .module-status {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 5px;
+
+        padding: 5px 8px;
+
+        border-radius: 50px;
+
+        font-size: 8.5px;
+        font-weight: 800;
+
+        white-space: nowrap;
+    }
+
+
+    .module-status::before {
+        content: "";
+
+        width: 6px;
+        height: 6px;
+
+        border-radius: 50%;
+
+        background: currentColor;
+
+        box-shadow:
+            0 0 0 3px currentColor;
+
+        opacity: .9;
+    }
+
+
+    .module-active {
+        color: #15803d;
+        background: #edfdf2;
+    }
+
+
+    .module-inactive {
+        color: #dc2626;
+        background: #fef2f2;
+    }
+
+
+
+    /* ==========================================================
+       AVAILABILITY HIGHLIGHT
+    ========================================================== */
+
+    .availability-highlight {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 10px;
+
+        margin-bottom: 12px;
+
+        padding: 13px 14px;
+
+        border-radius: 12px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f8fbff,
+                #eff6ff
+            );
+
+        border:
+            1px solid #dce8f8;
+    }
+
+
+    .availability-left {
+        display: flex;
+        align-items: center;
+
+        gap: 9px;
+    }
+
+
+    .availability-icon {
+        width: 34px;
+        height: 34px;
+
+        display: grid;
+        place-items: center;
+
+        border-radius: 10px;
+
+        color: #2563eb;
+
+        background: #fff;
+
+        box-shadow:
+            0 3px 8px rgba(37,99,235,.10);
+    }
+
+
+    .availability-label {
+        display: block;
+
+        color: #64748b;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .4px;
+    }
+
+
+    .availability-text {
+        margin-top: 2px;
+
+        color: #1e293b;
+
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+
+    .availability-percentage {
+        color: #1d4ed8;
+
+        font-size: 22px;
+        font-weight: 850;
+    }
+
+
+
+    /* ==========================================================
+       MAIN METRICS
+    ========================================================== */
+
+    .module-metrics {
+        position: relative;
+        z-index: 2;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 10px;
+
+        margin-bottom: 12px;
+    }
+
+
+    .metric-card {
+        padding: 12px;
+
+        border-radius: 11px;
+
+        border:
+            1px solid transparent;
+    }
+
+
+    .metric-card-header {
+        display: flex;
+        align-items: center;
+
+        gap: 6px;
+
+        margin-bottom: 6px;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .35px;
+    }
+
+
+    .metric-value {
+        font-size: 15px;
+        font-weight: 850;
+    }
+
+
+    .metric-percent {
+        display: block;
+
+        margin-top: 3px;
+
+        font-size: 9px;
+        font-weight: 700;
+
+        opacity: .75;
+    }
+
+
+    .metric-up {
+        color: #15803d;
+
+        background: #f0fdf4;
+
+        border-color: #dcfce7;
+    }
+
+
+    .metric-down {
+        color: #dc2626;
+
+        background: #fef2f2;
+
+        border-color: #fee2e2;
+    }
+
+
+
+    /* ==========================================================
+       SECONDARY DETAILS
+    ========================================================== */
+
+    .module-info-grid {
+        position: relative;
+        z-index: 2;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 7px;
+    }
+
+
+    .info-box {
+        padding: 9px 5px;
+
+        border:
+            1px solid #edf0f4;
+
+        border-radius: 9px;
+
+        background: #fafbfc;
+
+        text-align: center;
+    }
+
+
+    .info-label {
+        display: block;
+
+        margin-bottom: 4px;
+
+        color: #98a2b3;
+
+        font-size: 7.5px;
+        font-weight: 750;
+
+        text-transform: uppercase;
+    }
+
+
+    .info-value {
+        display: block;
+
+        color: #344054;
+
+        font-size: 10px;
+        font-weight: 800;
+
+        word-break: break-word;
+    }
+
+
+
+    /* ==========================================================
+       PROGRESS BAR
+    ========================================================== */
+
+    .availability-progress {
+        position: relative;
+        z-index: 2;
+
+        margin-top: 14px;
+    }
+
+
+    .progress-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        margin-bottom: 7px;
+
+        color: #667085;
+
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+
+    .progress-track {
+        height: 7px;
+
+        overflow: hidden;
+
+        border-radius: 50px;
+
+        background: #edf1f5;
+    }
+
+
+    .progress-fill {
+        height: 100%;
+
+        border-radius: 50px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #16a34a,
+                #22c55e,
+                #4ade80
+            );
+
+        transition:
+            width .5s ease;
+    }
+
+
+
+    /* ==========================================================
+       FOOTER
+    ========================================================== */
+
+    .module-footer {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 10px;
+
+        margin-top: 15px;
+
+        padding-top: 13px;
+
+        border-top:
+            1px solid #edf0f4;
+    }
+
+
+    .module-footer small {
+        display: flex;
+        align-items: center;
+
+        gap: 5px;
+
+        color: #98a2b3;
+
+        font-size: 8.5px;
+    }
+
+
+    .module-footer small i {
+        font-size: 7px;
+    }
+
+
+    .view-details {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 5px;
+
+        padding: 6px 9px;
+
+        border-radius: 7px;
+
+        color: #174b8f;
+
+        background: #f3f7fc;
+
+        font-size: 9px;
+        font-weight: 750;
+
+        text-decoration: none;
+
+        transition:
+            .2s ease;
+    }
+
+
+    .view-details:hover {
+        color: #fff;
+
+        background: #174b8f;
+
+        text-decoration: none;
+    }
+
+
+
+    /* ==========================================================
+       EMPTY STATE
+    ========================================================== */
+
+    .no-module {
+        grid-column:
+            1 / -1;
+
+        padding: 60px 20px;
+
+        text-align: center;
+
+        color: #94a3b8;
+    }
+
+
+    .no-module-icon {
+        width: 65px;
+        height: 65px;
+
+        display: grid;
+        place-items: center;
+
+        margin:
+            0 auto 12px;
+
+        border-radius: 50%;
+
+        color: #94a3b8;
+
+        background: #f1f5f9;
+
+        font-size: 27px;
+    }
+
+
+    .no-module strong {
+        display: block;
+
+        margin-bottom: 5px;
+
+        color: #475569;
+
+        font-size: 13px;
+    }
+
+
+    .no-module p {
+        margin: 0;
+
+        font-size: 10px;
+    }
+
+
+
+    /* ==========================================================
+       RESPONSIVE
+    ========================================================== */
+
+    @media (max-width: 1199px) {
+
+        .module-grid {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+    }
+
+
+    @media (max-width: 767px) {
+
+        .health-hero {
+            padding: 22px 19px;
+
+            border-radius: 16px;
+        }
+
+
+        .health-hero-inner {
+            flex-direction: column;
+
+            align-items: flex-start;
+        }
+
+
+        .health-summary-grid {
+            grid-template-columns:
+                1fr;
+        }
+
+
+        .module-grid {
+            grid-template-columns:
+                1fr;
+        }
+
+
+        .health-panel-body {
+            padding: 14px;
+        }
+
+
+        .health-panel-header {
+            padding: 15px;
+        }
+
+    }
+
+
+    @media (max-width: 430px) {
+
+        .health-hero-title {
+            font-size: 20px;
+        }
+
+
+        .health-hero-icon {
+            width: 50px;
+            height: 50px;
+
+            flex-basis: 50px;
+        }
+
+
+        .module-info-grid {
+            grid-template-columns:
+                1fr;
+        }
+
+
+        .info-box {
+            display: flex;
+            justify-content: space-between;
+
+            align-items: center;
+
+            text-align: left;
+
+            padding: 10px 12px;
+        }
+
+
+        .info-label {
+            margin: 0;
+        }
+
+    }
+
+
+
+    /* ==========================================================
+       FILTER PANEL
+    ========================================================== */
+
+    .health-filter-panel {
+        margin-bottom: 22px;
+        padding: 18px 20px;
+        background: #ffffff;
+        border: 1px solid var(--sh-border);
+        border-radius: 18px;
+        box-shadow: 0 7px 24px rgba(16, 24, 40, .045);
+    }
+
+    .filter-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 16px;
+    }
+
+    .filter-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-title-icon {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 11px;
+        color: #1d4ed8;
+        background: #eff6ff;
+        font-size: 16px;
+    }
+
+    .filter-panel-header h5 {
+        margin: 0;
+        color: #1e293b;
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    .filter-panel-header p {
+        margin: 3px 0 0;
+        color: #94a3b8;
+        font-size: 9.5px;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr))
+            auto;
+        gap: 12px;
+        align-items: end;
+    }
+
+    .filter-group label {
+        display: block;
+        margin-bottom: 6px;
+        color: #64748b;
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .35px;
+    }
+
+    .health-filter-control {
+        width: 100%;
+        height: 42px;
+        padding: 0 12px;
+        border: 1px solid #dfe5ec;
+        border-radius: 10px;
+        background: #fbfcfe;
+        color: #334155;
+        font-size: 11px;
+        font-weight: 650;
+        outline: none;
+        transition:
+            border-color .2s ease,
+            box-shadow .2s ease,
+            background .2s ease;
+    }
+
+    .health-filter-control:focus {
+        border-color: #93b4e7;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .health-filter-btn {
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 0 15px;
+        border: 0;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: .2s ease;
+    }
+
+    .health-filter-btn-primary {
+        color: #fff;
+        background:
+            linear-gradient(
+                135deg,
+                #174b8f,
+                #2563eb
+            );
+        box-shadow: 0 5px 13px rgba(37, 99, 235, .18);
+    }
+
+    .health-filter-btn-primary:hover {
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(37, 99, 235, .24);
+    }
+
+    .health-filter-btn-reset {
+        color: #475569;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+
+    .health-filter-btn-reset:hover {
+        color: #1d4ed8;
+        background: #eff6ff;
+        border-color: #dbeafe;
+    }
+
+    .active-filter-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid #eef2f6;
+    }
+
+    .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 9px;
+        border-radius: 50px;
+        color: #475569;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        font-size: 8.5px;
+        font-weight: 750;
+    }
+
+    .filter-chip strong {
+        color: #1d4ed8;
+    }
+
+    /* ==========================================================
+       EXTENDED SUMMARY
+    ========================================================== */
+
+    .health-summary-grid {
+        grid-template-columns:
+            repeat(5, minmax(0, 1fr));
+    }
+
+    .summary-days::before {
+        background: #7c3aed;
+    }
+
+    .summary-hours::before {
+        background: #0891b2;
+    }
+
+    .summary-days .summary-icon {
+        color: #7c3aed;
+        background: #f5f3ff;
+    }
+
+    .summary-hours .summary-icon {
+        color: #0891b2;
+        background: #ecfeff;
+    }
+
+    .summary-time-value {
+        font-size: 22px;
+    }
+
+    @media (max-width: 1399px) {
+
+        .health-summary-grid {
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+        }
+
+        .filter-grid {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+        .filter-actions {
+            grid-column: 1 / -1;
+        }
+    }
+
+    @media (max-width: 767px) {
+
+        .health-filter-panel {
+            padding: 15px;
+        }
+
+        .filter-panel-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .filter-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-actions {
+            grid-column: auto;
+            width: 100%;
+        }
+
+        .health-filter-btn {
+            flex: 1;
+        }
+
+        .health-summary-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+
+
+
+    /* ==========================================================
+       PREMIUM DASHBOARD POLISH
+       Overrides only — backend/template variables remain unchanged.
+    ========================================================== */
+
+    .software-health-page {
+        position: relative;
+        padding: 4px 0 44px;
+    }
+
+    .software-health-page::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 8% 8%, rgba(37, 99, 235, .055), transparent 22%),
+            radial-gradient(circle at 92% 18%, rgba(14, 165, 233, .045), transparent 20%),
+            linear-gradient(180deg, #f8faff 0%, #f5f7fb 55%, #f8fafc 100%);
+    }
+
+    /* HERO */
+
+    .health-hero {
+        margin-bottom: 20px;
+        padding: 30px 32px;
+        border-radius: 22px;
+        background:
+            radial-gradient(circle at 85% -10%, rgba(255,255,255,.17) 0 105px, transparent 107px),
+            radial-gradient(circle at 72% 140%, rgba(255,255,255,.11) 0 150px, transparent 152px),
+            linear-gradient(120deg, #0b2247 0%, #103e77 44%, #1d4ed8 100%);
+        border: 1px solid rgba(255,255,255,.08);
+        box-shadow:
+            0 18px 40px rgba(21, 54, 105, .17),
+            inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .health-hero-inner {
+        gap: 26px;
+    }
+
+    .health-hero-icon {
+        width: 62px;
+        height: 62px;
+        flex: 0 0 62px;
+        border-radius: 18px;
+        font-size: 26px;
+        background: rgba(255,255,255,.12);
+        border: 1px solid rgba(255,255,255,.20);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.10),
+            0 10px 24px rgba(0,0,0,.10);
+    }
+
+    .health-hero-title {
+        margin-bottom: 6px;
+        font-size: 27px;
+        letter-spacing: -.35px;
+    }
+
+    .health-hero-subtitle {
+        max-width: 620px;
+        color: rgba(255,255,255,.74);
+        font-size: 11px;
+        letter-spacing: .08px;
+    }
+
+    .hero-kpi-group {
+        display: flex;
+        align-items: stretch;
+        gap: 9px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .hero-kpi {
+        min-width: 118px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 12px;
+        border-radius: 13px;
+        color: #fff;
+        background: rgba(255,255,255,.10);
+        border: 1px solid rgba(255,255,255,.16);
+        backdrop-filter: blur(10px);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .hero-kpi-icon {
+        width: 31px;
+        height: 31px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 31px;
+        border-radius: 9px;
+        background: rgba(255,255,255,.11);
+        font-size: 13px;
+    }
+
+    .hero-kpi small {
+        display: block;
+        margin-bottom: 1px;
+        color: rgba(255,255,255,.68);
+        font-size: 7.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .45px;
+    }
+
+    .hero-kpi strong {
+        display: block;
+        font-size: 13px;
+        font-weight: 850;
+        line-height: 1.15;
+    }
+
+    /* FILTERS */
+
+    .health-filter-panel {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 20px;
+        padding: 19px 20px 17px;
+        border-radius: 17px;
+        background: rgba(255,255,255,.96);
+        border: 1px solid #e3e9f1;
+        box-shadow:
+            0 8px 25px rgba(15, 23, 42, .045),
+            inset 0 1px 0 #fff;
+    }
+
+    .health-filter-panel::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #1d4ed8, #38bdf8, #6366f1);
+    }
+
+    .filter-panel-header {
+        margin-bottom: 15px;
+    }
+
+    .filter-title-icon {
+        width: 41px;
+        height: 41px;
+        border-radius: 12px;
+        color: #1d4ed8;
+        background: linear-gradient(145deg, #eff6ff, #e0edff);
+        border: 1px solid #dce8fb;
+        box-shadow: 0 4px 12px rgba(37,99,235,.07);
+    }
+
+    .filter-panel-header h5 {
+        font-size: 14px;
+        letter-spacing: -.1px;
+    }
+
+    .filter-panel-header p {
+        color: #8996a9;
+        font-size: 9.25px;
+    }
+
+    .filter-group label {
+        margin-bottom: 7px;
+        color: #526074;
+        font-size: 8.5px;
+        letter-spacing: .42px;
+    }
+
+    .health-filter-control {
+        height: 44px;
+        padding: 0 13px;
+        border-radius: 10px;
+        border: 1px solid #dfe6ef;
+        background: #fbfcfe;
+        color: #27364b;
+        font-size: 10.5px;
+        font-weight: 700;
+        box-shadow: inset 0 1px 2px rgba(15,23,42,.015);
+    }
+
+    .health-filter-control:hover {
+        border-color: #cbd8e8;
+        background: #fff;
+    }
+
+    .health-filter-control:focus {
+        border-color: #6c9ce8;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(37,99,235,.075);
+    }
+
+    .health-filter-btn {
+        height: 44px;
+        border-radius: 10px;
+        padding: 0 16px;
+        font-size: 9.5px;
+        letter-spacing: .15px;
+    }
+
+    .health-filter-btn-primary {
+        background: linear-gradient(135deg, #123f7a, #2563eb);
+        box-shadow:
+            0 7px 16px rgba(37,99,235,.19),
+            inset 0 1px 0 rgba(255,255,255,.14);
+    }
+
+    .health-filter-btn-reset {
+        background: #fff;
+        border: 1px solid #dce4ee;
+    }
+
+    .active-filter-strip {
+        gap: 8px;
+        margin-top: 15px;
+        padding-top: 13px;
+    }
+
+    .filter-chip {
+        padding: 6px 10px;
+        color: #5b687a;
+        background: #f8fafc;
+        border-color: #e6ebf2;
+        font-size: 8px;
+    }
+
+    .filter-chip i {
+        color: #2563eb;
+    }
+
+    /* SUMMARY KPI CARDS */
+
+    .health-summary-grid {
+        gap: 13px;
+        margin-bottom: 20px;
+    }
+
+    .summary-card {
+        min-height: 104px;
+        padding: 18px 18px 17px 20px;
+        border-radius: 15px;
+        border-color: #e5eaf1;
+        box-shadow:
+            0 5px 18px rgba(15,23,42,.035),
+            inset 0 1px 0 rgba(255,255,255,.9);
+    }
+
+    .summary-card:hover {
+        transform: translateY(-3px);
+        border-color: #d6dfeb;
+        box-shadow: 0 13px 28px rgba(15,23,42,.07);
+    }
+
+    .summary-card::after {
+        content: "";
+        position: absolute;
+        width: 82px;
+        height: 82px;
+        right: -28px;
+        bottom: -37px;
+        border-radius: 50%;
+        opacity: .055;
+        background: currentColor;
+    }
+
+    .summary-total {
+        color: #2563eb;
+        background: linear-gradient(145deg, #ffffff, #f8fbff);
+    }
+
+    .summary-active {
+        color: #16a34a;
+        background: linear-gradient(145deg, #ffffff, #f8fdf9);
+    }
+
+    .summary-inactive {
+        color: #dc2626;
+        background: linear-gradient(145deg, #ffffff, #fffafa);
+    }
+
+    .summary-days {
+        color: #7c3aed;
+        background: linear-gradient(145deg, #ffffff, #fbf9ff);
+    }
+
+    .summary-hours {
+        color: #0891b2;
+        background: linear-gradient(145deg, #ffffff, #f7fdff);
+    }
+
+    .summary-label {
+        margin-bottom: 7px;
+        color: #7b8798;
+        font-size: 8px;
+        letter-spacing: .5px;
+    }
+
+    .summary-value {
+        color: #172033;
+        font-size: 27px;
+        letter-spacing: -.5px;
+    }
+
+    .summary-time-value {
+        font-size: 20px;
+        letter-spacing: -.15px;
+    }
+
+    .summary-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 13px;
+        border: 1px solid rgba(15,23,42,.035);
+        box-shadow: 0 5px 13px rgba(15,23,42,.035);
+    }
+
+    /* MODULE PANEL */
+
+    .health-panel {
+        border-radius: 18px;
+        border-color: #e3e9f0;
+        box-shadow:
+            0 10px 30px rgba(15,23,42,.045),
+            inset 0 1px 0 #fff;
+    }
+
+    .health-panel-header {
+        padding: 18px 20px;
+        background:
+            linear-gradient(180deg, #fff 0%, #fbfcfe 100%);
+    }
+
+    .health-panel-icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+        border-radius: 12px;
+        box-shadow: 0 5px 13px rgba(37,99,235,.07);
+    }
+
+    .health-panel-header h4 {
+        font-size: 14px;
+    }
+
+    .health-panel-header p {
+        font-size: 9px;
+    }
+
+    .health-panel-body {
+        padding: 18px;
+        background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+    }
+
+    .module-grid {
+        gap: 15px;
+    }
+
+    /* MODULE CARD */
+
+    .module-card {
+        padding: 17px;
+        border-radius: 15px;
+        border-color: #e4e9f0;
+        box-shadow:
+            0 4px 15px rgba(15,23,42,.03),
+            inset 0 1px 0 #fff;
+    }
+
+    .module-card::before {
+        height: 3px;
+        background: linear-gradient(90deg, #0f4c91, #2563eb 60%, #60a5fa);
+    }
+
+    .module-card:hover {
+        transform: translateY(-4px);
+        border-color: #cbd9eb;
+        box-shadow:
+            0 16px 32px rgba(23, 57, 105, .095),
+            inset 0 1px 0 #fff;
+    }
+
+    .module-card-header {
+        margin-bottom: 15px;
+    }
+
+    .module-icon {
+        width: 43px;
+        height: 43px;
+        flex-basis: 43px;
+        border-radius: 12px;
+        background: linear-gradient(145deg, #f2f7ff, #e4efff);
+        border: 1px solid #dbe8fa;
+        box-shadow: 0 4px 11px rgba(37,99,235,.06);
+    }
+
+    .module-title h5 {
+        margin-bottom: 5px;
+        font-size: 13px;
+        letter-spacing: -.1px;
+    }
+
+    .module-title p {
+        color: #8a97a8;
+        font-size: 8.7px;
+    }
+
+    .module-status {
+        padding: 5px 9px;
+        font-size: 7.8px;
+        letter-spacing: .2px;
+        border: 1px solid currentColor;
+        border-color: color-mix(in srgb, currentColor 17%, transparent);
+    }
+
+    .module-status::before {
+        width: 5px;
+        height: 5px;
+        box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 11%, transparent);
+    }
+
+    /* AVAILABILITY */
+
+    .availability-highlight {
+        margin-bottom: 11px;
+        padding: 12px 13px;
+        border-radius: 11px;
+        background:
+            linear-gradient(135deg, #f9fbff, #eef5ff);
+        border-color: #dbe7f6;
+        box-shadow: inset 0 1px 0 #fff;
+    }
+
+    .availability-icon {
+        width: 33px;
+        height: 33px;
+        border-radius: 9px;
+    }
+
+    .availability-label {
+        font-size: 7.3px;
+        letter-spacing: .45px;
+    }
+
+    .availability-text {
+        color: #526074;
+        font-size: 9px;
+    }
+
+    .availability-percentage {
+        font-size: 21px;
+        letter-spacing: -.5px;
+    }
+
+    /* METRICS */
+
+    .module-metrics {
+        gap: 9px;
+        margin-bottom: 10px;
+    }
+
+    .metric-card {
+        padding: 11px 12px;
+        border-radius: 10px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+    }
+
+    .metric-card-header {
+        margin-bottom: 5px;
+        font-size: 7.5px;
+    }
+
+    .metric-value {
+        font-size: 14px;
+        letter-spacing: -.2px;
+    }
+
+    .metric-percent {
+        font-size: 8px;
+    }
+
+    /* DETAILS */
+
+    .module-info-grid {
+        gap: 7px;
+    }
+
+    .info-box {
+        padding: 9px 6px;
+        border-radius: 9px;
+        background: linear-gradient(180deg, #fbfcfe, #f8fafc);
+        border-color: #e9edf3;
+    }
+
+    .info-label {
+        font-size: 6.8px;
+        letter-spacing: .35px;
+    }
+
+    .info-value {
+        color: #2f3c50;
+        font-size: 9.5px;
+    }
+
+    /* PROGRESS */
+
+    .availability-progress {
+        margin-top: 12px;
+    }
+
+    .progress-header {
+        margin-bottom: 6px;
+        font-size: 8px;
+    }
+
+    .progress-track {
+        height: 6px;
+        box-shadow: inset 0 1px 2px rgba(15,23,42,.06);
+    }
+
+    .progress-fill {
+        background: linear-gradient(90deg, #15803d, #22c55e, #4ade80);
+        box-shadow: 0 0 10px rgba(34,197,94,.13);
+    }
+
+    /* FOOTER */
+
+    .module-footer {
+        margin-top: 13px;
+        padding-top: 11px;
+    }
+
+    .module-footer small {
+        font-size: 7.8px;
+    }
+
+    .view-details {
+        padding: 6px 10px;
+        border-radius: 7px;
+        background: #f5f8fc;
+        border: 1px solid #e6edf6;
+        font-size: 8px;
+    }
+
+    .view-details:hover {
+        background: linear-gradient(135deg, #123f7a, #2563eb);
+        border-color: transparent;
+        box-shadow: 0 5px 12px rgba(37,99,235,.15);
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1399px) {
+        .hero-kpi-group {
+            max-width: 420px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .health-hero-inner {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .hero-kpi-group {
+            width: 100%;
+            max-width: none;
+            justify-content: flex-start;
+        }
+
+        .hero-kpi {
+            flex: 1 1 135px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .health-hero {
+            padding: 21px 18px;
+            border-radius: 17px;
+        }
+
+        .health-hero-left {
+            align-items: flex-start;
+        }
+
+        .health-hero-title {
+            font-size: 20px;
+        }
+
+        .health-hero-subtitle {
+            font-size: 9.5px;
+        }
+
+        .hero-kpi {
+            min-width: 0;
+            flex: 1 1 100%;
+        }
+
+        .health-filter-panel {
+            border-radius: 15px;
+        }
+
+        .summary-card {
+            min-height: 90px;
+        }
+
+        .health-panel {
+            border-radius: 15px;
+        }
+    }
+
+
+</style>
+
+
+
+<div class="software-health-page">
+
+
+    <!-- ======================================================
+         HERO
+    ======================================================= -->
+
+    <div class="health-hero">
+
+        <div class="health-hero-inner">
+
+
+            <div class="health-hero-left">
+
+                <div class="health-hero-icon">
+
+                    <i class="bi bi-activity"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h3 class="health-hero-title">
+
+                        Software Health Monitor
+
+                    </h3>
+
+
+                    <p class="health-hero-subtitle">
+
+                        Real-time monitoring of software module
+                        availability, uptime and downtime.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="hero-kpi-group">
+
+                <div class="hero-kpi">
+                    <span class="hero-kpi-icon">
+                        <i class="bi bi-grid-3x3-gap"></i>
+                    </span>
+                    <span>
+                        <small>Modules</small>
+                        <strong>{{ total_modules }}</strong>
+                    </span>
+                </div>
+
+                <div class="hero-kpi">
+                    <span class="hero-kpi-icon">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <span>
+                        <small>Selected Days</small>
+                        <strong>{{ selected_days }}</strong>
+                    </span>
+                </div>
+
+                <div class="hero-kpi">
+                    <span class="hero-kpi-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </span>
+                    <span>
+                        <small>Working Time</small>
+                        <strong>{{ total_working_time }}</strong>
+                    </span>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+
+    <!-- ======================================================
+         FILTERS
+    ======================================================= -->
+
+    <div class="health-filter-panel">
+
+        <div class="filter-panel-header">
+
+            <div class="filter-title-wrap">
+
+                <div class="filter-title-icon">
+                    <i class="bi bi-funnel"></i>
+                </div>
+
+                <div>
+                    <h5>Health Monitor Filters</h5>
+                    <p>
+                        Filter SLA monitoring by date range,
+                        software module and module status.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="panel-count">
+                <i class="bi bi-calendar3"></i>
+                {{ selected_days }} Day{{ selected_days|pluralize }}
+            </div>
+
+        </div>
+
+
+        <form method="GET">
+
+            <div class="filter-grid">
+
+                <div class="filter-group">
+
+                    <label>
+                        <i class="bi bi-calendar-event me-1"></i>
+                        From Date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="from_date"
+                        class="health-filter-control"
+                        value="{{ from_date }}"
+                    >
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label>
+                        <i class="bi bi-calendar-check me-1"></i>
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="to_date"
+                        class="health-filter-control"
+                        value="{{ to_date }}"
+                    >
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label>
+                        <i class="bi bi-window-stack me-1"></i>
+                        Software Module
+                    </label>
+
+                    <select
+                        name="module"
+                        class="health-filter-control"
+                    >
+
+                        <option value="">
+                            All Modules
+                        </option>
+
+                        {% for item in all_modules %}
+
+                        <option
+                            value="{{ item.id }}"
+                            {% if item.id|stringformat:"s" == selected_module %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ item.moduleName }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label>
+                        <i class="bi bi-toggle-on me-1"></i>
+                        Module Status
+                    </label>
+
+                    <select
+                        name="status"
+                        class="health-filter-control"
+                    >
+
+                        <option
+                            value="all"
+                            {% if selected_status == "all" %}
+                                selected
+                            {% endif %}
+                        >
+                            All Status
+                        </option>
+
+                        <option
+                            value="active"
+                            {% if selected_status == "active" %}
+                                selected
+                            {% endif %}
+                        >
+                            Active
+                        </option>
+
+                        <option
+                            value="inactive"
+                            {% if selected_status == "inactive" %}
+                                selected
+                            {% endif %}
+                        >
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-actions">
+
+                    <button
+                        type="submit"
+                        class="
+                            health-filter-btn
+                            health-filter-btn-primary
+                        "
+                    >
+                        <i class="bi bi-search"></i>
+                        Apply
+                    </button>
+
+                    <a
+                        href="{{ request.path }}"
+                        class="
+                            health-filter-btn
+                            health-filter-btn-reset
+                        "
+                    >
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        Reset
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="active-filter-strip">
+
+                <span class="filter-chip">
+                    <i class="bi bi-calendar-range"></i>
+                    Range:
+                    <strong>
+                        {{ from_date }}
+                        to
+                        {{ to_date }}
+                    </strong>
+                </span>
+
+                <span class="filter-chip">
+                    <i class="bi bi-clock"></i>
+                    Working Time:
+                    <strong>
+                        {{ total_working_time }}
+                    </strong>
+                </span>
+
+                <span class="filter-chip">
+                    <i class="bi bi-grid"></i>
+                    Modules:
+                    <strong>
+                        {{ total_modules }}
+                    </strong>
+                </span>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- ======================================================
+         SUMMARY
+    ======================================================= -->
+
+    <div class="health-summary-grid">
+
+
+        <div class="
+            summary-card
+            summary-total
+        ">
+
+            <div>
+
+                <div class="summary-label">
+                    Total Modules
+                </div>
+
+                <h3 class="summary-value">
+                    {{ total_modules }}
+                </h3>
+
+            </div>
+
+            <div class="summary-icon">
+                <i class="bi bi-grid"></i>
+            </div>
+
+        </div>
+
+
+
+        <div class="
+            summary-card
+            summary-active
+        ">
+
+            <div>
+
+                <div class="summary-label">
+                    Active Modules
+                </div>
+
+                <h3 class="summary-value">
+                    {{ active_modules }}
+                </h3>
+
+            </div>
+
+            <div class="summary-icon">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+        </div>
+
+
+
+        <div class="
+            summary-card
+            summary-inactive
+        ">
+
+            <div>
+
+                <div class="summary-label">
+                    Inactive Modules
+                </div>
+
+                <h3 class="summary-value">
+                    {{ inactive_modules }}
+                </h3>
+
+            </div>
+
+            <div class="summary-icon">
+                <i class="bi bi-exclamation-circle"></i>
+            </div>
+
+        </div>
+
+
+
+        <div class="
+            summary-card
+            summary-days
+        ">
+
+            <div>
+
+                <div class="summary-label">
+                    Selected Days
+                </div>
+
+                <h3 class="summary-value">
+                    {{ selected_days }}
+                </h3>
+
+            </div>
+
+            <div class="summary-icon">
+                <i class="bi bi-calendar3"></i>
+            </div>
+
+        </div>
+
+
+
+        <div class="
+            summary-card
+            summary-hours
+        ">
+
+            <div>
+
+                <div class="summary-label">
+                    Working Time
+                </div>
+
+                <h3 class="
+                    summary-value
+                    summary-time-value
+                ">
+                    {{ total_working_time }}
+                </h3>
+
+            </div>
+
+            <div class="summary-icon">
+                <i class="bi bi-clock-history"></i>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ======================================================
+         APPLICATION MODULE PANEL
+    ======================================================= -->
+
+    <div class="health-panel">
+
+
+        <div class="health-panel-header">
+
+
+            <div class="health-panel-title">
+
+                <div class="health-panel-icon">
+
+                    <i class="bi bi-window-stack"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h4>
+
+                        Application Modules
+
+                    </h4>
+
+
+                    <p>
+
+                        Module-wise software health
+                        and SLA monitoring
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="panel-count">
+
+                <i class="bi bi-boxes"></i>
+
+                {{ total_modules }} Modules
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="health-panel-body">
+
+
+            <div class="module-grid">
+
+
+                {% for module in modules %}
+
+
+                <!-- ==================================================
+                     MODULE CARD
+                =================================================== -->
+
+                <div class="module-card">
+
+
+                    <!-- HEADER -->
+
+                    <div class="module-card-header">
+
+
+                        <div class="module-card-left">
+
+
+                            <div class="module-icon">
+
+                                <i class="bi bi-window"></i>
+
+                            </div>
+
+
+                            <div class="module-title">
+
+
+                                <h5>
+
+                                    {{ module.moduleName }}
+
+                                </h5>
+
+
+                                <p>
+
+                                    {{ module.description }}
+
+                                </p>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        {% if module.is_active %}
+
+                        <span class="
+                            module-status
+                            module-active
+                        ">
+
+                            Active
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="
+                            module-status
+                            module-inactive
+                        ">
+
+                            Inactive
+
+                        </span>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+
+                    <!-- ==================================================
+                         AVAILABILITY HIGHLIGHT
+                    =================================================== -->
+
+                    <div class="availability-highlight">
+
+
+                        <div class="availability-left">
+
+
+                            <div class="availability-icon">
+
+                                <i class="bi bi-speedometer2"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <span class="availability-label">
+
+                                    Availability
+
+                                </span>
+
+
+                                <div class="availability-text">
+
+                                    Current SLA Performance
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div class="availability-percentage">
+
+                            {{ module.availability_percentage }}%
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ==================================================
+                         UPTIME / DOWNTIME
+                    =================================================== -->
+
+                    <div class="module-metrics">
+
+
+                        <div class="
+                            metric-card
+                            metric-up
+                        ">
+
+
+                            <div class="metric-card-header">
+
+                                <i class="bi bi-arrow-up-circle"></i>
+
+                                Uptime
+
+                            </div>
+
+
+                            <div class="metric-value">
+
+                                {{ module.uptime_time }}
+
+                            </div>
+
+
+                            <span class="metric-percent">
+
+                                {{ module.uptime_percentage }}%
+
+                            </span>
+
+
+                        </div>
+
+
+
+                        <div class="
+                            metric-card
+                            metric-down
+                        ">
+
+
+                            <div class="metric-card-header">
+
+                                <i class="bi bi-arrow-down-circle"></i>
+
+                                Downtime
+
+                            </div>
+
+
+                            <div class="metric-value">
+
+                                {{ module.downtime_time }}
+
+                            </div>
+
+
+                            <span class="metric-percent">
+
+                                {{ module.downtime_percentage }}%
+
+                            </span>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ==================================================
+                         EXTRA INFORMATION
+                    =================================================== -->
+
+                    <div class="module-info-grid">
+
+
+                        <div class="info-box">
+
+                            <span class="info-label">
+
+                                Tickets
+
+                            </span>
+
+                            <span class="info-value">
+
+                                {{ module.total_tickets }}
+
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="info-box">
+
+                            <span class="info-label">
+
+                                Working Time
+
+                            </span>
+
+                            <span class="info-value">
+
+                                {{ module.total_working_time }}
+
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="info-box">
+
+                            <span class="info-label">
+
+                                Down Time
+
+                            </span>
+
+                            <span class="info-value">
+
+                                {{ module.downtime_time }}
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ==================================================
+                         AVAILABILITY PROGRESS
+                    =================================================== -->
+
+                    <div class="availability-progress">
+
+
+                        <div class="progress-header">
+
+                            <span>
+
+                                SLA Availability
+
+                            </span>
+
+
+                            <span>
+
+                                {{ module.availability_percentage }}%
+
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill"
+                                style="
+                                    width:
+                                    {{ module.availability_percentage }}%;
+                                "
+                            ></div>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ==================================================
+                         FOOTER
+                    =================================================== -->
+
+                    <div class="module-footer">
+
+
+                        <small>
+
+                            {% if module.is_active %}
+
+                            <i
+                                class="bi bi-circle-fill"
+                                style="color:#16a34a;"
+                            ></i>
+
+                            Module operational
+
+                            {% else %}
+
+                            <i
+                                class="bi bi-circle-fill"
+                                style="color:#dc2626;"
+                            ></i>
+
+                            Module disabled
+
+                            {% endif %}
+
+                        </small>
+
+
+
+                        <a
+                            href="#"
+                            class="view-details"
+                        >
+
+                            Details
+
+                            <i class="
+                                bi
+                                bi-arrow-right
+                            "></i>
+
+                        </a>
+
+
+                    </div>
+
+
+                </div>
+
+
+                {% empty %}
+
+
+                <!-- ==================================================
+                     EMPTY STATE
+                =================================================== -->
+
+                <div class="no-module">
+
+
+                    <div class="no-module-icon">
+
+                        <i class="bi bi-inbox"></i>
+
+                    </div>
+
+
+                    <strong>
+
+                        No Software Modules Found
+
+                    </strong>
+
+
+                    <p>
+
+                        Add software modules from
+                        Software Module Master.
+
+                    </p>
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

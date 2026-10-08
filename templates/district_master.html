@@ -1,0 +1,1166 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+
+<style>
+
+/* ============================================================
+   MASTER CARD
+============================================================ */
+
+.master-card {
+
+    border: none;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 2px 12px
+        rgba(15, 23, 42, 0.05);
+
+    background: #ffffff;
+}
+
+
+.master-card .card-header {
+
+    background: transparent;
+
+    border-bottom:
+        1px solid #edf1f7;
+
+    padding: 20px 22px;
+}
+
+
+.master-card .card-header h4 {
+
+    margin: 0;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    color: #002152;
+}
+
+
+.master-card .card-body {
+
+    padding: 22px;
+}
+
+
+/* ============================================================
+   FORM
+============================================================ */
+
+.master-card .form-label {
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #475569;
+
+    margin-bottom: 7px;
+}
+
+
+.master-card .form-control,
+.master-card .form-select {
+
+    min-height: 43px;
+
+    border:
+        1px solid #dce3ed;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+
+    color: #334155;
+
+    transition:
+        all .2s ease;
+}
+
+
+.master-card textarea.form-control {
+
+    min-height: 90px;
+}
+
+
+.master-card .form-control:focus,
+.master-card .form-select:focus {
+
+    border-color: #002152;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(0, 33, 82, .10);
+}
+
+
+/* ============================================================
+   CREATE BUTTON
+============================================================ */
+
+.btn-create {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    width: 100%;
+
+    padding: 12px 20px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #ffffff;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #002152 0%,
+            #0b3d85 100%
+        );
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 33, 82, .25);
+
+    transition:
+        all .25s ease;
+
+    cursor: pointer;
+}
+
+
+.btn-create:hover {
+
+    color: #ffffff;
+
+    transform:
+        translateY(-2px);
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b3d85 0%,
+            #002152 100%
+        );
+
+    box-shadow:
+        0 8px 18px
+        rgba(0, 33, 82, .30);
+}
+
+
+/* ============================================================
+   TABLE WRAPPER
+============================================================ */
+
+.data-table-wrap {
+
+    width: 100%;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling:
+        touch;
+}
+
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.data-table {
+
+    width: 100%;
+
+    min-width: 850px;
+
+    margin: 0;
+
+    border-collapse:
+        separate;
+
+    border-spacing: 0;
+}
+
+
+/* ============================================================
+   TABLE HEADER
+============================================================ */
+
+.data-table thead th {
+
+    padding:
+        14px 13px !important;
+
+    background: #f5f8fc;
+
+    color: #64748b;
+
+    font-size: 11.5px;
+
+    font-weight: 700;
+
+    letter-spacing: .7px;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+
+    border: none;
+
+    border-bottom:
+        1px solid #e2e8f0;
+
+    vertical-align: middle;
+}
+
+
+/* ============================================================
+   TABLE BODY
+============================================================ */
+
+.data-table tbody td {
+
+    padding:
+        14px 13px !important;
+
+    font-size: 14px;
+
+    color: #475569;
+
+    background: #ffffff;
+
+    border: none;
+
+    border-bottom:
+        1px solid #f0f4f9;
+
+    vertical-align: middle;
+}
+
+
+.data-table tbody tr:last-child td {
+
+    border-bottom: none;
+}
+
+
+.data-table tbody tr:hover td {
+
+    background:
+        rgba(0, 33, 82, .025);
+}
+
+
+/* ============================================================
+   SERIAL
+============================================================ */
+
+.col-sr {
+
+    width: 55px;
+
+    min-width: 55px;
+
+    text-align: center;
+}
+
+
+.data-table td.col-sr {
+
+    color: #94a3b8;
+
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   COLUMN WIDTHS
+============================================================ */
+
+.state-column {
+
+    min-width: 150px;
+}
+
+
+.district-column {
+
+    min-width: 160px;
+}
+
+
+.code-column {
+
+    min-width: 110px;
+}
+
+
+.description-column {
+
+    min-width: 180px;
+}
+
+
+.status-column {
+
+    min-width: 100px;
+}
+
+
+.created-column {
+
+    min-width: 120px;
+}
+
+
+/* ============================================================
+   CODE BADGE
+============================================================ */
+
+.code-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        5px 9px;
+
+    border-radius: 6px;
+
+    background: #eff6ff;
+
+    color: #002152;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   STATE BADGE
+============================================================ */
+
+.state-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding:
+        5px 9px;
+
+    border-radius: 6px;
+
+    background: #f1f5f9;
+
+    color: #334155;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+.status-active {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        5px 10px;
+
+    border-radius: 6px;
+
+    background: #d1fae5;
+
+    color: #047857;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.status-inactive {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        5px 10px;
+
+    border-radius: 6px;
+
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   TOTAL BADGE
+============================================================ */
+
+.total-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        6px 12px;
+
+    border-radius: 7px;
+
+    background: #eff6ff;
+
+    color: #002152;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   EMPTY TABLE
+============================================================ */
+
+.table-empty {
+
+    padding:
+        45px 16px !important;
+
+    text-align: center;
+}
+
+
+.table-empty i {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 34px;
+
+    color: #cbd5e1;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 991px) {
+
+    .district-list-card {
+
+        margin-top: 20px;
+
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .master-card .card-body {
+
+        padding: 15px;
+
+    }
+
+
+    .master-card .card-header {
+
+        padding: 16px;
+
+    }
+
+}
+
+</style>
+
+
+
+<!-- ============================================================
+     PAGE HEADING
+============================================================ -->
+
+<div class="page-heading">
+
+    <h3>
+        District Master
+    </h3>
+
+</div>
+
+
+
+<!-- ============================================================
+     DJANGO MESSAGES
+============================================================ -->
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div
+            class="alert
+                   alert-{{ message.tags }}
+                   alert-dismissible
+                   fade show"
+
+            role="alert"
+        >
+
+            {{ message }}
+
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            >
+            </button>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+
+
+<div class="page-content">
+
+
+    <section class="row g-3">
+
+
+
+        <!-- ====================================================
+             LEFT SIDE
+             CREATE DISTRICT
+        ===================================================== -->
+
+        <div class="col-12 col-lg-4">
+
+
+            <div class="card master-card">
+
+
+                <!-- CARD HEADER -->
+
+                <div class="card-header">
+
+                    <h4>
+                        Create District
+                    </h4>
+
+                </div>
+
+
+
+                <!-- CARD BODY -->
+
+                <div class="card-body">
+
+
+                    <form
+                        method="POST"
+                        action=""
+                    >
+
+                        {% csrf_token %}
+
+
+
+                        <!-- =====================================
+                             STATE
+                        ====================================== -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label
+                                for="state"
+                                class="form-label"
+                            >
+
+                                State
+
+                                <span class="text-danger">
+                                    *
+                                </span>
+
+                            </label>
+
+
+                            <select
+                                name="state"
+                                id="state"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Select State
+                                </option>
+
+
+                                {% for state in states %}
+
+                                    <option
+                                        value="{{ state.id }}"
+                                    >
+
+                                        {{ state.name }}
+                                        ({{ state.code }})
+
+                                    </option>
+
+                                {% endfor %}
+
+
+                            </select>
+
+
+                        </div>
+
+
+
+                        <!-- =====================================
+                             DISTRICT NAME
+                        ====================================== -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label
+                                for="name"
+                                class="form-label"
+                            >
+
+                                District Name
+
+                                <span class="text-danger">
+                                    *
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                class="form-control"
+                                placeholder="Example: Dehradun"
+                                required
+                            >
+
+
+                        </div>
+
+
+
+                        <!-- =====================================
+                             DISTRICT CODE
+                        ====================================== -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label
+                                for="code"
+                                class="form-label"
+                            >
+
+                                District Code
+
+                                <span class="text-danger">
+                                    *
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                id="code"
+                                name="code"
+                                class="form-control"
+                                placeholder="Example: DDN"
+                                required
+                            >
+
+
+                        </div>
+
+
+
+                        <!-- =====================================
+                             DESCRIPTION
+                        ====================================== -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label
+                                for="description"
+                                class="form-label"
+                            >
+
+                                Description
+
+                            </label>
+
+
+                            <textarea
+                                name="description"
+                                id="description"
+                                class="form-control"
+                                rows="3"
+                                placeholder="Enter District Description"
+                            ></textarea>
+
+
+                        </div>
+
+
+
+                        <!-- =====================================
+                             STATUS
+                        ====================================== -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label
+                                for="is_active"
+                                class="form-label"
+                            >
+
+                                Status
+
+                            </label>
+
+
+                            <select
+                                name="is_active"
+                                id="is_active"
+                                class="form-select"
+                            >
+
+                                <option value="1">
+                                    Active
+                                </option>
+
+                                <option value="0">
+                                    Inactive
+                                </option>
+
+                            </select>
+
+
+                        </div>
+
+
+
+                        <!-- =====================================
+                             BUTTON
+                        ====================================== -->
+
+                        <div class="form-group mt-4 mb-0">
+
+
+                            <button
+                                type="submit"
+                                class="btn-create"
+                            >
+
+                                <i class="bi bi-plus-circle"></i>
+
+                                Create District
+
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ====================================================
+             RIGHT SIDE
+             DISTRICT LIST
+        ===================================================== -->
+
+        <div class="col-12 col-lg-8">
+
+
+            <div
+                class="card
+                       master-card
+                       district-list-card"
+            >
+
+
+                <!-- HEADER -->
+
+                <div class="card-header">
+
+
+                    <div
+                        class="d-flex
+                               justify-content-between
+                               align-items-center"
+                    >
+
+
+                        <h4>
+                            District List
+                        </h4>
+
+
+                        <span class="total-badge">
+
+                            Total:
+                            {{ districts.count }}
+
+                        </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- BODY -->
+
+                <div class="card-body">
+
+
+                    <div class="data-table-wrap">
+
+
+                        <table class="data-table">
+
+
+                            <!-- =================================
+                                 HEADER
+                            ================================== -->
+
+                            <thead>
+
+
+                                <tr>
+
+
+                                    <th class="col-sr">
+                                        #
+                                    </th>
+
+
+                                    <th class="state-column">
+                                        State
+                                    </th>
+
+
+                                    <th class="district-column">
+                                        District
+                                    </th>
+
+
+                                    <th class="code-column">
+                                        Code
+                                    </th>
+
+
+                                    <th class="description-column">
+                                        Description
+                                    </th>
+
+
+                                    <th class="status-column">
+                                        Status
+                                    </th>
+
+
+                                    <th class="created-column">
+                                        Created At
+                                    </th>
+
+
+                                </tr>
+
+
+                            </thead>
+
+
+
+                            <!-- =================================
+                                 BODY
+                            ================================== -->
+
+                            <tbody>
+
+
+                                {% for district in districts %}
+
+
+                                    <tr>
+
+
+
+                                        <!-- SERIAL -->
+
+                                        <td class="col-sr">
+
+                                            {{ forloop.counter }}
+
+                                        </td>
+
+
+
+                                        <!-- STATE -->
+
+                                        <td class="state-column">
+
+
+                                            <span class="state-badge">
+
+                                                <i class="bi bi-geo-alt"></i>
+
+                                                {{ district.state.name }}
+
+                                            </span>
+
+
+                                        </td>
+
+
+
+                                        <!-- DISTRICT -->
+
+                                        <td class="district-column">
+
+
+                                            <p class="font-bold mb-0">
+
+                                                {{ district.name }}
+
+                                            </p>
+
+
+                                        </td>
+
+
+
+                                        <!-- CODE -->
+
+                                        <td class="code-column">
+
+
+                                            <span class="code-badge">
+
+                                                {{ district.code }}
+
+                                            </span>
+
+
+                                        </td>
+
+
+
+                                        <!-- DESCRIPTION -->
+
+                                        <td class="description-column">
+
+
+                                            {% if district.description %}
+
+
+                                                {{ district.description }}
+
+
+                                            {% else %}
+
+
+                                                <span class="text-muted">
+
+                                                    -
+
+                                                </span>
+
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- STATUS -->
+
+                                        <td class="status-column">
+
+
+                                            {% if district.is_active %}
+
+
+                                                <span class="status-active">
+
+                                                    Active
+
+                                                </span>
+
+
+                                            {% else %}
+
+
+                                                <span class="status-inactive">
+
+                                                    Inactive
+
+                                                </span>
+
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- CREATED AT -->
+
+                                        <td class="created-column">
+
+
+                                            {{ district.created_at|date:"d M Y" }}
+
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                {% empty %}
+
+
+
+                                    <!-- NO DATA -->
+
+                                    <tr>
+
+
+                                        <td
+                                            colspan="7"
+                                            class="table-empty"
+                                        >
+
+
+                                            <i class="bi bi-geo-alt"></i>
+
+
+                                            <p class="text-muted mb-0">
+
+                                                No District Found
+
+                                            </p>
+
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+{% endblock %}

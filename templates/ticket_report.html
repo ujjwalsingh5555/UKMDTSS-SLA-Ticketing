@@ -1,0 +1,2611 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    :root {
+        --report-primary: #0f2f5f;
+        --report-primary-2: #174b8f;
+        --report-accent: #2563eb;
+        --report-bg: #f5f7fb;
+        --report-card: #ffffff;
+        --report-text: #182230;
+        --report-muted: #667085;
+        --report-border: #e4e7ec;
+        --report-soft: #f8fafc;
+        --report-radius: 18px;
+    }
+
+
+    .ticket-report-page {
+        padding-bottom: 34px;
+    }
+
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+
+    .report-hero {
+        position: relative;
+        overflow: hidden;
+
+        margin-bottom: 22px;
+        padding: 27px 30px;
+
+        border-radius: 22px;
+
+        background:
+            radial-gradient(
+                circle at 88% 22%,
+                rgba(255,255,255,.18) 0 70px,
+                transparent 71px
+            ),
+            radial-gradient(
+                circle at 96% 90%,
+                rgba(255,255,255,.10) 0 125px,
+                transparent 126px
+            ),
+            linear-gradient(
+                135deg,
+                #0b2348 0%,
+                #123d76 55%,
+                #1b5aae 100%
+            );
+
+        color: #fff;
+
+        box-shadow:
+            0 16px 40px rgba(15, 47, 95, .16);
+    }
+
+
+    .report-hero::after {
+        content: "";
+
+        position: absolute;
+
+        width: 180px;
+        height: 180px;
+
+        top: -84px;
+        right: 180px;
+
+        border:
+            1px solid rgba(255,255,255,.15);
+
+        border-radius: 50%;
+    }
+
+
+    .report-hero-content {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+    }
+
+
+    .report-hero-left {
+        display: flex;
+        align-items: center;
+
+        gap: 14px;
+    }
+
+
+    .report-hero-icon {
+        width: 52px;
+        height: 52px;
+
+        display: grid;
+        place-items: center;
+
+        flex: 0 0 52px;
+
+        border:
+            1px solid rgba(255,255,255,.22);
+
+        border-radius: 15px;
+
+        background:
+            rgba(255,255,255,.12);
+
+        backdrop-filter: blur(8px);
+
+        font-size: 23px;
+    }
+
+
+    .report-hero h3 {
+        margin: 0 0 5px;
+
+        color: #fff;
+
+        font-size: 25px;
+        font-weight: 750;
+
+        letter-spacing: -.25px;
+    }
+
+
+    .report-hero p {
+        margin: 0;
+
+        color:
+            rgba(255,255,255,.76);
+
+        font-size: 13px;
+    }
+
+
+    .report-total-pill {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 8px;
+
+        padding: 9px 13px;
+
+        border:
+            1px solid rgba(255,255,255,.18);
+
+        border-radius: 999px;
+
+        background:
+            rgba(255,255,255,.10);
+
+        color: #fff;
+
+        font-size: 12px;
+        font-weight: 650;
+
+        white-space: nowrap;
+    }
+
+
+    /* =========================================================
+       SUMMARY CARDS
+    ========================================================= */
+
+    .report-summary-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(5, minmax(0, 1fr));
+
+        gap: 14px;
+
+        margin-bottom: 20px;
+    }
+
+
+    .report-summary-card {
+        position: relative;
+
+        overflow: hidden;
+
+        min-height: 112px;
+
+        padding: 18px;
+
+        border:
+            1px solid var(--report-border);
+
+        border-radius: 16px;
+
+        background: #fff;
+
+        box-shadow:
+            0 8px 26px rgba(16, 24, 40, .045);
+
+        transition:
+            transform .2s ease,
+            box-shadow .2s ease;
+    }
+
+
+    .report-summary-card:hover {
+        transform:
+            translateY(-2px);
+
+        box-shadow:
+            0 11px 30px rgba(16, 24, 40, .075);
+    }
+
+
+    .report-summary-card::after {
+        content: "";
+
+        position: absolute;
+
+        width: 82px;
+        height: 82px;
+
+        right: -28px;
+        bottom: -36px;
+
+        border-radius: 50%;
+
+        background: currentColor;
+
+        opacity: .045;
+    }
+
+
+    .summary-top {
+        display: flex;
+
+        align-items: flex-start;
+        justify-content: space-between;
+
+        gap: 10px;
+    }
+
+
+    .summary-label {
+        margin-bottom: 7px;
+
+        color: #7a8699;
+
+        font-size: 10px;
+        font-weight: 800;
+
+        letter-spacing: .55px;
+
+        text-transform: uppercase;
+    }
+
+
+    .summary-value {
+        margin: 0;
+
+        color: #172b4d;
+
+        font-size: 27px;
+        font-weight: 800;
+
+        line-height: 1;
+    }
+
+
+    .summary-icon {
+        width: 40px;
+        height: 40px;
+
+        display: grid;
+        place-items: center;
+
+        flex: 0 0 40px;
+
+        border-radius: 11px;
+
+        font-size: 17px;
+    }
+
+
+    .summary-total {
+        color: #174b8f;
+    }
+
+    .summary-total .summary-icon {
+        color: #174b8f;
+        background: #edf4ff;
+    }
+
+
+    .summary-open {
+        color: #b7791f;
+    }
+
+    .summary-open .summary-icon {
+        color: #b7791f;
+        background: #fff7df;
+    }
+
+
+    .summary-progress {
+        color: #2563eb;
+    }
+
+    .summary-progress .summary-icon {
+        color: #2563eb;
+        background: #edf4ff;
+    }
+
+
+    .summary-resolved {
+        color: #15803d;
+    }
+
+    .summary-resolved .summary-icon {
+        color: #15803d;
+        background: #ecfdf3;
+    }
+
+
+    .summary-closed {
+        color: #64748b;
+    }
+
+    .summary-closed .summary-icon {
+        color: #64748b;
+        background: #f1f5f9;
+    }
+
+
+    /* =========================================================
+       MAIN PANEL
+    ========================================================= */
+
+    .report-panel {
+        margin-bottom: 20px;
+
+        border:
+            1px solid var(--report-border);
+
+        border-radius:
+            var(--report-radius);
+
+        background: #fff;
+
+        box-shadow:
+            0 8px 28px rgba(16,24,40,.05);
+
+        overflow: hidden;
+    }
+
+
+    .report-panel-header {
+        display: flex;
+
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 16px;
+
+        padding: 18px 21px;
+
+        border-bottom:
+            1px solid #edf0f4;
+
+        background:
+            linear-gradient(
+                180deg,
+                #fff 0%,
+                #fcfdff 100%
+            );
+    }
+
+
+    .panel-title-wrap {
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+    }
+
+
+    .panel-icon {
+        width: 36px;
+        height: 36px;
+
+        display: grid;
+        place-items: center;
+
+        flex: 0 0 36px;
+
+        border-radius: 10px;
+
+        background: #eef4ff;
+        color:
+            var(--report-primary-2);
+
+        font-size: 16px;
+    }
+
+
+    .report-panel-header h4 {
+        margin: 0;
+
+        color: #1f2f46;
+
+        font-size: 15px;
+        font-weight: 750;
+    }
+
+
+    .report-panel-header p {
+        margin: 2px 0 0;
+
+        color: #98a2b3;
+
+        font-size: 10px;
+    }
+
+
+    .report-panel-body {
+        padding: 20px 21px;
+    }
+
+
+    /* =========================================================
+       FILTERS
+    ========================================================= */
+
+    .filter-grid {
+        display: grid;
+
+        grid-template-columns:
+            2fr repeat(5, 1fr);
+
+        gap: 13px;
+
+        align-items: end;
+    }
+
+
+    .filter-label {
+        margin-bottom: 6px;
+
+        color: #475467;
+
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+
+    .filter-control {
+        min-height: 42px;
+
+        width: 100%;
+
+        border:
+            1px solid #d9dee7;
+
+        border-radius: 9px;
+
+        background-color: #fff;
+
+        color: #344054;
+
+        font-size: 12px;
+
+        box-shadow: none;
+
+        transition: .2s ease;
+    }
+
+
+    input.filter-control {
+        padding: 9px 12px;
+    }
+
+
+    select.filter-control {
+        padding:
+            9px 30px 9px 11px;
+    }
+
+
+    .filter-control:focus {
+        outline: none;
+
+        border-color: #7ca3da;
+
+        box-shadow:
+            0 0 0 4px
+            rgba(37,99,235,.07);
+    }
+
+
+    .filter-control::placeholder {
+        color: #a4adba;
+    }
+
+
+    .filter-actions {
+        display: flex;
+
+        justify-content: flex-end;
+
+        gap: 9px;
+
+        margin-top: 16px;
+    }
+
+
+    .btn-report-filter,
+    .btn-report-reset {
+        min-height: 41px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 7px;
+
+        padding: 9px 16px;
+
+        border-radius: 9px;
+
+        font-size: 11px;
+        font-weight: 700;
+
+        text-decoration: none;
+
+        transition: .2s ease;
+    }
+
+
+    .btn-report-filter {
+        min-width: 130px;
+
+        border:
+            1px solid transparent;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f2f5f 0%,
+                #184f96 100%
+            );
+
+        color: #fff;
+
+        box-shadow:
+            0 6px 16px rgba(15,47,95,.14);
+    }
+
+
+    .btn-report-filter:hover {
+        color: #fff;
+
+        transform:
+            translateY(-1px);
+    }
+
+
+    .btn-report-reset {
+        border:
+            1px solid #d9dee7;
+
+        background: #fff;
+
+        color: #667085;
+    }
+
+
+    .btn-report-reset:hover {
+        background: #f8fafc;
+
+        color: #344054;
+    }
+
+
+    /* =========================================================
+       TABLE
+    ========================================================= */
+
+    .ticket-table-wrap {
+        width: 100%;
+
+        overflow-x: auto;
+
+        border:
+            1px solid #e7ebf0;
+
+        border-radius: 12px;
+    }
+
+
+    .ticket-report-table {
+        width: 100%;
+
+        min-width: 1600px;
+
+        margin: 0;
+
+        border-collapse: separate;
+
+        border-spacing: 0;
+    }
+
+
+    .ticket-report-table thead th {
+        padding: 11px 13px;
+
+        border: 0;
+
+        border-bottom:
+            1px solid #e8edf3;
+
+        background: #f7f9fc;
+
+        color: #697586;
+
+        font-size: 9.5px;
+        font-weight: 800;
+
+        letter-spacing: .55px;
+
+        text-transform: uppercase;
+
+        white-space: nowrap;
+
+        vertical-align: middle;
+    }
+
+
+    .ticket-report-table tbody td {
+        padding: 12px 13px;
+
+        border: 0;
+
+        border-bottom:
+            1px solid #f0f3f7;
+
+        background: #fff;
+
+        color: #475467;
+
+        font-size: 11.5px;
+
+        vertical-align: middle;
+    }
+
+
+    .ticket-report-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+
+    .ticket-report-table tbody tr:hover td {
+        background: #fbfdff;
+    }
+
+
+    .table-serial {
+        width: 42px;
+
+        color:
+            #98a2b3 !important;
+
+        font-weight: 600;
+    }
+
+
+    .ticket-number {
+        color: #123d76;
+
+        font-weight: 750;
+
+        white-space: nowrap;
+    }
+
+
+    .ticket-type-chip {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 5px;
+
+        padding: 5px 8px;
+
+        border-radius: 7px;
+
+        background: #f2f5f9;
+
+        color: #536174;
+
+        font-size: 10px;
+        font-weight: 700;
+
+        white-space: nowrap;
+    }
+
+
+    .subject-cell {
+        max-width: 245px;
+
+        color: #344054;
+
+        font-weight: 550;
+    }
+
+
+    .user-cell {
+        display: flex;
+        align-items: center;
+
+        gap: 7px;
+
+        white-space: nowrap;
+    }
+
+
+    .user-avatar {
+        width: 28px;
+        height: 28px;
+
+        display: grid;
+        place-items: center;
+
+        flex: 0 0 28px;
+
+        border-radius: 50%;
+
+        background: #eef4ff;
+
+        color: #315e96;
+
+        font-size: 10px;
+        font-weight: 800;
+
+        text-transform: uppercase;
+    }
+
+
+    /* =========================================================
+       BADGES
+    ========================================================= */
+
+    .badge-soft {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 5px;
+
+        padding: 5px 8px;
+
+        border-radius: 999px;
+
+        font-size: 9.5px;
+        font-weight: 750;
+
+        white-space: nowrap;
+    }
+
+
+    .badge-soft::before {
+        content: "";
+
+        width: 5px;
+        height: 5px;
+
+        flex: 0 0 5px;
+
+        border-radius: 50%;
+
+        background: currentColor;
+    }
+
+
+    .priority-low {
+        color: #16803b;
+        background: #edf9f0;
+    }
+
+
+    .priority-medium {
+        color: #ad7515;
+        background: #fff8e8;
+    }
+
+
+    .priority-high {
+        color: #c15d12;
+        background: #fff2e8;
+    }
+
+
+    .priority-critical {
+        color: #c73737;
+        background: #fff0f0;
+    }
+
+
+    .status-open {
+        color: #b7791f;
+        background: #fff8e7;
+    }
+
+
+    .status-progress {
+        color: #2563eb;
+        background: #eef4ff;
+    }
+
+
+    .status-resolved {
+        color: #16803b;
+        background: #edf9f0;
+    }
+
+
+    .status-closed {
+        color: #64748b;
+        background: #f1f5f9;
+    }
+
+
+    /* =========================================================
+       ATTACHMENT
+    ========================================================= */
+
+    .attachment-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 5px;
+
+        min-height: 30px;
+
+        padding: 5px 9px;
+
+        border:
+            1px solid #d8e2f0;
+
+        border-radius: 8px;
+
+        background: #fff;
+
+        color: #315e96;
+
+        font-size: 10px;
+        font-weight: 700;
+
+        text-decoration: none;
+    }
+
+
+    .attachment-link:hover {
+        background: #f7faff;
+
+        color: #123d76;
+    }
+
+
+    /* =========================================================
+       CHAT BUTTON
+    ========================================================= */
+
+    .chat-action-btn {
+        min-width: 92px;
+        height: 34px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 6px;
+
+        padding: 6px 11px;
+
+        border:
+            1px solid #d5e3f5;
+
+        border-radius: 9px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eef5ff 0%,
+                #f7faff 100%
+            );
+
+        color: #174b8f;
+
+        font-size: 10.5px;
+        font-weight: 750;
+
+        text-decoration: none;
+
+        white-space: nowrap;
+
+        transition: all .2s ease;
+    }
+
+
+    .chat-action-btn i {
+        font-size: 13px;
+    }
+
+
+    .chat-action-btn:hover {
+        border-color: #174b8f;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f2f5f 0%,
+                #174b8f 100%
+            );
+
+        color: #fff;
+
+        transform:
+            translateY(-1px);
+
+        box-shadow:
+            0 5px 14px rgba(15,47,95,.16);
+    }
+
+
+    .chat-active {
+        border-color: transparent;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f2f5f 0%,
+                #174b8f 100%
+            );
+
+        color: #fff;
+    }
+
+
+    .chat-disabled {
+        min-width: 92px;
+        height: 34px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 6px;
+
+        padding: 6px 10px;
+
+        border:
+            1px solid #e4e7ec;
+
+        border-radius: 9px;
+
+        background: #f8fafc;
+
+        color: #98a2b3;
+
+        font-size: 10px;
+        font-weight: 650;
+
+        white-space: nowrap;
+
+        cursor: not-allowed;
+    }
+
+
+    /* =========================================================
+       DATE
+    ========================================================= */
+
+    .date-cell {
+        white-space: nowrap;
+    }
+
+
+    .date-cell strong {
+        display: block;
+
+        color: #4a5568;
+
+        font-size: 10.5px;
+        font-weight: 650;
+    }
+
+
+    .date-cell small {
+        color: #98a2b3;
+
+        font-size: 9.5px;
+    }
+
+
+    /* =========================================================
+       EMPTY REPORT
+    ========================================================= */
+
+    .empty-report {
+        padding:
+            55px 15px !important;
+
+        text-align: center;
+
+        color:
+            #98a2b3 !important;
+    }
+
+
+    .empty-report i {
+        display: block;
+
+        margin-bottom: 10px;
+
+        color: #c7d0dc;
+
+        font-size: 34px;
+    }
+
+
+    /* =========================================================
+       PAGINATION
+    ========================================================= */
+
+    .report-pagination {
+        display: flex;
+
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 14px;
+
+        flex-wrap: wrap;
+
+        margin-top: 18px;
+    }
+
+
+    .page-info {
+        color: #8a94a6;
+
+        font-size: 10.5px;
+    }
+
+
+    .report-pagination .pagination {
+        margin: 0;
+
+        gap: 4px;
+    }
+
+
+    .report-pagination .page-link {
+        min-width: 32px;
+        height: 32px;
+
+        display: grid;
+        place-items: center;
+
+        padding: 5px 8px;
+
+        border:
+            1px solid #e1e6ed;
+
+        border-radius:
+            8px !important;
+
+        background: #fff;
+
+        color: #43566f;
+
+        font-size: 10px;
+
+        box-shadow: none;
+    }
+
+
+    .report-pagination
+    .page-item.active
+    .page-link {
+        border-color: #123d76;
+
+        background: #123d76;
+
+        color: #fff;
+    }
+
+
+    .report-pagination
+    .page-item.disabled
+    .page-link {
+        background: #f8fafc;
+
+        color: #b3bbc7;
+    }
+
+
+    .result-count-badge {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 6px;
+
+        padding: 6px 9px;
+
+        border-radius: 999px;
+
+        background: #f3f6fa;
+
+        color: #667085;
+
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 1399px) {
+
+        .filter-grid {
+            grid-template-columns:
+                2fr repeat(3, 1fr);
+        }
+
+
+        .report-summary-grid {
+            grid-template-columns:
+                repeat(
+                    5,
+                    minmax(150px, 1fr)
+                );
+
+            overflow-x: auto;
+
+            padding-bottom: 4px;
+        }
+
+    }
+
+
+    @media (max-width: 991px) {
+
+        .filter-grid {
+            grid-template-columns:
+                1fr 1fr;
+        }
+
+    }
+
+
+    @media (max-width: 767px) {
+
+        .report-hero {
+            padding: 22px 20px;
+
+            border-radius: 16px;
+        }
+
+
+        .report-hero-content {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+
+        .report-hero h3 {
+            font-size: 21px;
+        }
+
+
+        .report-panel-header {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+
+        .report-panel-body {
+            padding: 16px;
+        }
+
+
+        .filter-grid {
+            grid-template-columns:
+                1fr;
+        }
+
+
+        .filter-actions {
+            flex-direction: column;
+        }
+
+
+        .btn-report-filter,
+        .btn-report-reset {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<div class="ticket-report-page">
+
+
+    <!-- =========================================================
+         HERO
+    ========================================================== -->
+
+    <div class="report-hero">
+
+        <div class="report-hero-content">
+
+            <div class="report-hero-left">
+
+                <div class="report-hero-icon">
+
+                    <i class="bi bi-bar-chart-line"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Ticket Report
+                    </h3>
+
+                    <p>
+                        Monitor, filter and review your support tickets from one place.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-total-pill">
+
+                <i class="bi bi-ticket-perforated"></i>
+
+                {{ total_tickets }}
+                Total Tickets
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         SUMMARY
+    ========================================================== -->
+
+    <div class="report-summary-grid">
+
+
+        <!-- TOTAL -->
+
+        <div class="report-summary-card summary-total">
+
+            <div class="summary-top">
+
+                <div>
+
+                    <div class="summary-label">
+                        Total Tickets
+                    </div>
+
+                    <h3 class="summary-value">
+                        {{ total_tickets }}
+                    </h3>
+
+                </div>
+
+
+                <div class="summary-icon">
+
+                    <i class="bi bi-ticket-perforated"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- OPEN -->
+
+        <div class="report-summary-card summary-open">
+
+            <div class="summary-top">
+
+                <div>
+
+                    <div class="summary-label">
+                        Open
+                    </div>
+
+                    <h3 class="summary-value">
+                        {{ open_count }}
+                    </h3>
+
+                </div>
+
+
+                <div class="summary-icon">
+
+                    <i class="bi bi-folder2-open"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- IN PROGRESS -->
+
+        <div class="report-summary-card summary-progress">
+
+            <div class="summary-top">
+
+                <div>
+
+                    <div class="summary-label">
+                        In Progress
+                    </div>
+
+                    <h3 class="summary-value">
+                        {{ in_progress_count }}
+                    </h3>
+
+                </div>
+
+
+                <div class="summary-icon">
+
+                    <i class="bi bi-arrow-repeat"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- RESOLVED -->
+
+        <div class="report-summary-card summary-resolved">
+
+            <div class="summary-top">
+
+                <div>
+
+                    <div class="summary-label">
+                        Resolved
+                    </div>
+
+                    <h3 class="summary-value">
+                        {{ resolved_count }}
+                    </h3>
+
+                </div>
+
+
+                <div class="summary-icon">
+
+                    <i class="bi bi-check-circle"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CLOSED -->
+
+        <div class="report-summary-card summary-closed">
+
+            <div class="summary-top">
+
+                <div>
+
+                    <div class="summary-label">
+                        Closed
+                    </div>
+
+                    <h3 class="summary-value">
+                        {{ closed_count }}
+                    </h3>
+
+                </div>
+
+
+                <div class="summary-icon">
+
+                    <i class="bi bi-lock"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         FILTER PANEL
+    ========================================================== -->
+
+    <div class="report-panel">
+
+
+        <div class="report-panel-header">
+
+            <div class="panel-title-wrap">
+
+                <div class="panel-icon">
+
+                    <i class="bi bi-funnel"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h4>
+                        Filter Tickets
+                    </h4>
+
+                    <p>
+                        Use one or more filters to narrow the report.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="report-panel-body">
+
+
+            <form
+                method="GET"
+                action=""
+            >
+
+
+                <div class="filter-grid">
+
+
+                    <!-- SEARCH -->
+
+                    <div>
+
+                        <label
+                            for="search"
+                            class="filter-label"
+                        >
+                            Search
+                        </label>
+
+
+                        <input
+                            type="text"
+                            name="search"
+                            id="search"
+                            class="filter-control"
+                            value="{{ search }}"
+                            placeholder="Ticket No / Subject / User / Gate / Module"
+                        >
+
+                    </div>
+
+
+
+                    <!-- TYPE -->
+
+                    <div>
+
+                        <label
+                            for="ticket_type"
+                            class="filter-label"
+                        >
+                            Ticket Type
+                        </label>
+
+
+                        <select
+                            name="ticket_type"
+                            id="ticket_type"
+                            class="filter-control"
+                        >
+
+                            <option value="">
+                                All Types
+                            </option>
+
+
+                            {% for ticket_type in ticket_types %}
+
+                                <option
+                                    value="{{ ticket_type.id }}"
+
+                                    {% if selected_ticket_type == ticket_type.id|stringformat:"s" %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ ticket_type.name }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- PRIORITY -->
+
+                    <div>
+
+                        <label
+                            for="priority"
+                            class="filter-label"
+                        >
+                            Priority
+                        </label>
+
+
+                        <select
+                            name="priority"
+                            id="priority"
+                            class="filter-control"
+                        >
+
+                            <option value="">
+                                All Priorities
+                            </option>
+
+
+                            {% for priority in priorities %}
+
+                                <option
+                                    value="{{ priority.id }}"
+
+                                    {% if selected_priority == priority.id|stringformat:"s" %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ priority.name }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- STATUS -->
+
+                    <div>
+
+                        <label
+                            for="status"
+                            class="filter-label"
+                        >
+                            Status
+                        </label>
+
+
+                        <select
+                            name="status"
+                            id="status"
+                            class="filter-control"
+                        >
+
+                            <option value="">
+                                All Status
+                            </option>
+
+
+                            <option
+                                value="OPEN"
+                                {% if selected_status == "OPEN" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Open
+                            </option>
+
+
+                            <option
+                                value="IN_PROGRESS"
+                                {% if selected_status == "IN_PROGRESS" %}
+                                    selected
+                                {% endif %}
+                            >
+                                In Progress
+                            </option>
+
+
+                            <option
+                                value="RESOLVED"
+                                {% if selected_status == "RESOLVED" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Resolved
+                            </option>
+
+
+                            <option
+                                value="CLOSED"
+                                {% if selected_status == "CLOSED" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Closed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- FROM DATE -->
+
+                    <div>
+
+                        <label
+                            for="from_date"
+                            class="filter-label"
+                        >
+                            From Date
+                        </label>
+
+
+                        <input
+                            type="date"
+                            name="from_date"
+                            id="from_date"
+                            class="filter-control"
+                            value="{{ from_date }}"
+                        >
+
+                    </div>
+
+
+
+                    <!-- TO DATE -->
+
+                    <div>
+
+                        <label
+                            for="to_date"
+                            class="filter-label"
+                        >
+                            To Date
+                        </label>
+
+
+                        <input
+                            type="date"
+                            name="to_date"
+                            id="to_date"
+                            class="filter-control"
+                            value="{{ to_date }}"
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- FILTER ACTION -->
+
+                <div class="filter-actions">
+
+
+                    <a
+                        href=""
+                        class="btn-report-reset"
+                    >
+
+                        <i class="bi bi-arrow-counterclockwise"></i>
+
+                        Reset
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn-report-filter"
+                    >
+
+                        <i class="bi bi-search"></i>
+
+                        Apply Filter
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         TICKET LIST
+    ========================================================== -->
+
+    <div class="report-panel">
+
+
+        <div class="report-panel-header">
+
+
+            <div class="panel-title-wrap">
+
+
+                <div class="panel-icon">
+
+                    <i class="bi bi-table"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h4>
+                        Ticket List
+                    </h4>
+
+                    <p>
+                        Tickets raised by you or assigned to you.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="result-count-badge">
+
+                <i class="bi bi-list-ul"></i>
+
+                {{ total_tickets }}
+                Records
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="report-panel-body">
+
+
+            <div class="ticket-table-wrap">
+
+
+                <table class="ticket-report-table">
+
+
+                    <!-- ==========================================
+                         HEADER
+                    =========================================== -->
+
+                    <thead>
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>
+                                Ticket No
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Gate
+                            </th>
+
+                            <th>
+                                Module
+                            </th>
+
+                            <th>
+                                Priority
+                            </th>
+
+                            <th>
+                                Subject
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Raised By
+                            </th>
+
+                            <th>
+                                Assigned To
+                            </th>
+
+                            <th>
+                                Created At
+                            </th>
+
+                            <th>
+                                Attachment
+                            </th>
+
+                            <th>
+                                Chat
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+
+                    <!-- ==========================================
+                        BODY
+                    =========================================== -->
+
+                    <tbody>
+
+
+                        {% for ticket in tickets %}
+
+
+                            <tr>
+
+
+                                <!-- SERIAL -->
+
+                                <td class="table-serial">
+
+                                    {{ forloop.counter }}
+
+                                </td>
+
+
+
+                                <!-- TICKET NUMBER -->
+
+                                <td>
+
+                                    <span class="ticket-number">
+
+                                        {{ ticket.ticket_no }}
+
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- TYPE -->
+
+                                <td>
+
+                                    <span class="ticket-type-chip">
+
+
+                                        {% if ticket.ticket_type.code|upper == "SOFTWARE" %}
+
+                                            <i class="bi bi-code-square"></i>
+
+
+                                        {% elif ticket.ticket_type.code|upper == "HARDWARE" %}
+
+                                            <i class="bi bi-cpu"></i>
+
+
+                                        {% else %}
+
+                                            <i class="bi bi-ticket"></i>
+
+                                        {% endif %}
+
+
+                                        {{ ticket.ticket_type.name }}
+
+
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- GATE -->
+
+                                <td>
+
+
+                                    {% if ticket.ticket_type.code|upper == "HARDWARE" %}
+
+
+                                        {% if ticket.gate %}
+
+                                            {{ ticket.gate.gate_name }}
+
+                                        {% else %}
+
+                                            <span class="text-muted">
+                                                -
+                                            </span>
+
+                                        {% endif %}
+
+
+                                    {% else %}
+
+                                        <span class="text-muted">
+                                            -
+                                        </span>
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- MODULE -->
+
+                                <td>
+
+
+                                    {% if ticket.software_module %}
+
+
+                                        {{ ticket.software_module.moduleName }}
+
+
+                                    {% elif ticket.hardware_module %}
+
+
+                                        {{ ticket.hardware_module.moduleName }}
+
+
+                                    {% else %}
+
+
+                                        <span class="text-muted">
+                                            -
+                                        </span>
+
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- PRIORITY -->
+
+                                <td>
+
+
+                                    {% if ticket.priority.name|upper == "LOW" %}
+
+
+                                        <span class="badge-soft priority-low">
+
+                                            {{ ticket.priority.name }}
+
+                                        </span>
+
+
+                                    {% elif ticket.priority.name|upper == "MEDIUM" %}
+
+
+                                        <span class="badge-soft priority-medium">
+
+                                            {{ ticket.priority.name }}
+
+                                        </span>
+
+
+                                    {% elif ticket.priority.name|upper == "HIGH" %}
+
+
+                                        <span class="badge-soft priority-high">
+
+                                            {{ ticket.priority.name }}
+
+                                        </span>
+
+
+                                    {% elif ticket.priority.name|upper == "CRITICAL" %}
+
+
+                                        <span class="badge-soft priority-critical">
+
+                                            {{ ticket.priority.name }}
+
+                                        </span>
+
+
+                                    {% else %}
+
+
+                                        {{ ticket.priority.name }}
+
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- SUBJECT -->
+
+                                <td>
+
+                                    <div class="subject-cell">
+
+                                        {{ ticket.subject|truncatechars:50 }}
+
+                                    </div>
+
+                                </td>
+
+
+
+                                <!-- STATUS -->
+
+                                <td>
+
+
+                                    {% if ticket.status == "OPEN" %}
+
+
+                                        <span class="badge-soft status-open">
+
+                                            Open
+
+                                        </span>
+
+
+                                    {% elif ticket.status == "IN_PROGRESS" %}
+
+
+                                        <span class="badge-soft status-progress">
+
+                                            In Progress
+
+                                        </span>
+
+
+                                    {% elif ticket.status == "RESOLVED" %}
+
+
+                                        <span class="badge-soft status-resolved">
+
+                                            Resolved
+
+                                        </span>
+
+
+                                    {% elif ticket.status == "CLOSED" %}
+
+
+                                        <span class="badge-soft status-closed">
+
+                                            Closed
+
+                                        </span>
+
+
+                                    {% else %}
+
+
+                                        {{ ticket.status }}
+
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- RAISED BY -->
+
+                                <td>
+
+
+                                    <div class="user-cell">
+
+
+                                        <div class="user-avatar">
+
+                                            {{ ticket.created_by.name|slice:":1" }}
+
+                                        </div>
+
+
+                                        <span>
+
+                                            {{ ticket.created_by.name }}
+
+                                        </span>
+
+
+                                    </div>
+
+
+                                </td>
+
+
+
+                                <!-- ASSIGNED TO -->
+
+                                <td>
+
+
+                                    {% if ticket.assigned_to %}
+
+
+                                        <div class="user-cell">
+
+
+                                            <div class="user-avatar">
+
+                                                {{ ticket.assigned_to.name|slice:":1" }}
+
+                                            </div>
+
+
+                                            <span>
+
+                                                {{ ticket.assigned_to.name }}
+
+                                            </span>
+
+
+                                        </div>
+
+
+                                    {% else %}
+
+
+                                        <span class="text-muted">
+
+                                            Not Assigned
+
+                                        </span>
+
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- CREATED -->
+
+                                <td>
+
+
+                                    <div class="date-cell">
+
+
+                                        <strong>
+
+                                            {{ ticket.created_at|date:"d M Y" }}
+
+                                        </strong>
+
+
+                                        <small>
+
+                                            {{ ticket.created_at|date:"h:i A" }}
+
+                                        </small>
+
+
+                                    </div>
+
+
+                                </td>
+
+
+
+                                <!-- ATTACHMENT -->
+
+                                <td>
+
+
+                                    {% if ticket.attachment %}
+
+
+                                        <a
+                                            href="{{ ticket.attachment.url }}"
+                                            target="_blank"
+                                            class="attachment-link"
+                                        >
+
+                                            <i class="bi bi-paperclip"></i>
+
+                                            View
+
+                                        </a>
+
+
+                                    {% else %}
+
+
+                                        <span class="text-muted">
+
+                                            -
+
+                                        </span>
+
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- ==========================================
+                                     CHAT
+                                =========================================== -->
+
+                                <td>
+
+
+                                    {% if ticket.assigned_to %}
+                                        {% if ticket.assignment_status == "APPROVED" %}
+
+
+                                            <a
+                                                href="/raise/ticket-chat/{{ ticket.id }}/"
+                                                class="chat-action-btn chat-active"
+                                                title="Open Ticket Chat"
+                                            >
+
+                                                <i class="bi bi-chat-dots-fill"></i>
+
+                                                Chat
+
+                                            </a>
+
+
+                                        {% elif ticket.assignment_status == "PENDING" %}
+
+
+                                            <span
+                                                class="chat-disabled"
+                                                title="Chat available after ticket acceptance"
+                                            >
+
+                                                <i class="bi bi-clock"></i>
+
+                                                Pending
+
+                                            </span>
+
+
+                                        {% elif ticket.assignment_status == "REJECTED" %}
+
+
+                                            <span
+                                                class="chat-disabled"
+                                                title="Assignment rejected"
+                                            >
+
+                                                <i class="bi bi-x-circle"></i>
+
+                                                Rejected
+
+                                            </span>
+
+
+                                        {% else %}
+
+
+                                            <span class="chat-disabled">
+
+                                                <i class="bi bi-chat"></i>
+
+                                                Unavailable
+
+                                            </span>
+
+
+                                        {% endif %}
+
+
+                                    {% else %}
+
+
+                                        <span
+                                            class="chat-disabled"
+                                            title="Ticket has not been assigned yet"
+                                        >
+
+                                            <i class="bi bi-person-x"></i>
+
+                                            Not Assigned
+
+                                        </span>
+
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% empty %}
+
+
+                            <tr>
+
+
+                                <td
+                                    colspan="13"
+                                    class="empty-report"
+                                >
+
+
+                                    <i class="bi bi-inbox"></i>
+
+
+                                    <p class="mb-1 fw-semibold">
+
+                                        No tickets found
+
+                                    </p>
+
+
+                                    <small>
+
+                                        Try changing or resetting the selected filters.
+
+                                    </small>
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+
+            <!-- =========================================================
+                 PAGINATION
+            ========================================================== -->
+
+
+            {% if page_obj.has_other_pages %}
+
+
+                <div class="report-pagination">
+
+
+                    <div class="page-info">
+
+                        Page
+
+                        {{ page_obj.number }}
+
+                        of
+
+                        {{ page_obj.paginator.num_pages }}
+
+                    </div>
+
+
+
+                    <nav>
+
+
+                        <ul class="pagination">
+
+
+                            <!-- PREVIOUS -->
+
+                            {% if page_obj.has_previous %}
+
+
+                                <li class="page-item">
+
+
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ page_obj.previous_page_number }}&search={{ search }}&ticket_type={{ selected_ticket_type }}&priority={{ selected_priority }}&status={{ selected_status }}&from_date={{ from_date }}&to_date={{ to_date }}"
+                                    >
+
+                                        <i class="bi bi-chevron-left"></i>
+
+                                    </a>
+
+
+                                </li>
+
+
+                            {% else %}
+
+
+                                <li class="page-item disabled">
+
+
+                                    <span class="page-link">
+
+                                        <i class="bi bi-chevron-left"></i>
+
+                                    </span>
+
+
+                                </li>
+
+
+                            {% endif %}
+
+
+
+                            <!-- PAGE NUMBER -->
+
+
+                            {% for num in page_obj.paginator.page_range %}
+
+
+                                {% if page_obj.number == num %}
+
+
+                                    <li class="page-item active">
+
+
+                                        <span class="page-link">
+
+                                            {{ num }}
+
+                                        </span>
+
+
+                                    </li>
+
+
+                                {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+
+
+                                    <li class="page-item">
+
+
+                                        <a
+                                            class="page-link"
+                                            href="?page={{ num }}&search={{ search }}&ticket_type={{ selected_ticket_type }}&priority={{ selected_priority }}&status={{ selected_status }}&from_date={{ from_date }}&to_date={{ to_date }}"
+                                        >
+
+                                            {{ num }}
+
+                                        </a>
+
+
+                                    </li>
+
+
+                                {% endif %}
+
+
+                            {% endfor %}
+
+
+
+                            <!-- NEXT -->
+
+
+                            {% if page_obj.has_next %}
+
+
+                                <li class="page-item">
+
+
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ page_obj.next_page_number }}&search={{ search }}&ticket_type={{ selected_ticket_type }}&priority={{ selected_priority }}&status={{ selected_status }}&from_date={{ from_date }}&to_date={{ to_date }}"
+                                    >
+
+                                        <i class="bi bi-chevron-right"></i>
+
+                                    </a>
+
+
+                                </li>
+
+
+                            {% else %}
+
+
+                                <li class="page-item disabled">
+
+
+                                    <span class="page-link">
+
+                                        <i class="bi bi-chevron-right"></i>
+
+                                    </span>
+
+
+                                </li>
+
+
+                            {% endif %}
+
+
+                        </ul>
+
+
+                    </nav>
+
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

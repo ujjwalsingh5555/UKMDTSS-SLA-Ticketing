@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Login | Magrsoft Support Desk</title>
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+
+        /* ===============================
+        LEFT PANEL
+        =============================== */
+
+        .brand-panel {
+
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            padding: 55px;
+
+            color: #ffffff;
+
+            background: linear-gradient(
+                145deg,
+                #0f172a 0%,
+                #172554 45%,
+                #312e81 100%
+            );
+        }
+
+
+        .brand-logo {
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 65px;
+        }
+
+
+        .logo-icon {
+
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 8px;
+
+            font-size: 21px;
+
+            background: rgba(255,255,255,0.10);
+
+            border: 1px solid rgba(255,255,255,0.16);
+        }
+
+
+        .brand-logo h4 {
+
+            margin: 0;
+
+            font-size: 19px;
+            font-weight: 700;
+        }
+
+
+        .brand-logo span {
+
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 12px;
+
+            color: rgba(255,255,255,.60);
+        }
+
+
+        .brand-heading {
+
+            max-width: 550px;
+
+            margin-bottom: 18px;
+
+            font-size: clamp(34px, 3vw, 50px);
+
+            font-weight: 750;
+
+            line-height: 1.12;
+        }
+
+
+        .brand-heading span {
+            color: #c7d2fe;
+        }
+
+
+        .brand-description {
+
+            max-width: 540px;
+
+            margin-bottom: 40px;
+
+            color: rgba(255,255,255,.65);
+
+            font-size: 15px;
+
+            line-height: 1.8;
+        }
+
+
+        /* ===============================
+           FEATURES
+        =============================== */
+
+        .feature-list {
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 20px;
+        }
+
+
+        .feature-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+
+        .feature-icon {
+
+            width: 40px;
+            height: 40px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 8px;
+
+            font-size: 18px;
+
+            background: rgba(255,255,255,.09);
+
+            border: 1px solid rgba(255,255,255,.14);
+        }
+
+
+        .feature-item h6 {
+
+            margin: 0 0 3px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .feature-item p {
+
+            margin: 0;
+
+            font-size: 12px;
+
+            color: rgba(255,255,255,.55);
+        }
+
+
+        .system-status {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 8px 12px;
+
+            border-radius: 7px;
+
+            font-size: 12px;
+
+            background: rgba(255,255,255,.06);
+
+            border: 1px solid rgba(255,255,255,.10);
+        }
+
+
+        .system-status i {
+            color: #4ade80;
+        }
+
+
+        /* ===============================
+           RIGHT PANEL
+        =============================== */
+
+        .auth-panel {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 40px;
+        }
+
+
+        .auth-wrapper {
+
+            width: 100%;
+
+            max-width: 480px;
+        }
+
+
+        .auth-card {
+
+            width: 100%;
+
+            padding: 38px;
+
+            background: #ffffff;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            box-shadow: 0 15px 40px rgba(15,23,42,.08);
+        }
+
+
+        .auth-heading {
+
+            margin-bottom: 28px;
+        }
+
+
+        .auth-heading h2 {
+
+            margin-bottom: 7px;
+
+            font-size: 27px;
+
+            font-weight: 750;
+        }
+
+
+        .auth-heading p {
+
+            margin: 0;
+
+            color: #64748b;
+
+            font-size: 13.5px;
+        }
+
+
+        /* ===============================
+           INPUT
+        =============================== */
+
+        .form-label-custom {
+
+            margin-bottom: 7px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            color: #334155;
+        }
+
+
+        .input-wrapper {
+
+            position: relative;
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 15px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #94a3b8;
+
+            font-size: 16px;
+        }
+
+
+        .auth-input {
+
+            width: 100%;
+
+            height: 48px;
+
+            padding: 10px 45px;
+
+            border: 1px solid #dfe5ed;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            background: #f8fafc;
+
+            font-size: 13.5px;
+
+            transition: all .2s ease;
+        }
+
+
+        .username-input {
+            padding-right: 15px;
+        }
+
+
+        .auth-input:focus {
+
+            border-color: #6366f1;
+
+            background: #ffffff;
+
+            box-shadow: 0 0 0 3px rgba(99,102,241,.08);
+        }
+
+
+        /* ===============================
+           PASSWORD
+        =============================== */
+
+        .password-toggle {
+
+            position: absolute;
+
+            right: 8px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 35px;
+            height: 35px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: transparent;
+
+            color: #94a3b8;
+        }
+
+
+        .password-toggle:hover {
+
+            color: #4f46e5;
+
+            background: #eef2ff;
+        }
+
+
+        /* ===============================
+           BUTTON
+        =============================== */
+
+        .btn-login {
+
+            width: 100%;
+
+            height: 49px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #3730a3;
+
+            color: #ffffff;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition: .2s ease;
+        }
+
+
+        .btn-login:hover {
+
+            background: #312e81;
+
+            transform: translateY(-1px);
+        }
+
+
+        .register-link {
+
+            margin-top: 24px;
+
+            text-align: center;
+
+            font-size: 13px;
+
+            color: #64748b;
+        }
+
+
+        .register-link a {
+
+            color: #4f46e5;
+
+            font-weight: 600;
+
+            text-decoration: none;
+        }
+
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* ===============================
+           MESSAGES
+        =============================== */
+
+        .message-box {
+
+            display: flex;
+
+            gap: 8px;
+
+            align-items: center;
+
+            padding: 10px 12px;
+
+            margin-bottom: 18px;
+
+            border-radius: 7px;
+
+            color: #991b1b;
+
+            background: #fef2f2;
+
+            border: 1px solid #fecaca;
+
+            font-size: 13px;
+        }
+
+
+        /* ===============================
+           RESPONSIVE
+        =============================== */
+
+        @media (max-width: 991px) {
+
+            .brand-panel {
+                display: none;
+            }
+
+            .auth-panel {
+                padding: 25px 15px;
+            }
+
+        }
+
+
+        @media (max-width: 576px) {
+            .auth-card {
+                padding: 28px 20px;
+            }
+
+        }
+
+    </style>
+</head>
+<body>
+<main class="container-fluid p-0">
+    <div class="row g-0">
+        <!-- LEFT -->
+        <aside class="col-lg-7 brand-panel">
+            <div>
+
+
+                <div class="brand-logo">
+
+                    <div class="logo-icon">
+
+                        <i class="bi bi-headset"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h4>Magrsoft Support Desk</h4>
+
+                        <span>
+                            Ticket Management System
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <h1 class="brand-heading">
+
+                    Manage support tickets
+
+                    <span>
+                        efficiently.
+                    </span>
+
+                </h1>
+
+
+                <p class="brand-description">
+
+                    Centralized support management system for
+                    ticket assignment, SLA monitoring and
+                    issue resolution.
+
+                </p>
+
+
+                <div class="feature-list">
+
+
+                    <div class="feature-item">
+
+                        <div class="feature-icon">
+
+                            <i class="bi bi-stopwatch"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h6>Fast SLA Tracking</h6>
+
+                            <p>
+                                Monitor response and resolution timelines.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="feature-item">
+
+                        <div class="feature-icon">
+
+                            <i class="bi bi-people"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h6>Role Based Access</h6>
+
+                            <p>
+                                Manage access according to user roles.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="feature-item">
+
+                        <div class="feature-icon">
+
+                            <i class="bi bi-ticket-perforated"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h6>Ticket Tracking</h6>
+
+                            <p>
+                                Track ticket status until resolution.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="system-status">
+
+                    <i class="bi bi-check-circle-fill"></i>
+
+                    All systems operational
+
+                </div>
+
+            </div>
+
+
+        </aside>
+
+
+
+        <!-- RIGHT LOGIN -->
+
+        <section class="col-12 col-lg-5 auth-panel">
+
+
+            <div class="auth-wrapper">
+
+
+                <div class="auth-card">
+
+
+                    <div class="auth-heading">
+
+                        <h2>Welcome Back</h2>
+
+                        <p>
+                            Login using your username and password.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- Django Messages -->
+
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div class="message-box">
+
+                                <i class="bi bi-exclamation-circle"></i>
+
+                                {{ message }}
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+
+
+                    <!-- Login Form -->
+
+                    <form
+                        method="POST"
+                        action="{% url 'login' %}"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <!-- Username -->
+
+                        <div class="mb-3">
+
+                            <label
+                                class="form-label-custom"
+                                for="username"
+                            >
+
+                                Username
+
+                            </label>
+
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-person input-icon"></i>
+
+
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="email"
+                                    class="auth-input username-input"
+                                    placeholder="Enter Username"
+                                    required
+                                    autofocus
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Password -->
+
+                        <div class="mb-3">
+
+                            <label
+                                class="form-label-custom"
+                                for="password"
+                            >
+
+                                Password
+
+                            </label>
+
+
+                            <div class="input-wrapper">
+
+                                <i class="bi bi-lock input-icon"></i>
+
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="auth-input"
+                                    placeholder="Enter Password"
+                                    required
+                                >
+
+
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    onclick="togglePassword()"
+                                >
+
+                                    <i
+                                        id="passwordIcon"
+                                        class="bi bi-eye"
+                                    ></i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Remember -->
+
+                        <div
+                            class="
+                                d-flex
+                                justify-content-between
+                                align-items-center
+                                mb-4
+                            "
+                        >
+
+                            <div class="form-check">
+
+                                <input
+                                    type="checkbox"
+                                    class="form-check-input"
+                                    id="remember"
+                                >
+
+                                <label
+                                    class="form-check-label"
+                                    for="remember"
+                                >
+
+                                    Remember Me
+
+                                </label>
+
+                            </div>
+
+
+                            <a
+                                href="#"
+                                style="
+                                    font-size:12px;
+                                    color:#4f46e5;
+                                    text-decoration:none;
+                                "
+                            >
+                                Forgot Password?
+                            </a>
+
+                        </div>
+
+
+
+                        <!-- Login -->
+
+                        <button
+                            type="submit"
+                            class="btn-login"
+                        >
+
+                            <i class="bi bi-box-arrow-in-right"></i>
+
+                            Login to Dashboard
+
+                        </button>
+
+
+                    </form>
+
+
+
+                    <!-- Register link -->
+
+                    <div class="register-link">
+
+                        Don't have an account?
+
+                        <a href=>
+
+                            Create Account
+
+                        </a>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+</main>
+
+
+
+<script>
+
+    function togglePassword() {
+
+        const password =
+            document.getElementById("password");
+
+        const icon =
+            document.getElementById("passwordIcon");
+
+
+        if (password.type === "password") {
+
+            password.type = "text";
+
+            icon.classList.remove("bi-eye");
+
+            icon.classList.add("bi-eye-slash");
+
+        }
+
+        else {
+
+            password.type = "password";
+
+            icon.classList.remove("bi-eye-slash");
+
+            icon.classList.add("bi-eye");
+
+        }
+
+    }
+    setTimeout(function () {
+    const messages = document.querySelectorAll(".message-box");
+    messages.forEach(function (message) {
+        message.style.display = "none";
+    });
+}, 10000);
+</script>
+
+
+</body>
+
+</html>

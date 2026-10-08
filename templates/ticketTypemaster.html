@@ -1,0 +1,1790 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<style>
+
+/* ============================================================
+   PAGE CARD
+============================================================ */
+
+.ticket-master-card {
+
+    border: none;
+
+    border-radius: 14px;
+
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05);
+
+    background: #ffffff;
+
+}
+
+
+.ticket-master-card .card-header {
+
+    background: transparent;
+
+    border-bottom: 1px solid #edf1f7;
+
+    padding: 20px 22px;
+
+}
+
+
+.ticket-master-card .card-header h4 {
+
+    margin: 0;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    color: #002152;
+
+}
+
+
+.ticket-master-card .card-body {
+
+    padding: 22px;
+
+}
+
+
+
+/* ============================================================
+   FORM
+============================================================ */
+
+.ticket-master-card .form-label {
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #475569;
+
+    margin-bottom: 7px;
+
+}
+
+
+.ticket-master-card .form-control,
+.ticket-master-card .form-select {
+
+    min-height: 43px;
+
+    border: 1px solid #dce3ed;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+
+    color: #334155;
+
+    transition: all .2s ease;
+
+}
+
+
+.ticket-master-card textarea.form-control {
+
+    min-height: 90px;
+
+}
+
+
+.ticket-master-card .form-control:focus,
+.ticket-master-card .form-select:focus {
+
+    border-color: #002152;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 33, 82, .10);
+
+}
+
+
+
+/* ============================================================
+   CREATE BUTTON
+============================================================ */
+
+.btn-create {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    width: 100%;
+
+    padding: 12px 20px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    letter-spacing: .3px;
+
+    color: #ffffff;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #002152 0%,
+            #0b3d85 100%
+        );
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 33, 82, .25);
+
+    transition: all .25s ease;
+
+    cursor: pointer;
+
+}
+
+
+.btn-create i {
+
+    font-size: 16px;
+
+}
+
+
+.btn-create:hover {
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b3d85 0%,
+            #002152 100%
+        );
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 18px
+        rgba(0, 33, 82, .30);
+
+}
+
+
+.btn-create:focus {
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(0, 33, 82, .15);
+
+}
+
+
+
+/* ============================================================
+   TABLE WRAPPER
+
+   overflow hidden nahi rakha hai
+   isi wajah se Delete button cut nahi hoga
+============================================================ */
+
+.data-table-wrap {
+
+    width: 100%;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+
+}
+
+
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.data-table {
+
+    width: 100%;
+
+    min-width: 900px;
+
+    margin: 0;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+}
+
+
+
+/* ============================================================
+   TABLE HEADER
+============================================================ */
+
+.data-table thead th {
+
+    padding: 14px 13px !important;
+
+    background: #f5f8fc;
+
+    color: #64748b;
+
+    font-size: 11.5px;
+
+    font-weight: 700;
+
+    letter-spacing: .7px;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+
+    border: none;
+
+    border-bottom:
+        1px solid #e2e8f0;
+
+    vertical-align: middle;
+
+}
+
+
+
+/* ============================================================
+   TABLE BODY
+============================================================ */
+
+.data-table tbody td {
+
+    padding: 14px 13px !important;
+
+    font-size: 14px;
+
+    color: #475569;
+
+    background: #ffffff;
+
+    border: none;
+
+    border-bottom:
+        1px solid #f0f4f9;
+
+    vertical-align: middle;
+
+}
+
+
+.data-table tbody tr:last-child td {
+
+    border-bottom: none;
+
+}
+
+
+.data-table tbody tr {
+
+    transition:
+        background .18s ease;
+
+}
+
+
+.data-table tbody tr:hover td {
+
+    background:
+        rgba(0, 33, 82, .025);
+
+}
+
+
+
+/* ============================================================
+   SERIAL COLUMN
+============================================================ */
+
+.col-sr {
+
+    width: 55px;
+
+    min-width: 55px;
+
+    text-align: center;
+
+}
+
+
+.data-table td.col-sr {
+
+    color: #94a3b8;
+
+    font-weight: 600;
+
+}
+
+
+
+/* ============================================================
+   DIFFERENT COLUMN WIDTH
+============================================================ */
+
+.ticket-type-column {
+
+    min-width: 125px;
+
+}
+
+
+.code-column {
+
+    min-width: 115px;
+
+}
+
+
+.description-column {
+
+    min-width: 130px;
+
+}
+
+
+.status-column {
+
+    min-width: 90px;
+
+}
+
+
+.created-column {
+
+    min-width: 110px;
+
+}
+
+
+
+/* ============================================================
+   ACTION COLUMN
+
+   Ye important hai
+   Delete button ab cut nahi hoga
+============================================================ */
+
+.action-column {
+
+    min-width: 180px !important;
+
+    width: 180px;
+
+    white-space: nowrap;
+
+}
+
+
+
+/* ============================================================
+   ACTION GROUP
+============================================================ */
+
+.action-group {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: nowrap;
+
+    white-space: nowrap;
+
+}
+
+
+
+/* ============================================================
+   COMMON ACTION BUTTON
+============================================================ */
+
+.action-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 7px 12px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    border-radius: 8px;
+
+    border: 1px solid transparent;
+
+    background-color: transparent;
+
+    transition: all .2s ease;
+
+    white-space: nowrap;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+}
+
+
+.action-btn i {
+
+    font-size: 14px;
+
+}
+
+
+
+/* ============================================================
+   EDIT BUTTON
+============================================================ */
+
+.action-btn-edit {
+
+    color: #002152;
+
+    border-color:
+        rgba(0, 33, 82, .25);
+
+    background-color:
+        rgba(0, 33, 82, .05);
+
+}
+
+
+.action-btn-edit:hover {
+
+    color: #ffffff;
+
+    background-color: #002152;
+
+    border-color: #002152;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(0, 33, 82, .20);
+
+}
+
+
+
+/* ============================================================
+   DELETE BUTTON
+============================================================ */
+
+.action-btn-delete {
+
+    color: #dc3545;
+
+    border-color:
+        rgba(220, 53, 69, .25);
+
+    background-color:
+        rgba(220, 53, 69, .05);
+
+}
+
+
+.action-btn-delete:hover {
+
+    color: #ffffff;
+
+    background-color: #dc3545;
+
+    border-color: #dc3545;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(220, 53, 69, .25);
+
+}
+
+
+
+/* ============================================================
+   CODE BADGE
+============================================================ */
+
+.code-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border-radius: 6px;
+
+    background: #eff6ff;
+
+    color: #002152;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+
+
+/* ============================================================
+   ACTIVE STATUS
+============================================================ */
+
+.status-active {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 10px;
+
+    border-radius: 6px;
+
+    background: #d1fae5;
+
+    color: #047857;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+
+/* ============================================================
+   INACTIVE STATUS
+============================================================ */
+
+.status-inactive {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 10px;
+
+    border-radius: 6px;
+
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+
+/* ============================================================
+   TOTAL COUNT BADGE
+============================================================ */
+
+.total-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 6px 12px;
+
+    border-radius: 7px;
+
+    background: #eff6ff;
+
+    color: #002152;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+}
+
+
+
+/* ============================================================
+   EMPTY TABLE
+============================================================ */
+
+.table-empty {
+
+    padding: 45px 16px !important;
+
+    text-align: center;
+
+}
+
+
+.table-empty i {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 34px;
+
+    color: #cbd5e1;
+
+}
+
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 991px) {
+
+    .ticket-list-card {
+
+        margin-top: 20px;
+
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .ticket-master-card .card-body {
+
+        padding: 15px;
+
+    }
+
+
+    .ticket-master-card .card-header {
+
+        padding: 16px;
+
+    }
+
+
+    .action-btn {
+
+        padding: 6px 10px;
+
+        font-size: 12px;
+
+    }
+
+}
+
+</style>
+
+
+
+<!-- ============================================================
+     PAGE HEADING
+============================================================ -->
+
+<div class="page-heading">
+
+    <h3>
+        Ticket Type Management
+    </h3>
+
+</div>
+
+
+
+<!-- ============================================================
+     DJANGO MESSAGES
+============================================================ -->
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div
+            class="alert alert-{{ message.tags }}
+                   alert-dismissible
+                   fade show"
+            role="alert"
+        >
+
+            {{ message }}
+
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+
+
+<div class="page-content">
+
+
+    <section class="row g-3">
+
+
+        <!-- ====================================================
+             LEFT SIDE
+             CREATE TICKET TYPE
+        ===================================================== -->
+
+        <div class="col-12 col-lg-4">
+
+
+            <div class="card ticket-master-card">
+
+
+                <!-- CARD HEADER -->
+
+                <div class="card-header">
+
+                    <h4>
+                        Create Ticket Type
+                    </h4>
+
+                </div>
+
+
+
+                <!-- CARD BODY -->
+
+                <div class="card-body">
+
+
+                    <form
+                        method="POST"
+                        action=""
+                    >
+
+
+                        {% csrf_token %}
+
+
+
+                        <!-- =================================================
+                             NAME
+                        ================================================== -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label
+                                for="name"
+                                class="form-label"
+                            >
+
+                                Ticket Type Name
+
+                                <span class="text-danger">
+                                    *
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                class="form-control"
+                                placeholder="Example: Software"
+                                required
+                            >
+
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             CODE
+                        ================================================== -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label
+                                for="code"
+                                class="form-label"
+                            >
+
+                                Ticket Type Code
+
+                                <span class="text-danger">
+                                    *
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                id="code"
+                                name="code"
+                                class="form-control"
+                                placeholder="Example: SOFTWARE"
+                                required
+                            >
+
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             DESCRIPTION
+                        ================================================== -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label
+                                for="description"
+                                class="form-label"
+                            >
+
+                                Description
+
+                            </label>
+
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                class="form-control"
+                                rows="3"
+                                placeholder="Enter Description"
+                            ></textarea>
+
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             STATUS
+                        ================================================== -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label
+                                for="is_active"
+                                class="form-label"
+                            >
+
+                                Status
+
+                            </label>
+
+
+                            <select
+                                id="is_active"
+                                name="is_active"
+                                class="form-select"
+                            >
+
+
+                                <option value="1">
+
+                                    Active
+
+                                </option>
+
+
+                                <option value="0">
+
+                                    Inactive
+
+                                </option>
+
+
+                            </select>
+
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             CREATE BUTTON
+                        ================================================== -->
+
+                        <div class="form-group mt-4 mb-0">
+
+
+                            <button
+                                type="submit"
+                                class="btn-create"
+                            >
+
+
+                                <i class="bi bi-plus-circle"></i>
+
+
+                                Create Ticket Type
+
+
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ====================================================
+             RIGHT SIDE
+             TICKET TYPE LIST
+        ===================================================== -->
+
+        <div class="col-12 col-lg-8">
+
+
+            <div
+                class="card
+                       ticket-master-card
+                       ticket-list-card"
+            >
+
+
+                <!-- =================================================
+                     CARD HEADER
+                ================================================== -->
+
+                <div class="card-header">
+
+
+                    <div
+                        class="d-flex
+                               justify-content-between
+                               align-items-center"
+                    >
+
+
+                        <h4>
+
+                            Ticket Type List
+
+                        </h4>
+
+
+                        <span class="total-badge">
+
+                            Total:
+                            {{ ticket_types.count }}
+
+                        </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CARD BODY
+                ================================================== -->
+
+                <div class="card-body">
+
+
+                    <div class="data-table-wrap">
+
+
+                        <table class="data-table">
+
+
+                            <!-- =============================================
+                                 TABLE HEADER
+                            ============================================== -->
+
+                            <thead>
+
+
+                                <tr>
+
+
+                                    <th class="col-sr">
+
+                                        #
+
+                                    </th>
+
+
+                                    <th class="ticket-type-column">
+
+                                        Ticket Type
+
+                                    </th>
+
+
+                                    <th class="code-column">
+
+                                        Code
+
+                                    </th>
+
+
+                                    <th class="description-column">
+
+                                        Description
+
+                                    </th>
+
+
+                                    <th class="status-column">
+
+                                        Status
+
+                                    </th>
+
+
+                                    <th class="created-column">
+
+                                        Created At
+
+                                    </th>
+
+
+                                    <th class="action-column">
+
+                                        Action
+
+                                    </th>
+
+
+                                </tr>
+
+
+                            </thead>
+
+
+
+                            <!-- =============================================
+                                 TABLE BODY
+                            ============================================== -->
+
+                            <tbody>
+
+
+                                {% for ticket_type in ticket_types %}
+
+
+                                    <tr>
+
+
+                                        <!-- =============================
+                                             SERIAL NUMBER
+                                        ============================== -->
+
+                                        <td class="col-sr">
+
+
+                                            {{ forloop.counter }}
+
+
+                                        </td>
+
+
+
+                                        <!-- =============================
+                                             TICKET TYPE NAME
+                                        ============================== -->
+
+                                        <td class="ticket-type-column">
+
+
+                                            <p class="font-bold mb-0">
+
+
+                                                {{ ticket_type.name }}
+
+
+                                            </p>
+
+
+                                        </td>
+
+
+
+                                        <!-- =============================
+                                             CODE
+                                        ============================== -->
+
+                                        <td class="code-column">
+
+
+                                            <span class="code-badge">
+
+
+                                                {{ ticket_type.code }}
+
+
+                                            </span>
+
+
+                                        </td>
+
+
+
+                                        <!-- =============================
+                                             DESCRIPTION
+                                        ============================== -->
+
+                                        <td class="description-column">
+
+
+                                            {% if ticket_type.description %}
+
+
+                                                {{ ticket_type.description }}
+
+
+                                            {% else %}
+
+
+                                                <span class="text-muted">
+
+                                                    -
+
+                                                </span>
+
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- =============================
+                                             STATUS
+                                        ============================== -->
+
+                                        <td class="status-column">
+
+
+                                            {% if ticket_type.is_active %}
+
+
+                                                <span class="status-active">
+
+
+                                                    Active
+
+
+                                                </span>
+
+
+                                            {% else %}
+
+
+                                                <span class="status-inactive">
+
+
+                                                    Inactive
+
+
+                                                </span>
+
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- =============================
+                                             CREATED DATE
+                                        ============================== -->
+
+                                        <td class="created-column">
+
+
+                                            {{ ticket_type.created_at|date:"d M Y" }}
+
+
+                                        </td>
+
+
+
+                                        <!-- =============================
+                                             ACTION
+                                        ============================== -->
+
+                                        <td class="action-column">
+
+
+                                            <div class="action-group">
+
+
+
+                                                <!-- =========================
+                                                     EDIT BUTTON
+                                                ========================== -->
+
+                                                <button
+                                                    type="button"
+                                                    class="action-btn
+                                                           action-btn-edit"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editTicketType{{ ticket_type.id }}"
+                                                >
+
+
+                                                    <i class="bi bi-pencil-square"></i>
+
+
+                                                    Edit
+
+
+                                                </button>
+
+
+
+                                                <!-- =========================
+                                                     DELETE BUTTON
+                                                ========================== -->
+
+                                                <button
+                                                    type="button"
+                                                    class="action-btn
+                                                           action-btn-delete"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteTicketType{{ ticket_type.id }}"
+                                                >
+
+
+                                                    <i class="bi bi-trash"></i>
+
+
+                                                    Delete
+
+
+                                                </button>
+
+
+                                            </div>
+
+
+                                        </td>
+
+
+                                    </tr>
+
+
+
+                                    <!-- =================================================
+                                         EDIT MODAL
+                                    ================================================== -->
+
+                                    <div
+                                        class="modal fade"
+                                        id="editTicketType{{ ticket_type.id }}"
+                                        tabindex="-1"
+                                        aria-hidden="true"
+                                    >
+
+
+                                        <div
+                                            class="modal-dialog
+                                                   modal-dialog-centered"
+                                        >
+
+
+                                            <div class="modal-content">
+
+
+                                                <!-- =================================
+                                                     FORM
+                                                ================================== -->
+
+                                                <form
+                                                    method="POST"
+                                                    action=""
+                                                >
+
+
+                                                    {% csrf_token %}
+
+
+
+                                                    <!-- MODAL HEADER -->
+
+                                                    <div class="modal-header">
+
+
+                                                        <h5 class="modal-title">
+
+
+                                                            Edit Ticket Type
+
+
+                                                        </h5>
+
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Close"
+                                                        ></button>
+
+
+                                                    </div>
+
+
+
+                                                    <!-- MODAL BODY -->
+
+                                                    <div class="modal-body">
+
+
+
+                                                        <!-- NAME -->
+
+                                                        <div class="mb-3">
+
+
+                                                            <label
+                                                                class="form-label"
+                                                            >
+
+                                                                Ticket Type Name
+
+                                                            </label>
+
+
+                                                            <input
+                                                                type="text"
+                                                                name="name"
+                                                                value="{{ ticket_type.name }}"
+                                                                class="form-control"
+                                                                required
+                                                            >
+
+
+                                                        </div>
+
+
+
+                                                        <!-- CODE -->
+
+                                                        <div class="mb-3">
+
+
+                                                            <label
+                                                                class="form-label"
+                                                            >
+
+                                                                Ticket Type Code
+
+                                                            </label>
+
+
+                                                            <input
+                                                                type="text"
+                                                                name="code"
+                                                                value="{{ ticket_type.code }}"
+                                                                class="form-control"
+                                                                required
+                                                            >
+
+
+                                                        </div>
+
+
+
+                                                        <!-- DESCRIPTION -->
+
+                                                        <div class="mb-3">
+
+
+                                                            <label
+                                                                class="form-label"
+                                                            >
+
+                                                                Description
+
+                                                            </label>
+
+
+                                                            <textarea
+                                                                name="description"
+                                                                class="form-control"
+                                                                rows="3"
+                                                            >{{ ticket_type.description|default:"" }}</textarea>
+
+
+                                                        </div>
+
+
+
+                                                        <!-- STATUS -->
+
+                                                        <div class="mb-3">
+
+
+                                                            <label
+                                                                class="form-label"
+                                                            >
+
+                                                                Status
+
+                                                            </label>
+
+
+                                                            <select
+                                                                name="is_active"
+                                                                class="form-select"
+                                                            >
+
+
+                                                                <option
+                                                                    value="1"
+                                                                    {% if ticket_type.is_active %}
+                                                                        selected
+                                                                    {% endif %}
+                                                                >
+
+                                                                    Active
+
+                                                                </option>
+
+
+                                                                <option
+                                                                    value="0"
+                                                                    {% if not ticket_type.is_active %}
+                                                                        selected
+                                                                    {% endif %}
+                                                                >
+
+                                                                    Inactive
+
+                                                                </option>
+
+
+                                                            </select>
+
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+
+                                                    <!-- MODAL FOOTER -->
+
+                                                    <div class="modal-footer">
+
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-light-secondary"
+                                                            data-bs-dismiss="modal"
+                                                        >
+
+                                                            Cancel
+
+                                                        </button>
+
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary"
+                                                        >
+
+
+                                                            <i class="bi bi-check-circle me-1"></i>
+
+
+                                                            Update
+
+
+                                                        </button>
+
+
+                                                    </div>
+
+
+                                                </form>
+
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                    <!-- =================================================
+                                         DELETE MODAL
+                                    ================================================== -->
+
+                                    <div
+                                        class="modal fade"
+                                        id="deleteTicketType{{ ticket_type.id }}"
+                                        tabindex="-1"
+                                        aria-hidden="true"
+                                    >
+
+
+                                        <div
+                                            class="modal-dialog
+                                                   modal-dialog-centered"
+                                        >
+
+
+                                            <div class="modal-content">
+
+
+
+                                                <!-- MODAL HEADER -->
+
+                                                <div class="modal-header">
+
+
+                                                    <h5 class="modal-title">
+
+
+                                                        Delete Ticket Type
+
+
+                                                    </h5>
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn-close"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close"
+                                                    ></button>
+
+
+                                                </div>
+
+
+
+                                                <!-- MODAL BODY -->
+
+                                                <div class="modal-body">
+
+
+                                                    <p class="mb-0">
+
+
+                                                        Are you sure you want to delete
+
+
+                                                        <strong>
+
+
+                                                            {{ ticket_type.name }}
+
+
+                                                        </strong>
+
+
+                                                        ticket type?
+
+
+                                                    </p>
+
+
+                                                </div>
+
+
+
+                                                <!-- MODAL FOOTER -->
+
+                                                <div class="modal-footer">
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-light-secondary"
+                                                        data-bs-dismiss="modal"
+                                                    >
+
+
+                                                        Cancel
+
+
+                                                    </button>
+
+
+
+                                                    <form
+                                                        method="POST"
+                                                        action=""
+                                                    >
+
+
+                                                        {% csrf_token %}
+
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-danger"
+                                                        >
+
+
+                                                            <i class="bi bi-trash me-1"></i>
+
+
+                                                            Delete
+
+
+                                                        </button>
+
+
+                                                    </form>
+
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                {% empty %}
+
+
+
+                                    <!-- =================================================
+                                         NO DATA
+                                    ================================================== -->
+
+                                    <tr>
+
+
+                                        <td
+                                            colspan="7"
+                                            class="table-empty"
+                                        >
+
+
+                                            <i class="bi bi-ticket-perforated"></i>
+
+
+                                            <p class="text-muted mb-0">
+
+
+                                                No Ticket Type Found
+
+
+                                            </p>
+
+
+                                        </td>
+
+
+                                    </tr>
+
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+{% endblock %}

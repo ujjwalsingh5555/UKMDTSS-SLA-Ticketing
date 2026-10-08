@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title> Margsoft Support Ticket Management System</title>
+
+
+    <!-- =========================================================
+         GOOGLE FONT
+    ========================================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =========================================================
+         BOOTSTRAP CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'assets/css/bootstrap.css' %}"
+    >
+
+
+    <!-- =========================================================
+         ICONLY
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'assets/vendors/iconly/bold.css' %}"
+    >
+
+
+    <!-- =========================================================
+         PERFECT SCROLLBAR
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'assets/vendors/perfect-scrollbar/perfect-scrollbar.css' %}"
+    >
+
+
+    <!-- =========================================================
+         BOOTSTRAP ICONS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'assets/vendors/bootstrap-icons/bootstrap-icons.css' %}"
+    >
+
+
+    <!-- =========================================================
+         MAIN CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'assets/css/app.css' %}"
+    >
+
+
+    <!-- =========================================================
+         RESPONSIVE CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'assets/css/responsive-enhancements.css' %}"
+    >
+
+
+    <!-- =========================================================
+         FAVICON
+    ========================================================== -->
+
+    <link
+        rel="shortcut icon"
+        href="{% static 'assets/images/favicon.svg' %}"
+        type="image/x-icon"
+    >
+
+
+    <!-- =========================================================
+         ALERTIFYJS CSS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"
+    >
+
+    <style>
+
+        /* =====================================================
+           SIDEBAR PROFILE
+        ====================================================== */
+
+        .sidebar-profile {
+
+            margin: 15px 18px 8px;
+
+            padding: 14px;
+
+            border-radius: 12px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e8edf4;
+        }
+
+
+        .profile-info {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+        }
+
+
+        .profile-avatar {
+
+            width: 42px;
+
+            height: 42px;
+
+            min-width: 42px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #435ebe;
+
+            color: #ffffff;
+
+            font-size: 18px;
+
+            font-weight: 700;
+        }
+
+
+        .profile-details {
+
+            flex: 1;
+
+            min-width: 0;
+        }
+
+
+        .profile-name {
+
+            margin: 0;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            color: #25396f;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+        .profile-role {
+
+            margin: 2px 0 0;
+
+            font-size: 11px;
+
+            color: #7c8db5;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+        .profile-email {
+
+            margin: 3px 0 0;
+
+            font-size: 10px;
+
+            color: #94a3b8;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+
+        /* =====================================================
+           VIEW PROFILE BUTTON
+        ====================================================== */
+
+        .profile-action {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 7px;
+
+            width: 100%;
+
+            margin-top: 12px;
+
+            padding: 8px 10px;
+
+            border-radius: 7px;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            color: #435ebe;
+
+            background: #eef2ff;
+
+            border: 1px solid #dce3ff;
+
+            transition: all .2s ease;
+        }
+
+
+        .profile-action:hover {
+
+            color: #ffffff;
+
+            background: #435ebe;
+
+            border-color: #435ebe;
+        }
+
+
+
+        /* =====================================================
+           LOGOUT
+        ====================================================== */
+
+        .logout-item {
+
+            margin-top: 5px;
+        }
+
+
+        .logout-link {
+
+            color: #dc3545 !important;
+
+            transition: all .2s ease;
+        }
+
+
+        .logout-link i,
+        .logout-link span {
+
+            color: #dc3545 !important;
+        }
+
+
+        .logout-link:hover {
+
+            background: #dc3545 !important;
+        }
+
+
+        .logout-link:hover i,
+        .logout-link:hover span {
+
+            color: #ffffff !important;
+        }
+
+
+
+        /* =====================================================
+           SUB MENU DESIGN
+        ====================================================== */
+
+        .sidebar-item.has-sub > .sidebar-link {
+
+            position: relative;
+        }
+
+
+        .sidebar-item .submenu {
+
+            margin-top: 4px;
+
+            padding-bottom: 5px;
+        }
+
+
+        .sidebar-item .submenu .submenu-item {
+
+            margin-bottom: 2px;
+        }
+
+
+        .sidebar-item .submenu .submenu-item a {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 9px 15px 9px 20px;
+
+            border-radius: 7px;
+
+            color: #607080;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            text-decoration: none;
+
+            transition: all .2s ease;
+        }
+
+
+        .sidebar-item .submenu .submenu-item a i {
+
+            width: 19px;
+
+            font-size: 13px;
+
+            color: #7c8db5;
+
+            transition: all .2s ease;
+        }
+
+
+        .sidebar-item .submenu .submenu-item a:hover {
+
+            color: #435ebe;
+
+            background: #f0f3ff;
+        }
+
+
+        .sidebar-item .submenu .submenu-item a:hover i {
+
+            color: #435ebe;
+        }
+
+
+        .sidebar-item .submenu .submenu-item.active a {
+
+            color: #435ebe;
+
+            background: #eef2ff;
+        }
+
+
+
+        /* =====================================================
+           SUPPORT PARENT
+        ====================================================== */
+
+        .support-parent > .sidebar-link {
+
+            transition: all .2s ease;
+        }
+
+
+        .support-parent > .sidebar-link i {
+
+            color: #435ebe;
+        }
+
+
+        /* =====================================================
+           SUPPORT CHILD
+        ====================================================== */
+
+        .support-submenu .submenu-item a {
+
+            position: relative;
+        }
+
+
+        .support-submenu .submenu-item a::before {
+
+            content: "";
+
+            width: 5px;
+
+            height: 5px;
+
+            border-radius: 50%;
+
+            background: #cbd5e1;
+
+            margin-right: 3px;
+
+            transition: all .2s ease;
+        }
+
+
+        .support-submenu .submenu-item a:hover::before {
+
+            background: #435ebe;
+        }
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div id="app">
+
+
+    <!-- =========================================================
+         SIDEBAR
+    ========================================================== -->
+
+    <div
+        id="sidebar"
+        class="active"
+    >
+
+
+        <div class="sidebar-wrapper active">
+
+
+            <!-- =================================================
+                 SIDEBAR HEADER
+            ================================================== -->
+
+            <div class="sidebar-header">
+
+
+                <div class="d-flex justify-content-between">
+
+
+                    <!-- Logo -->
+
+                    <div class="logo">
+
+
+                        <a href="/raise/index/">
+
+
+                            <img
+                                src="{% static 'assets/images/logo/logo.png' %}"
+                                alt="Logo"
+                                style="
+                                    height: 100px;
+                                    width: 300px;
+                                "
+                            >
+
+
+                        </a>
+
+
+                    </div>
+
+
+
+                    <!-- Mobile Close -->
+
+                    <div class="toggler">
+
+
+                        <a
+                            href="#"
+                            class="sidebar-hide d-xl-none d-block"
+                        >
+
+                            <i class="bi bi-x bi-middle"></i>
+
+                        </a>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SIDEBAR MENU
+            ================================================== -->
+
+            <div class="sidebar-menu">
+
+
+                <ul class="menu">
+
+
+                    <!-- =================================================
+                         MENU
+                    ================================================== -->
+
+                    <li class="sidebar-title">
+
+                        Menu
+
+                    </li>
+
+
+
+                    <!-- =================================================
+                         DASHBOARD
+                    ================================================== -->
+
+                    <li class="sidebar-item">
+
+
+                        <a
+                            href="/raise/index/"
+                            class="sidebar-link"
+                        >
+
+
+                            <i class="bi bi-grid-fill"></i>
+
+
+                            <span>
+
+                                Dashboard
+
+                            </span>
+
+
+                        </a>
+
+
+                    </li>
+
+
+
+                    <!-- =================================================
+                         MASTERS PARENT MENU
+                    ================================================== -->
+
+                    <li class="sidebar-item has-sub">
+
+
+                        <!-- Parent -->
+
+                        <a
+                            href="#"
+                            class="sidebar-link"
+                        >
+
+
+                            <i class="bi bi-stack"></i>
+
+
+                            <span>
+
+                                Masters
+
+                            </span>
+
+
+                        </a>
+
+
+
+                        <!-- =================================================
+                             MASTER CHILD MENUS
+                        ================================================== -->
+
+                        <ul class="submenu">
+
+
+                            <!-- =============================================
+                                 ROLE MASTER
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/roles">
+
+
+                                    <i class="bi bi-person-badge"></i>
+
+
+                                    Role Master
+
+
+                                </a>
+
+
+                            </li>
+
+
+
+                            <!-- =============================================
+                                 PERMISSION MASTER
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/permissions">
+
+
+                                    <i class="bi bi-shield-check"></i>
+
+
+                                    Permission Master
+
+
+                                </a>
+
+
+                            </li>
+
+
+
+                            <!-- =============================================
+                                 ROLE PERMISSION MAPPING
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/role-permissions">
+
+
+                                    <i class="bi bi-diagram-3"></i>
+
+
+                                    Role Permission Mapping
+
+
+                                </a>
+
+
+                            </li>
+
+
+
+                            <!-- =============================================
+                                 CREATE USER
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/users/">
+
+
+                                    <i class="bi bi-person-plus"></i>
+
+
+                                    Create User
+
+
+                                </a>
+
+
+                            </li>
+
+
+
+                            <!-- =============================================
+                                 SOFTWARE MASTER
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/software-modules/">
+
+
+                                    <i class="bi bi-code-square"></i>
+
+
+                                    Software Master
+
+
+                                </a>
+
+
+                            </li>
+
+
+
+                            <!-- =============================================
+                                 HARDWARE MASTER
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/hardware-modules/">
+
+
+                                    <i class="bi bi-cpu"></i>
+
+
+                                    Hardware Master
+
+
+                                </a>
+
+
+                            </li>
+
+
+
+                            <!-- =============================================
+                                 TICKET TYPE MASTER
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/ticket_master/">
+
+
+                                    <i class="bi bi-ticket-detailed"></i>
+
+
+                                    Ticket Type Master
+
+
+                                </a>
+
+
+                            </li>
+
+
+
+                            <!-- =============================================
+                                 PRIORITY MASTER
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/priority_list/">
+
+
+                                    <i class="bi bi-flag"></i>
+
+
+                                    Priority Type Master
+
+
+                                </a>
+
+
+                            </li>
+
+
+
+                            <!-- =============================================
+                                 STATE MASTER
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/state_masters/">
+
+
+                                    <i class="bi bi-map"></i>
+
+
+                                    State Master
+
+
+                                </a>
+
+
+                            </li>
+
+
+
+                            <!-- =============================================
+                                 DISTRICT MASTER
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/district_masters/">
+
+
+                                    <i class="bi bi-geo-alt"></i>
+
+
+                                    District Master
+
+
+                                </a>
+
+
+                            </li>
+
+
+
+                            <!-- =============================================
+                                 GATE MASTER
+                            ============================================== -->
+
+                            <li class="submenu-item">
+
+
+                                <a href="/masters/gate_masters/">
+
+
+                                    <i class="bi bi-signpost-2"></i>
+
+
+                                    Gate Master
+
+
+                                </a>
+
+
+                            </li>
+
+
+                        </ul>
+
+
+                    </li>
+
+
+
+                    <!-- =================================================
+                         SUPPORT
+                    ================================================== -->
+
+                    <li class="sidebar-title">
+                        Support
+                    </li>
+
+
+                    <!-- =================================================
+                         SUPPORT PARENT MENU
+                    ================================================== -->
+
+                    <li
+                        class="sidebar-item
+                               has-sub
+                               support-parent"
+                    >
+
+                        <a
+                            href="#"
+                            class="sidebar-link"
+                        >
+
+                            <i class="bi bi-headset"></i>
+
+                            <span>
+                                Support
+                            </span>
+
+                        </a>
+
+
+                        <ul class="submenu support-submenu">
+
+                            <!-- RAISE TICKET -->
+                            <li class="submenu-item">
+
+                                <a href="/raise/genrate-ticket/">
+
+                                    <i class="bi bi-plus-circle"></i>
+                                    Raise Ticket
+
+                                </a>
+
+                            </li>
+
+
+                            <!-- TICKET HISTORY / REPORT -->
+                            <li class="submenu-item">
+
+                                <a href="/raise/Viewticket_report/">
+
+                                    <i class="bi bi-clock-history"></i>
+                                    Ticket History
+
+                                </a>
+
+                            </li>
+
+
+                            <!-- ASSIGNED TICKETS -->
+                            <li class="submenu-item">
+
+                                <a href="/raise/assined_ticket/">
+
+                                    <i class="bi bi-person-check"></i>
+                                    Assigned Tickets
+
+                                </a>
+
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+
+                    <!-- =================================================
+                         MAINTENANCE PARENT MENU
+                    ================================================== -->
+
+                    <li
+                        class="sidebar-item
+                               has-sub"
+                    >
+
+                        <a
+                            href="#"
+                            class="sidebar-link"
+                        >
+
+                            <i class="bi bi-tools"></i>
+
+                            <span>
+                                Maintenance
+                            </span>
+
+                        </a>
+
+
+                        <ul class="submenu support-submenu">
+
+                            <!-- SCHEDULE MAINTENANCE -->
+                            <li class="submenu-item">
+
+                                <a href="/raise/schedule-maintenance/">
+
+                                    <i class="bi bi-calendar2-check"></i>
+                                    Schedule Maintenance
+
+                                </a>
+
+                            </li>
+
+
+                            <!-- MAINTENANCE REPORT -->
+                            <li class="submenu-item">
+
+                                <a href="/raise/maintenance-report/">
+
+                                    <i class="bi bi-clipboard-data"></i>
+                                    Maintenance Report
+
+                                </a>
+
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+
+                    <!-- =================================================
+                         MODULE PREVIEW PARENT MENU
+                    ================================================== -->
+
+                    <li
+                        class="sidebar-item
+                               has-sub"
+                    >
+
+                        <a
+                            href="#"
+                            class="sidebar-link"
+                        >
+
+                            <i class="bi bi-speedometer2"></i>
+
+                            <span>
+                                Module Preview
+                            </span>
+
+                        </a>
+
+
+                        <ul class="submenu support-submenu">
+
+                            <!-- SOFTWARE MODULE PREVIEW -->
+                            <li class="submenu-item">
+
+                                <a href="/modules/software_module_list/">
+
+                                    <i class="bi bi-code-square"></i>
+                                    Software
+
+                                </a>
+
+                            </li>
+
+
+                            <!-- HARDWARE MODULE PREVIEW -->
+                            <li class="submenu-item">
+
+                                <a href="{% url 'gate_health' %}">
+
+                                    <i class="bi bi-cpu"></i>
+                                    Hardware
+
+                                </a>
+
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+
+                    <!-- =================================================
+                         IMPORTANT DYNAMIC URL
+                         /raise/assigner_actions/<int:ticket_id>/
+                         This URL needs a ticket_id, so it should be used
+                         inside assigned-ticket rows/forms, not as a static
+                         sidebar menu link.
+                    ================================================== -->
+
+
+                    <!-- =================================================
+                         ACCOUNT
+                    ================================================== -->
+
+                    <li class="sidebar-title">
+
+                        Account
+
+                    </li>
+
+
+
+                    <!-- =================================================
+                         PROFILE CARD
+                    ================================================== -->
+
+                    <li>
+
+
+                        <div class="sidebar-profile">
+
+
+                            <div class="profile-info">
+
+
+                                <!-- =========================================
+                                     AVATAR
+                                ========================================== -->
+
+                                <div class="profile-avatar">
+
+
+                                    <i class="bi bi-person"></i>
+
+
+                                </div>
+
+
+
+                                <!-- =========================================
+                                     PROFILE DETAILS
+                                ========================================== -->
+
+                                <div class="profile-details">
+
+
+                                    <!-- NAME -->
+
+                                    <p class="profile-name">
+
+
+                                        {{ request.session.name|default:"User" }}
+
+
+                                    </p>
+
+
+
+                                    <!-- ROLE -->
+
+                                    <p class="profile-role">
+
+
+                                        <i class="bi bi-person-badge me-1"></i>
+
+
+                                        {{ request.session.role_name|default:"User Role" }}
+
+
+                                    </p>
+
+
+
+                                    <!-- EMAIL -->
+
+                                    <p class="profile-email">
+
+
+                                        {{ request.session.email|default:"" }}
+
+
+                                    </p>
+
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <!-- =============================================
+                                 VIEW PROFILE
+                            ============================================== -->
+
+                            <a
+                                href="#"
+                                class="profile-action"
+                            >
+
+
+                                <i class="bi bi-person-circle"></i>
+                                View Profile
+                            </a>
+
+
+                        </div>
+
+
+                    </li>
+
+
+
+                    <!-- =================================================
+                         LOGOUT
+                    ================================================== -->
+
+                    <li class="sidebar-item logout-item">
+
+
+                        <a
+                            href="/logout/"
+                            class="sidebar-link logout-link"
+                        >
+
+
+                            <i class="bi bi-box-arrow-right"></i>
+
+
+                            <span>
+
+                                Logout
+
+                            </span>
+
+
+                        </a>
+
+
+                    </li>
+
+
+                </ul>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SIDEBAR CLOSE BUTTON
+            ================================================== -->
+
+            <button
+                class="sidebar-toggler btn x"
+            >
+
+
+                <i data-feather="x"></i>
+
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+    ========================================================== -->
+
+    <div id="main">
+
+
+        <!-- =====================================================
+             MOBILE HEADER
+        ====================================================== -->
+
+        <header class="mb-3">
+
+
+            <a
+                href="#"
+                class="burger-btn d-block d-xl-none"
+            >
+
+
+                <i class="bi bi-justify fs-3"></i>
+
+
+            </a>
+
+
+        </header>
+
+
+
+        <!-- =====================================================
+             CHILD PAGE CONTENT
+        ====================================================== -->
+
+        {% block content %}
+
+
+        {% endblock content %}
+
+
+
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+
+        <footer>
+
+
+            <div
+                class="
+                    footer
+                    clearfix
+                    mb-0
+                    text-muted
+                "
+            >
+
+
+                <div class="float-start">
+
+
+                    <p>
+
+                        2026 &copy; Margsoft
+
+                    </p>
+
+
+                </div>
+
+
+
+                <div class="float-end">
+
+
+                    <p>
+
+
+                        Crafted with
+
+
+                        <span class="text-danger">
+
+
+                            <i class="bi bi-heart"></i>
+
+
+                        </span>
+
+
+                        by
+
+
+                        <a>
+
+                            Margsoft
+
+                        </a>
+
+
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+        </footer>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     PERFECT SCROLLBAR
+========================================================== -->
+
+<script
+    src="{% static 'assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js' %}"
+></script>
+
+
+
+<!-- =========================================================
+     BOOTSTRAP
+========================================================== -->
+
+<script
+    src="{% static 'assets/js/bootstrap.bundle.min.js' %}"
+></script>
+
+
+
+<!-- =========================================================
+     APEX CHARTS
+========================================================== -->
+
+<script
+    src="{% static 'assets/vendors/apexcharts/apexcharts.js' %}"
+></script>
+
+
+
+<!-- =========================================================
+     DASHBOARD
+========================================================== -->
+
+<script
+    src="{% static 'assets/js/pages/dashboard.js' %}"
+></script>
+
+
+
+<!-- =========================================================
+     MAIN JS
+========================================================== -->
+
+<script
+    src="{% static 'assets/js/main.js' %}"
+></script>
+
+
+
+<!-- =========================================================
+     RESPONSIVE
+========================================================== -->
+
+<script
+    src="{% static 'assets/js/responsive-enhancements.js' %}"
+></script>
+
+
+
+<!-- =========================================================
+     ALERTIFYJS
+========================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"
+></script>
+
+
+<!-- =========================================================
+     DJANGO MESSAGES -> ALERTIFYJS
+========================================================== -->
+
+{% if messages %}
+
+<script>
+
+    // Default Alertify settings
+    alertify.set("notifier", "position", "top-right");
+    alertify.set("notifier", "delay", 10);
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            alertify.success(
+                "{{ message|escapejs }}"
+            );
+        {% elif message.tags == "error" %}
+            alertify.error(
+                "{{ message|escapejs }}"
+            );
+        {% elif message.tags == "warning" %}
+            alertify.warning(
+                "{{ message|escapejs }}"
+            );
+        {% else %}
+            alertify.message(
+                "{{ message|escapejs }}"
+            );
+        {% endif %}
+    {% endfor %}
+
+</script>
+
+{% endif %}
+
+
+</body>
+
+</html>

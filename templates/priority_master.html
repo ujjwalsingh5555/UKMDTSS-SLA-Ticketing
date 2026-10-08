@@ -1,0 +1,1163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    /* ========================================
+       ACTION BUTTON
+    ======================================== */
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 7px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        background: transparent;
+        transition: all .2s ease;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+
+    /* EDIT */
+
+    .action-btn-edit {
+        color: #002152;
+        border-color: rgba(0, 33, 82, .25);
+        background: rgba(0, 33, 82, .05);
+    }
+
+    .action-btn-edit:hover {
+        color: #ffffff;
+        background: #002152;
+        border-color: #002152;
+    }
+
+
+    /* DELETE */
+
+    .action-btn-delete {
+        color: #dc3545;
+        border-color: rgba(220, 53, 69, .25);
+        background: rgba(220, 53, 69, .05);
+    }
+
+    .action-btn-delete:hover {
+        color: #ffffff;
+        background: #dc3545;
+        border-color: #dc3545;
+    }
+
+
+    /* ========================================
+       CREATE BUTTON
+    ======================================== */
+
+    .btn-create {
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        width: 100%;
+
+        padding: 11px 20px;
+
+        font-size: 14px;
+        font-weight: 600;
+
+        color: white;
+
+        border: none;
+
+        border-radius: 10px;
+
+        background: linear-gradient(
+            135deg,
+            #002152 0%,
+            #0b3d85 100%
+        );
+
+        transition: all .25s ease;
+    }
+
+    .btn-create:hover {
+
+        color: white;
+
+        transform: translateY(-1px);
+
+        box-shadow: 0 6px 15px rgba(0, 33, 82, .25);
+    }
+
+
+    /* ========================================
+       TABLE
+    ======================================== */
+
+    .data-table-wrap {
+
+        width: 100%;
+
+        border: 1px solid #e8edf4;
+
+        border-radius: 12px;
+
+        overflow-x: auto;
+
+        overflow-y: hidden;
+    }
+
+
+    .data-table {
+
+        width: 100%;
+
+        min-width: 800px;
+
+        margin: 0;
+
+        border-collapse: separate;
+
+        border-spacing: 0;
+    }
+
+
+    .data-table thead th {
+
+        padding: 13px 14px !important;
+
+        background: #f5f8fc;
+
+        color: #64748b;
+
+        font-size: 11.5px;
+
+        font-weight: 700;
+
+        letter-spacing: .7px;
+
+        text-transform: uppercase;
+
+        white-space: nowrap;
+
+        border: none;
+
+        border-bottom: 1px solid #e8edf4;
+    }
+
+
+    .data-table tbody td {
+
+        padding: 13px 14px !important;
+
+        font-size: 14px;
+
+        color: #475569;
+
+        border: none;
+
+        border-bottom: 1px solid #f0f4f9;
+
+        vertical-align: middle;
+    }
+
+
+    .data-table tbody tr:last-child td {
+
+        border-bottom: none;
+    }
+
+
+    .data-table tbody tr:hover td {
+
+        background: rgba(0, 33, 82, .03);
+    }
+
+
+    /* ========================================
+       ACTION COLUMN
+    ======================================== */
+
+    .action-column {
+
+        min-width: 180px;
+
+        white-space: nowrap;
+    }
+
+
+    .action-group {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        flex-wrap: nowrap;
+    }
+
+
+    /* ========================================
+       BADGES
+    ======================================== */
+
+    .code-badge {
+
+        display: inline-block;
+
+        padding: 5px 9px;
+
+        background: #eff6ff;
+
+        color: #002152;
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        border-radius: 6px;
+    }
+
+
+    .status-active {
+
+        display: inline-block;
+
+        padding: 5px 10px;
+
+        background: #d1fae5;
+
+        color: #047857;
+
+        border-radius: 6px;
+    }
+
+
+    .status-inactive {
+
+        display: inline-block;
+
+        padding: 5px 10px;
+
+        background: #fee2e2;
+
+        color: #b91c1c;
+
+        border-radius: 6px;
+    }
+
+
+    .total-badge {
+
+        padding: 6px 12px;
+
+        background: #eff6ff;
+
+        color: #002152;
+
+        font-size: 13px;
+
+        font-weight: 700;
+
+        border-radius: 7px;
+    }
+
+</style>
+
+
+
+<!-- ================================================= -->
+<!-- PAGE HEADING -->
+<!-- ================================================= -->
+
+<div class="page-heading">
+
+    <h3>
+        Priority Management
+    </h3>
+
+</div>
+
+
+
+<!-- ================================================= -->
+<!-- MESSAGES -->
+<!-- ================================================= -->
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div
+            class="alert alert-{{ message.tags }}
+                   alert-dismissible fade show"
+        >
+
+            {{ message }}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+            ></button>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+
+
+<div class="page-content">
+
+
+    <section class="row g-3">
+
+
+
+        <!-- ================================================= -->
+        <!-- CREATE PRIORITY -->
+        <!-- ================================================= -->
+
+        <div class="col-12 col-lg-4">
+
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <h4>
+                        Create Priority
+                    </h4>
+
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    <form
+                        method="POST"
+                        action="{% url 'priority_list' %}"
+                    >
+
+
+                        {% csrf_token %}
+
+
+
+                        <!-- Priority Name -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label class="form-label">
+
+                                Priority Name
+
+                                <span class="text-danger">
+                                    *
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                name="name"
+                                class="form-control"
+                                placeholder="Example: High"
+                                required
+                            >
+
+
+                        </div>
+
+
+
+                        <!-- Priority Code -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label class="form-label">
+
+                                Priority Code
+
+                                <span class="text-danger">
+                                    *
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                name="code"
+                                class="form-control"
+                                placeholder="Example: HIGH"
+                                required
+                            >
+
+
+                        </div>
+
+
+
+                        <!-- Description -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label class="form-label">
+
+                                Description
+
+                            </label>
+
+
+                            <textarea
+                                name="description"
+                                class="form-control"
+                                rows="3"
+                                placeholder="Enter Description"
+                            ></textarea>
+
+
+                        </div>
+
+
+
+                        <!-- Status -->
+
+                        <div class="form-group mb-3">
+
+
+                            <label class="form-label">
+
+                                Status
+
+                            </label>
+
+
+                            <select
+                                name="is_active"
+                                class="form-select"
+                            >
+
+
+                                <option value="1">
+                                    Active
+                                </option>
+
+
+                                <option value="0">
+                                    Inactive
+                                </option>
+
+
+                            </select>
+
+
+                        </div>
+
+
+
+                        <!-- Create -->
+
+                        <div class="form-group mt-4">
+
+
+                            <button
+                                type="submit"
+                                class="btn-create"
+                            >
+
+
+                                <i class="bi bi-plus-circle"></i>
+
+
+                                Create Priority
+
+
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- PRIORITY LIST -->
+        <!-- ================================================= -->
+
+        <div class="col-12 col-lg-8">
+
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+
+                    <div
+                        class="d-flex
+                               justify-content-between
+                               align-items-center"
+                    >
+
+
+                        <h4>
+                            Priority List
+                        </h4>
+
+
+                        <span class="total-badge">
+
+                            Total:
+                            {{ priorities.count }}
+
+                        </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    <div class="data-table-wrap">
+
+
+                        <table class="data-table">
+
+
+                            <thead>
+
+
+                                <tr>
+
+
+                                    <th>
+                                        #
+                                    </th>
+
+
+                                    <th>
+                                        Priority
+                                    </th>
+
+
+                                    <th>
+                                        Code
+                                    </th>
+
+
+                                    <th>
+                                        Description
+                                    </th>
+
+
+                                    <th>
+                                        Status
+                                    </th>
+
+
+                                    <th>
+                                        Created At
+                                    </th>
+
+
+                                    <th class="action-column">
+                                        Action
+                                    </th>
+
+
+                                </tr>
+
+
+                            </thead>
+
+
+
+                            <tbody>
+
+
+                                {% for priority in priorities %}
+
+
+                                    <tr>
+
+
+                                        <!-- Serial -->
+
+                                        <td>
+
+                                            {{ forloop.counter }}
+
+                                        </td>
+
+
+
+                                        <!-- Name -->
+
+                                        <td>
+
+                                            <strong>
+
+                                                {{ priority.name }}
+
+                                            </strong>
+
+                                        </td>
+
+
+
+                                        <!-- Code -->
+
+                                        <td>
+
+
+                                            <span class="code-badge">
+
+                                                {{ priority.code }}
+
+                                            </span>
+
+
+                                        </td>
+
+
+
+                                        <!-- Description -->
+
+                                        <td>
+
+
+                                            {% if priority.description %}
+
+                                                {{ priority.description }}
+
+                                            {% else %}
+
+                                                -
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- Status -->
+
+                                        <td>
+
+
+                                            {% if priority.is_active %}
+
+
+                                                <span class="status-active">
+
+                                                    Active
+
+                                                </span>
+
+
+                                            {% else %}
+
+
+                                                <span class="status-inactive">
+
+                                                    Inactive
+
+                                                </span>
+
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- Date -->
+
+                                        <td>
+
+                                            {{ priority.created_at|date:"d M Y" }}
+
+                                        </td>
+
+
+
+                                        <!-- Actions -->
+
+                                        <td class="action-column">
+
+
+                                            <div class="action-group">
+
+
+
+                                                <!-- EDIT -->
+
+                                                <button
+                                                    type="button"
+                                                    class="action-btn action-btn-edit"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editPriority{{ priority.id }}"
+                                                >
+
+                                                    <i class="bi bi-pencil-square"></i>
+
+                                                    Edit
+
+                                                </button>
+
+
+
+                                                <!-- DELETE -->
+
+                                                <button
+                                                    type="button"
+                                                    class="action-btn action-btn-delete"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deletePriority{{ priority.id }}"
+                                                >
+
+                                                    <i class="bi bi-trash"></i>
+
+                                                    Delete
+
+                                                </button>
+
+
+                                            </div>
+
+
+                                        </td>
+
+
+                                    </tr>
+
+
+
+                                    <!-- ================================================= -->
+                                    <!-- EDIT MODAL -->
+                                    <!-- ================================================= -->
+
+                                    <div
+                                        class="modal fade"
+                                        id="editPriority{{ priority.id }}"
+                                        tabindex="-1"
+                                    >
+
+
+                                        <div
+                                            class="modal-dialog
+                                                   modal-dialog-centered"
+                                        >
+
+
+                                            <div class="modal-content">
+
+
+                                                <form
+                                                    method="POST"
+                                                    action="{% url 'priority_update' priority.id %}"
+                                                >
+
+
+                                                    {% csrf_token %}
+
+
+                                                    <div class="modal-header">
+
+
+                                                        <h5 class="modal-title">
+
+                                                            Edit Priority
+
+                                                        </h5>
+
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                        ></button>
+
+
+                                                    </div>
+
+
+
+                                                    <div class="modal-body">
+
+
+
+                                                        <!-- Name -->
+
+                                                        <div class="mb-3">
+
+
+                                                            <label class="form-label">
+
+                                                                Priority Name
+
+                                                            </label>
+
+
+                                                            <input
+                                                                type="text"
+                                                                name="name"
+                                                                value="{{ priority.name }}"
+                                                                class="form-control"
+                                                                required
+                                                            >
+
+
+                                                        </div>
+
+
+
+                                                        <!-- Code -->
+
+                                                        <div class="mb-3">
+
+
+                                                            <label class="form-label">
+
+                                                                Priority Code
+
+                                                            </label>
+
+
+                                                            <input
+                                                                type="text"
+                                                                name="code"
+                                                                value="{{ priority.code }}"
+                                                                class="form-control"
+                                                                required
+                                                            >
+
+
+                                                        </div>
+
+
+
+                                                        <!-- Description -->
+
+                                                        <div class="mb-3">
+
+
+                                                            <label class="form-label">
+
+                                                                Description
+
+                                                            </label>
+
+
+                                                            <textarea
+                                                                name="description"
+                                                                class="form-control"
+                                                                rows="3"
+                                                            >{{ priority.description|default:"" }}</textarea>
+
+
+                                                        </div>
+
+
+
+                                                        <!-- Status -->
+
+                                                        <div class="mb-3">
+
+
+                                                            <label class="form-label">
+
+                                                                Status
+
+                                                            </label>
+
+
+                                                            <select
+                                                                name="is_active"
+                                                                class="form-select"
+                                                            >
+
+
+                                                                <option
+                                                                    value="1"
+                                                                    {% if priority.is_active %}
+                                                                        selected
+                                                                    {% endif %}
+                                                                >
+
+                                                                    Active
+
+                                                                </option>
+
+
+                                                                <option
+                                                                    value="0"
+                                                                    {% if not priority.is_active %}
+                                                                        selected
+                                                                    {% endif %}
+                                                                >
+
+                                                                    Inactive
+
+                                                                </option>
+
+
+                                                            </select>
+
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+
+                                                    <div class="modal-footer">
+
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-light-secondary"
+                                                            data-bs-dismiss="modal"
+                                                        >
+
+                                                            Cancel
+
+                                                        </button>
+
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary"
+                                                        >
+
+                                                            Update
+
+                                                        </button>
+
+
+                                                    </div>
+
+
+                                                </form>
+
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                    <!-- ================================================= -->
+                                    <!-- DELETE MODAL -->
+                                    <!-- ================================================= -->
+
+                                    <div
+                                        class="modal fade"
+                                        id="deletePriority{{ priority.id }}"
+                                        tabindex="-1"
+                                    >
+
+
+                                        <div
+                                            class="modal-dialog
+                                                   modal-dialog-centered"
+                                        >
+
+
+                                            <div class="modal-content">
+
+
+                                                <div class="modal-header">
+
+
+                                                    <h5 class="modal-title">
+
+                                                        Delete Priority
+
+                                                    </h5>
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn-close"
+                                                        data-bs-dismiss="modal"
+                                                    ></button>
+
+
+                                                </div>
+
+
+
+                                                <div class="modal-body">
+
+
+                                                    Are you sure you want to delete
+
+
+                                                    <strong>
+
+                                                        {{ priority.name }}
+
+                                                    </strong>
+
+                                                    priority?
+
+
+                                                </div>
+
+
+
+                                                <div class="modal-footer">
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-light-secondary"
+                                                        data-bs-dismiss="modal"
+                                                    >
+
+                                                        Cancel
+
+                                                    </button>
+
+
+
+                                                    <form
+                                                        method="POST"
+                                                        action="{% url 'priority_delete' priority.id %}"
+                                                    >
+
+
+                                                        {% csrf_token %}
+
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-danger"
+                                                        >
+
+                                                            Delete
+
+                                                        </button>
+
+
+                                                    </form>
+
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                {% empty %}
+
+
+                                    <tr>
+
+
+                                        <td
+                                            colspan="7"
+                                            class="text-center py-5"
+                                        >
+
+                                            <i
+                                                class="bi bi-flag"
+                                                style="font-size:30px;"
+                                            ></i>
+
+
+                                            <p class="text-muted mt-2 mb-0">
+
+                                                No Priority Found
+
+                                            </p>
+
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+{% endblock %}

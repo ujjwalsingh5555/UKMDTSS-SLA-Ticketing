@@ -1,0 +1,616 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+.weekoff-page {
+    padding: 20px 8px 40px;
+    background: #f6f8fc;
+    min-height: 100vh;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+.weekoff-hero {
+    background: linear-gradient(115deg,#172b55,#3959a4);
+    color: white;
+    padding: 30px;
+    border-radius: 18px;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+.weekoff-hero h2 {
+    font-size: 25px;
+    font-weight: 750;
+    margin-bottom: 5px;
+}
+.weekoff-hero p {
+    margin: 0;
+    font-size: 13px;
+    color: #dce6ff;
+}
+.hero-icon {
+    width: 58px;
+    height: 58px;
+    background: rgba(255,255,255,.15);
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+}
+.metric-card {
+    background: white;
+    border: 1px solid #e9edf5;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    box-shadow: 0 3px 12px rgba(30,45,80,.03);
+}
+.metric-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #8491a9;
+}
+.metric-value {
+    font-size: 25px;
+    font-weight: 750;
+    color: #263a70;
+    margin-top: 5px;
+}
+.metric-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 13px;
+    background: #eef3ff;
+    color: #496cc5;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+}
+.panel-card {
+    background: white;
+    border: 1px solid #e8edf5;
+    border-radius: 16px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 20px rgba(30,45,80,.035);
+    overflow: hidden;
+}
+.panel-heading {
+    padding: 20px 24px;
+    border-bottom: 1px solid #eef1f6;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.panel-heading h5 {
+    font-size: 16px;
+    color: #233763;
+    font-weight: 700;
+    margin: 0;
+}
+.panel-heading p {
+    color: #94a0b2;
+    font-size: 12px;
+    margin: 3px 0 0;
+}
+.panel-body {
+    padding: 24px;
+}
+.section-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: #34466c;
+    margin-bottom: 14px;
+}
+.custom-label {
+    font-size: 12px;
+    color: #67758e;
+    font-weight: 650;
+    margin-bottom: 7px;
+}
+.weekoff-page .form-select,
+.weekoff-page .form-control {
+    min-height: 44px;
+    border: 1px solid #e1e7f0;
+    border-radius: 10px;
+    font-size: 14px;
+}
+.weekoff-page .form-select:focus,
+.weekoff-page .form-control:focus {
+    border-color: #6587d8;
+    box-shadow: 0 0 0 3px #6587d822;
+}
+.rules-box {
+    background: #fafbfe;
+    border: 1px solid #edf0f5;
+    border-radius: 13px;
+    padding: 20px;
+    height: 100%;
+}
+.selection-grid {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 10px;
+}
+.saturday-grid {
+    grid-template-columns: repeat(3,minmax(0,1fr));
+}
+.day-option {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+}
+.day-option input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+.day-option span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 76px;
+    border: 1px solid #e4e9f2;
+    background: white;
+    border-radius: 11px;
+    color: #718098;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s;
+    text-align: center;
+}
+.day-option i {
+    font-size: 19px;
+}
+.day-option input:checked + span {
+    color: #3b5eb7;
+    border-color: #6486db;
+    background: #edf3ff;
+    box-shadow: 0 2px 8px #6486db1a;
+}
+.day-option input:focus-visible + span {
+    outline: 3px solid #8eaceb;
+    outline-offset: 2px;
+}
+.day-option:hover span {
+    border-color: #6486db;
+}
+.action-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+}
+.generate-btn {
+    background: linear-gradient(100deg,#3d61be,#597bd5);
+    border: 0;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 650;
+    font-size: 13px;
+}
+.generate-btn:hover {
+    color: white;
+    background: #3455a8;
+}
+.filter-btn {
+    border-radius: 9px;
+    padding: 10px 22px;
+    background: #344f9d;
+    border: 0;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+}
+.filter-btn:hover {
+    background: #253d7c;
+    color: white;
+}
+.off-table {
+    margin: 0;
+}
+.off-table thead th {
+    background: #f5f7fc;
+    color: #66768f;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 16px 20px;
+    border: 0;
+    white-space: nowrap;
+}
+.off-table td {
+    padding: 16px 20px;
+    color: #45536d;
+    font-size: 13px;
+    border-color: #f0f2f7;
+    vertical-align: middle;
+}
+.off-table tbody tr:hover {
+    background: #f9fbff;
+}
+.type-badge {
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 650;
+}
+.type-weekly {
+    background: #e8f0ff;
+    color: #315cb4;
+}
+.type-monthly {
+    background: #fff3dd;
+    color: #a16a10;
+}
+.status-active {
+    background: #e5f8ed;
+    color: #17834a;
+}
+.status-inactive {
+    background: #fdecec;
+    color: #c43d3d;
+}
+.empty-list {
+    padding: 45px 15px !important;
+    text-align: center;
+    color: #91a0b6 !important;
+}
+@media(max-width:991px) {
+    .selection-grid {
+        grid-template-columns: repeat(3,minmax(0,1fr));
+    }
+}
+@media(max-width:575px) {
+    .weekoff-page { padding: 12px 0 25px; }
+    .weekoff-hero { padding: 20px; }
+    .weekoff-hero h2 { font-size: 20px; }
+    .panel-body { padding: 16px; }
+    .panel-heading { padding: 17px; }
+    .rules-box { padding: 14px; }
+    .selection-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+    .saturday-grid {
+        grid-template-columns: repeat(3,minmax(0,1fr));
+    }
+    .day-option span {
+        min-height: 67px;
+        font-size: 12px;
+    }
+    .action-row { display: block; }
+    .generate-btn { width: 100%; }
+}
+</style>
+
+<div class="container-fluid weekoff-page">
+
+    <!-- Hero -->
+    <div class="weekoff-hero">
+        <div>
+            <h2 class = "text-white">Week Off Master</h2>
+            <p>Manage weekly holidays and monthly off schedules.</p>
+        </div>
+        <div class="hero-icon">
+            <i class="bi bi-calendar2-check"></i>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="metric-card">
+                <div>
+                    <div class="metric-title">Selected Month</div>
+                    <div class="metric-value">
+                        {{ selected_month }}/{{ selected_year }}
+                    </div>
+                </div>
+                <div class="metric-icon">
+                    <i class="bi bi-calendar3"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="metric-card">
+                <div>
+                    <div class="metric-title">Total Saved Week Offs</div>
+                    <div class="metric-value">
+                        {{ total_week_offs }}
+                    </div>
+                </div>
+                <div class="metric-icon">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Form -->
+    <div class="panel-card">
+        <div class="panel-heading">
+            <div class="metric-icon">
+                <i class="bi bi-sliders"></i>
+            </div>
+            <div>
+                <h5>Configure Week Off</h5>
+                <p>Choose a period and define your weekly holiday rules.</p>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="custom-label">Select Month</label>
+                        <select name="month"
+                                class="form-select"
+                                required>
+                            {% for value, name in months %}
+                            <option value="{{ value }}"
+                              {% if value == selected_month %}selected{% endif %}>
+                                {{ name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="custom-label">Select Year</label>
+                        <input type="number"
+                               name="year"
+                               class="form-control"
+                               value="{{ selected_year }}"
+                               min="2000"
+                               max="9999"
+                               required>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+
+                    <!-- Weekdays -->
+                    <div class="col-lg-7">
+                        <div class="rules-box">
+                            <div class="section-title">
+                                <i class="bi bi-calendar-week me-2"></i>
+                                Weekly Off Days
+                            </div>
+
+                            <div class="selection-grid">
+                                <label class="day-option">
+                                    <input type="checkbox"
+                                           name="weekly_days" value="0">
+                                    <span><i class="bi bi-circle"></i>Monday</span>
+                                </label>
+
+                                <label class="day-option">
+                                    <input type="checkbox"
+                                           name="weekly_days" value="1">
+                                    <span><i class="bi bi-circle"></i>Tuesday</span>
+                                </label>
+
+                                <label class="day-option">
+                                    <input type="checkbox"
+                                           name="weekly_days" value="2">
+                                    <span><i class="bi bi-circle"></i>Wednesday</span>
+                                </label>
+
+                                <label class="day-option">
+                                    <input type="checkbox"
+                                           name="weekly_days" value="3">
+                                    <span><i class="bi bi-circle"></i>Thursday</span>
+                                </label>
+
+                                <label class="day-option">
+                                    <input type="checkbox"
+                                           name="weekly_days" value="4">
+                                    <span><i class="bi bi-circle"></i>Friday</span>
+                                </label>
+
+                                <label class="day-option">
+                                    <input type="checkbox"
+                                           name="weekly_days" value="5">
+                                    <span><i class="bi bi-circle"></i>Saturday</span>
+                                </label>
+
+                                <label class="day-option">
+                                    <input type="checkbox"
+                                           name="weekly_days"
+                                           value="6" checked>
+                                    <span><i class="bi bi-check-circle"></i>Sunday</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Saturday Selection -->
+                    <div class="col-lg-5">
+                        <div class="rules-box">
+                            <div class="section-title">
+                                <i class="bi bi-calendar-event me-2"></i>
+                                Saturday Off Rules
+                            </div>
+
+                            <div class="selection-grid saturday-grid">
+                                {% for n in "12345" %}
+                                <label class="day-option">
+                                    <input type="checkbox"
+                                           name="saturday_weeks"
+                                           value="{{ n }}"
+                                           {% if n == "2" or n == "4" %}
+                                             checked
+                                           {% endif %}>
+                                    <span>
+                                        <i class="bi bi-calendar2"></i>
+                                        {{ n }}
+                                        {% if n == "1" %}st
+                                        {% elif n == "2" %}nd
+                                        {% elif n == "3" %}rd
+                                        {% else %}th{% endif %}
+                                    </span>
+                                </label>
+                                {% endfor %}
+                            </div>
+
+                            <p class="small text-muted mt-3 mb-0">
+                                Select which Saturdays should be considered
+                                organizational holidays.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-row">
+                    <button type="submit" class="generate-btn">
+                        <i class="bi bi-calendar-plus me-2"></i>
+                        Generate Week Off
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search / Filter -->
+    <div class="panel-card">
+        <div class="panel-heading">
+            <div class="metric-icon">
+                <i class="bi bi-funnel"></i>
+            </div>
+            <div>
+                <h5>Filter Records</h5>
+                <p>View existing week offs by month and year.</p>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <form method="GET">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label class="custom-label">Month</label>
+                        <select class="form-select" name="month">
+                            {% for value, name in months %}
+                            <option value="{{ value }}"
+                                {% if value == selected_month %}selected{% endif %}>
+                                {{ name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="custom-label">Year</label>
+                        <input type="number"
+                               class="form-control"
+                               name="year"
+                               min="2000"
+                               max="9999"
+                               value="{{ selected_year }}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="filter-btn w-100">
+                            <i class="bi bi-search me-2"></i>Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Records Table -->
+    <div class="panel-card">
+        <div class="panel-heading justify-content-between">
+            <div>
+                <h5>Week Off Records</h5>
+                <p>All configured dates for the selected month.</p>
+            </div>
+            <span class="type-badge type-weekly">
+                {{ total_week_offs }} Records
+            </span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table off-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Off Date</th>
+                        <th>Day</th>
+                        <th>Off Type</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for off in week_offs %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <strong>{{ off.off_date|date:"d M Y" }}</strong>
+                        </td>
+                        <td>{{ off.day_name }}</td>
+                        <td>
+                            {% if off.off_type == "WEEKLY" %}
+                            <span class="type-badge type-weekly">
+                                Weekly
+                            </span>
+                            {% else %}
+                            <span class="type-badge type-monthly">
+                                Monthly
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>{{ off.description }}</td>
+                        <td>
+                            {% if off.is_active %}
+                            <span class="type-badge status-active">
+                                Active
+                            </span>
+                            {% else %}
+                            <span class="type-badge status-inactive">
+                                Inactive
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="empty-list">
+                            <i class="bi bi-calendar-x fs-2 d-block mb-2"></i>
+                            No Week Off Records Found
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -102,6 +102,32 @@ class Menu(models.Model):
     url_name = models.CharField(max_length=100,blank=True,null=True)
     parent = models.ForeignKey("self", on_delete=models.CASCADE,blank=True,null=True,related_name="submenus")
         
+
+
+from django.db import models
+
+
+class WeekOffMaster(models.Model):
+    off_date = models.DateField(unique=True)
+    day_name = models.CharField(max_length=15)
+    off_type = models.CharField(max_length=20)
+    description = models.CharField(max_length=150,blank=True,null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        ordering = ["off_date"]
+
+from django.db import models
+
+
+class WorkingHoursMaster(models.Model):
+
+    month = models.PositiveSmallIntegerField(unique=True)
+    year = models.PositiveSmallIntegerField(unique=True)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    class Meta:
+        ordering = ["-year", "-month"]
         
-        
-    

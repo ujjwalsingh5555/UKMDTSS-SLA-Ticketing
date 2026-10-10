@@ -1,9 +1,252 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
 from django.contrib import messages
 from ticketProject.helper import get_logged_in_user, user_has_permission
-
 from .models import *
+import calendar
+from datetime import date,datetime
+from .models import WeekOffMaster,WorkingHoursMaster
+import calendar
+from django.utils import timezone
+
+
+
+# ==========================================================
+# WORKING HOURS MASTER
+# ==========================================================
+
+def working_hours_master(request):
+
+    # ======================================================
+    # CURRENT MONTH AND YEAR
+    # ======================================================
+
+    today = timezone.localdate()
+
+    selected_month = today.month
+    selected_year = today.year
+
+    # ======================================================
+    # MONTH LIST
+    # ======================================================
+
+    months = [
+        {
+            "id": month,
+            "name": calendar.month_name[month]
+        }
+        for month in range(1, 13)
+    ]
+
+    # ======================================================
+    # YEAR LIST
+    # ======================================================
+
+    years = range(
+        today.year - 2,
+        today.year + 6
+    )
+
+    # ======================================================
+    # POST REQUEST
+    # ======================================================
+
+    if request.method == "POST":
+
+        # ==================================================
+        # GET FORM DATA
+        # ==================================================
+
+        month = request.POST.get("month")
+        year = request.POST.get("year")
+
+        start_time = request.POST.get("start_time")
+        end_time = request.POST.get("end_time")
+
+        # ==================================================
+        # REQUIRED FIELD VALIDATION
+        # ==================================================
+
+        if not all([month, year, start_time, end_time]):
+
+            messages.error(
+                request,
+                "All fields are required."
+            )
+
+            return redirect("working_hours_master")
+
+        # ==================================================
+        # MONTH AND YEAR VALIDATION
+        # ==================================================
+
+        try:
+            month = int(month)
+            year = int(year)
+
+            if not (1 <= month <= 12):
+                raise ValueError()
+
+            if not (2000 <= year <= 2100):
+                raise ValueError()
+
+        except (ValueError, TypeError):
+
+            messages.error(
+                request,
+                "Please select a valid Month and Year."
+            )
+
+            return redirect("working_hours_master")
+
+        # ==================================================
+        # TIME CONVERSION
+        # ==================================================
+
+        try:
+
+            start_time = datetime.strptime(
+                start_time,
+                "%H:%M"
+            ).time()
+
+            end_time = datetime.strptime(
+                end_time,
+                "%H:%M"
+            ).time()
+
+        except ValueError:
+
+            messages.error(
+                request,
+                "Invalid Working Hours."
+            )
+
+            return redirect("working_hours_master")
+
+        # ==================================================
+        # START AND END TIME VALIDATION
+        # ==================================================
+
+        if end_time <= start_time:
+
+            messages.error(
+                request,
+                "Ending Working Hours must be greater than Starting Working Hours."
+            )
+
+            return redirect("working_hours_master")
+
+        # ==================================================
+        # CHECK EXISTING MONTH AND YEAR
+        # ==================================================
+
+        existing_record = WorkingHoursMaster.objects.filter(
+            month=month,
+            year=year
+        ).first()
+
+        # ==================================================
+        # UPDATE EXISTING RECORD
+        # ==================================================
+
+        if existing_record:
+
+            existing_record.start_time = start_time
+            existing_record.end_time = end_time
+
+            existing_record.save()
+
+            messages.success(
+                request,
+                "Working Hours updated successfully."
+            )
+
+        # ==================================================
+        # CREATE NEW RECORD
+        # ==================================================
+
+        else:
+
+            WorkingHoursMaster.objects.create(
+                month=month,
+                year=year,
+                start_time=start_time,
+                end_time=end_time
+            )
+
+            messages.success(
+                request,
+                "Working Hours created successfully."
+            )
+
+        return redirect("working_hours_master")
+
+    # ======================================================
+    # GET WORKING HOURS RECORDS
+    # ======================================================
+
+    records = list(
+        WorkingHoursMaster.objects.all()
+        .order_by("-year", "-month")
+    )
+
+    # ======================================================
+    # CALCULATE TOTAL WORKING HOURS
+    # ======================================================
+
+    for record in records:
+
+        start_datetime = datetime.combine(
+            today,
+            record.start_time
+        )
+
+        end_datetime = datetime.combine(
+            today,
+            record.end_time
+        )
+
+        duration = end_datetime - start_datetime
+
+        total_minutes = max(
+            0,
+            int(duration.total_seconds() // 60)
+        )
+
+        hours = total_minutes // 60
+        minutes = total_minutes % 60
+
+        record.duration_display = (
+            f"{hours}h {minutes:02d}m"
+        )
+
+        record.month_name = calendar.month_name[
+            record.month
+        ]
+
+    # ======================================================
+    # CONTEXT
+    # ======================================================
+
+    context = {
+        "months": months,
+        "years": years,
+        "records": records,
+        "selected_month": selected_month,
+        "selected_year": selected_year
+    }
+
+    # ======================================================
+    # RENDER TEMPLATE
+    # ======================================================
+
+    return render(
+        request,
+        "working_hours_master.html",
+        context
+    )
+
+
 
 # ============================================================
 
@@ -78,48 +321,18 @@ def permission_update(request, id):
 
 
 def permission_delete(request, id):
-
-
-
-
     user = get_logged_in_user(request)
-
     if not user:
         messages.error(request,"Please login first.")
         return redirect("login")
-
     if user.role.name.strip().lower() != "admin" and not user_has_permission(request,"MASTER_ACCESS"):
         messages.error(request,"You are not authorized for this.")
         return redirect("/raise/index/")
 
-    permission = get_object_or_404(
-
-        Permission,
-
-        id=id
-
-    )
-
-
-
+    permission = get_object_or_404(Permission,id=id)
     if request.method == "POST":
-
-
-
         permission.delete()
-
-
-
-        messages.success(
-
-            request,
-
-            "Permission deleted successfully."
-
-        )
-
-
-
+        messages.success(request,"Permission deleted successfully.")
     return redirect("permission_list")
 
 
@@ -3071,18 +3284,11 @@ def gate_master(request):
 
         )
 
-
-
-
-
     # ======================================================
 
     # GET ACTIVE STATES
 
     # ======================================================
-
-
-
     states = StateMaster.objects.filter(is_active=True).order_by("name")
     # ======================================================
     # GET ACTIVE DISTRICTS
@@ -3111,11 +3317,6 @@ def menu_create(request):
     context = {"menus": menus}
     return render(request, "menu_create.html", context)
 
-
-from django.contrib import messages
-from django.shortcuts import render, redirect
-
-
 def submenuURL(request):
     parent_menus = Menu.objects.filter(
         parent_id__isnull=True
@@ -3140,4 +3341,344 @@ def submenuURL(request):
         return redirect("/masters/sub-menu-create/")
     context = {"parent_menus": parent_menus,"submenus": submenus,"selected_parent_id": selected_parent_id}
     return render(request,"submenu_url.html",context)
-        
+
+def week_off_master(request):
+
+    today = date.today()
+
+    month = int(request.GET.get("month", today.month))
+    year = int(request.GET.get("year", today.year))
+
+    if request.method == "POST":
+
+        month = int(request.POST.get("month"))
+        year = int(request.POST.get("year"))
+
+        weekly_days = request.POST.getlist("weekly_days")
+        saturday_weeks = request.POST.getlist("saturday_weeks")
+
+        total_days = calendar.monthrange(year, month)[1]
+
+        saturday_count = 0
+        created_count = 0
+
+        for day in range(1, total_days + 1):
+
+            current_date = date(year, month, day)
+
+            weekday = current_date.weekday()
+
+            day_name = current_date.strftime("%A")
+
+            off_type = None
+            description = ""
+
+            # Weekly Off: Sunday, Monday etc.
+            if str(weekday) in weekly_days:
+
+                off_type = "WEEKLY"
+                description = "Weekly " + day_name
+
+            # Saturday Off: 2nd, 4th etc.
+            if weekday == 5:
+                saturday_count += 1
+                if str(saturday_count) in saturday_weeks:
+                    off_type = "MONTHLY"
+                    description = str(saturday_count) + " Saturday"
+            # Database mein save
+            if off_type:
+                if not WeekOffMaster.objects.filter(
+                    off_date=current_date
+                ).exists():
+                    WeekOffMaster.objects.create(
+                        off_date=current_date,
+                        day_name=day_name,
+                        off_type=off_type,
+                        description=description,
+                        is_active=True
+                    )
+                    created_count += 1
+
+        messages.success(
+            request,
+            f"{created_count} Week Off created successfully.")
+        return redirect(f"/role/week-off-master/?month={month}&year={year}")
+    week_offs = WeekOffMaster.objects.filter(
+        off_date__month=month,
+        off_date__year=year
+    ).order_by("off_date")
+
+    months = []
+
+    for i in range(1, 13):
+        months.append((i, calendar.month_name[i]))
+
+    context = {
+        "week_offs": week_offs,
+        "months": months,
+        "selected_month": month,
+        "selected_year": year,
+        "total_week_offs": week_offs.count()
+    }
+
+    return render(request, "week_off_master.html", context)
+
+
+def week_off_delete(request, id):
+
+    if request.method == "POST":
+
+        week_off = WeekOffMaster.objects.filter(id=id).first()
+
+        if week_off:
+
+            month = week_off.off_date.month
+            year = week_off.off_date.year
+
+            week_off.delete()
+
+            messages.success(
+                request,
+                "Week Off deleted successfully."
+            )
+
+            return redirect(
+                f"/role/week-off-master/?month={month}&year={year}"
+            )
+
+    return redirect("week_off_master")
+
+
+
+
+
+# ==========================================================
+# WORKING HOURS MASTER
+# ==========================================================
+
+def working_hours_master(request):
+
+    # ======================================================
+    # CURRENT MONTH AND YEAR
+    # ======================================================
+
+    today = timezone.localdate()
+
+    selected_month = today.month
+    selected_year = today.year
+
+    # ======================================================
+    # MONTH LIST
+    # ======================================================
+
+    months = [
+        {
+            "id": month,
+            "name": calendar.month_name[month]
+        }
+        for month in range(1, 13)
+    ]
+
+    # ======================================================
+    # YEAR LIST
+    # ======================================================
+
+    years = range(
+        today.year - 2,
+        today.year + 6
+    )
+
+    # ======================================================
+    # POST REQUEST
+    # ======================================================
+
+    if request.method == "POST":
+
+        # ==================================================
+        # GET FORM DATA
+        # ==================================================
+
+        month = request.POST.get("month")
+        year = request.POST.get("year")
+
+        start_time = request.POST.get("start_time")
+        end_time = request.POST.get("end_time")
+
+        # ==================================================
+        # REQUIRED FIELD VALIDATION
+        # ==================================================
+
+        if not all([month, year, start_time, end_time]):
+
+            messages.error(
+                request,
+                "All fields are required."
+            )
+
+            return redirect("working_hours_master")
+
+        # ==================================================
+        # MONTH AND YEAR VALIDATION
+        # ==================================================
+
+        try:
+            month = int(month)
+            year = int(year)
+
+            if not (1 <= month <= 12):
+                raise ValueError()
+
+            if not (2000 <= year <= 2100):
+                raise ValueError()
+
+        except (ValueError, TypeError):
+
+            messages.error(
+                request,
+                "Please select a valid Month and Year."
+            )
+
+            return redirect("working_hours_master")
+
+        # ==================================================
+        # TIME CONVERSION
+        # ==================================================
+
+        try:
+
+            start_time = datetime.strptime(
+                start_time,
+                "%H:%M"
+            ).time()
+
+            end_time = datetime.strptime(
+                end_time,
+                "%H:%M"
+            ).time()
+
+        except ValueError:
+            messages.error(request,"Invalid Working Hours.")
+            return redirect("working_hours_master")
+
+        # ==================================================
+        # START AND END TIME VALIDATION
+        # ==================================================
+
+        if end_time <= start_time:
+
+            messages.error(
+                request,
+                "Ending Working Hours must be greater than Starting Working Hours."
+            )
+
+            return redirect("working_hours_master")
+
+        # ==================================================
+        # CHECK EXISTING MONTH AND YEAR
+        # ==================================================
+
+        existing_record = WorkingHoursMaster.objects.filter(
+            month=month,
+            year=year
+        ).first()
+
+        # ==================================================
+        # UPDATE EXISTING RECORD
+        # ==================================================
+
+        if existing_record:
+
+            existing_record.start_time = start_time
+            existing_record.end_time = end_time
+
+            existing_record.save()
+
+            messages.success(
+                request,
+                "Working Hours updated successfully."
+            )
+
+        # ==================================================
+        # CREATE NEW RECORD
+        # ==================================================
+
+        else:
+
+            WorkingHoursMaster.objects.create(
+                month=month,
+                year=year,
+                start_time=start_time,
+                end_time=end_time
+            )
+
+            messages.success(
+                request,
+                "Working Hours created successfully."
+            )
+
+        return redirect("working_hours_master")
+
+    # ======================================================
+    # GET WORKING HOURS RECORDS
+    # ======================================================
+
+    records = list(
+        WorkingHoursMaster.objects.all()
+        .order_by("-year", "-month")
+    )
+
+    # ======================================================
+    # CALCULATE TOTAL WORKING HOURS
+    # ======================================================
+
+    for record in records:
+
+        start_datetime = datetime.combine(
+            today,
+            record.start_time
+        )
+
+        end_datetime = datetime.combine(
+            today,
+            record.end_time
+        )
+
+        duration = end_datetime - start_datetime
+
+        total_minutes = max(
+            0,
+            int(duration.total_seconds() // 60)
+        )
+
+        hours = total_minutes // 60
+        minutes = total_minutes % 60
+
+        record.duration_display = (
+            f"{hours}h {minutes:02d}m"
+        )
+
+        record.month_name = calendar.month_name[
+            record.month
+        ]
+
+    # ======================================================
+    # CONTEXT
+    # ======================================================
+
+    context = {
+        "months": months,
+        "years": years,
+        "records": records,
+        "selected_month": selected_month,
+        "selected_year": selected_year
+    }
+
+    # ======================================================
+    # RENDER TEMPLATE
+    # ======================================================
+
+    return render(
+        request,
+        "working_hours_master.html",
+        context
+    )

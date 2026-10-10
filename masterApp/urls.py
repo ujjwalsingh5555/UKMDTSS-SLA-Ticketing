@@ -138,6 +138,8 @@ path(
     path("gate_masters/",views.gate_master),
     path("meanu_master/",views.menu_create),
     path("sub-menu-create/",views.submenuURL),
+    path("week_off_master/",views. week_off_master),
+    path("working_hours_master/",views.working_hours_master),
     
 ]
 

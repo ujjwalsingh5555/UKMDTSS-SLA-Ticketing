@@ -1,0 +1,577 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .working-page {
+        padding: 10px 4px 35px;
+    }
+
+    .working-header {
+        margin-bottom: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .working-header h3 {
+        color: #25396f;
+        font-size: 24px;
+        font-weight: 750;
+        margin-bottom: 4px;
+    }
+
+    .working-header p {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 13px;
+    }
+
+    .working-card {
+        background: #fff;
+        border: 1px solid #e8edf4;
+        border-radius: 14px;
+        box-shadow: 0 5px 24px rgba(30, 50, 90, 0.045);
+        margin-bottom: 23px;
+        overflow: hidden;
+    }
+
+    .working-card-header {
+        padding: 17px 21px;
+        background: #f8faff;
+        border-bottom: 1px solid #edf0f5;
+        color: #25396f;
+        font-size: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .working-card-body {
+        padding: 24px 21px;
+    }
+
+    .working-label {
+        color: #475569;
+        font-size: 12px;
+        font-weight: 650;
+        margin-bottom: 7px;
+        display: block;
+    }
+
+    .working-input {
+        height: 45px;
+        border-radius: 9px;
+        border: 1px solid #dfe5ef;
+        font-size: 13px;
+        padding: 10px 12px;
+        width: 100%;
+        background: white;
+        color: #334155;
+    }
+
+    .working-input:focus {
+        outline: none;
+        border-color: #435ebe;
+        box-shadow: 0 0 0 3px rgba(67, 94, 190, .10);
+    }
+
+    .working-save {
+        width: 100%;
+        height: 45px;
+        background: linear-gradient(135deg, #435ebe, #304a9a);
+        color: white;
+        border: none;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 700;
+        transition: .2s;
+    }
+
+    .working-save:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 14px rgba(67, 94, 190, .22);
+    }
+
+    .working-duration {
+        margin-top: 20px;
+        padding: 13px 17px;
+        background: #f0fdf4;
+        border: 1px solid #dcfce7;
+        border-radius: 9px;
+        font-size: 13px;
+        color: #15803d;
+        font-weight: 650;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .working-table {
+        width: 100%;
+        margin-bottom: 0;
+        border-collapse: collapse;
+    }
+
+    .working-table thead {
+        background: #f8faff;
+    }
+
+    .working-table th {
+        padding: 15px 18px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #64748b;
+        white-space: nowrap;
+        border-bottom: 1px solid #e8edf5;
+    }
+
+    .working-table td {
+        padding: 15px 18px;
+        font-size: 13px;
+        color: #475569;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .working-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    .time-badge {
+        padding: 7px 12px;
+        display: inline-block;
+        border-radius: 7px;
+        background: #eef2ff;
+        color: #435ebe;
+        font-weight: 650;
+        white-space: nowrap;
+    }
+
+    .hours-badge {
+        background: #ecfdf5;
+        color: #059669;
+        border-radius: 7px;
+        padding: 7px 12px;
+        font-weight: 700;
+        display: inline-block;
+    }
+
+    .working-edit {
+        border: 1px solid #fcd89a;
+        background: #fffbeb;
+        color: #b45309;
+        padding: 7px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .working-edit:hover {
+        background: #fef3c7;
+    }
+
+    .working-count {
+        padding: 5px 11px;
+        background: #e9efff;
+        color: #435ebe;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .working-empty {
+        text-align: center;
+        padding: 45px 15px !important;
+        color: #94a3b8 !important;
+    }
+
+    @media (max-width: 768px) {
+        .working-header h3 {
+            font-size: 20px;
+        }
+
+        .working-card-body {
+            padding: 18px 14px;
+        }
+
+        .working-card-header {
+            padding: 15px;
+        }
+    }
+</style>
+
+<div class="working-page">
+
+    <!-- PAGE HEADING -->
+
+    <div class="working-header">
+        <div>
+            <h3>
+                <i class="bi bi-clock-history me-2"></i>
+                Working Hours Master
+            </h3>
+            <p>
+                Configure monthly office working hours
+                and manage working schedules.
+            </p>
+        </div>
+    </div>
+
+    <!-- DJANGO MESSAGES -->
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+                {{ message }}
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- WORKING HOURS FORM -->
+
+    <div class="working-card" id="workingFormCard">
+
+        <div class="working-card-header">
+            <span>
+                <i class="bi bi-calendar2-week me-2"></i>
+                Configure Working Hours
+            </span>
+
+            <span class="working-count">Monthly Configuration</span>
+        </div>
+
+        <div class="working-card-body">
+
+            <form method="POST"
+                  action=""
+                  id="workingHoursForm">
+
+                {% csrf_token %}
+
+                <div class="row g-3 align-items-end">
+
+                    <!-- MONTH -->
+
+                    <div class="col-xl-2 col-lg-3 col-md-6">
+                        <label class="working-label">
+                            Select Month
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select name="month"
+                                id="month"
+                                class="working-input"
+                                required>
+
+                            {% for month in months %}
+                                <option value="{{ month.id }}"
+                                    {% if month.id == selected_month %}
+                                        selected
+                                    {% endif %}>
+                                    {{ month.name }}
+                                </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <!-- YEAR -->
+
+                    <div class="col-xl-2 col-lg-3 col-md-6">
+                        <label class="working-label">
+                            Select Year
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select name="year"
+                                id="year"
+                                class="working-input"
+                                required>
+
+                            {% for year in years %}
+                                <option value="{{ year }}"
+                                    {% if year == selected_year %}
+                                        selected
+                                    {% endif %}>
+                                    {{ year }}
+                                </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <!-- START TIME -->
+
+                    <div class="col-xl-3 col-lg-3 col-md-6">
+                        <label class="working-label">
+                            Starting Working Hours
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <input type="time"
+                               name="start_time"
+                               id="start_time"
+                               class="working-input"
+                               value="10:00"
+                               required>
+                    </div>
+
+                    <!-- END TIME -->
+
+                    <div class="col-xl-3 col-lg-3 col-md-6">
+                        <label class="working-label">
+                            Ending Working Hours
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <input type="time"
+                               name="end_time"
+                               id="end_time"
+                               class="working-input"
+                               value="18:00"
+                               required>
+                    </div>
+
+                    <!-- SAVE BUTTON -->
+
+                    <div class="col-xl-2 col-lg-12 col-md-12">
+                        <button type="submit"
+                                class="working-save"
+                                id="saveButton">
+                            <i class="bi bi-check-circle me-1"></i>
+                            Save Hours
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- LIVE DURATION -->
+
+                <div class="working-duration" id="durationPreview">
+                    <i class="bi bi-clock"></i>
+                    <span id="durationText">
+                        Total Working Hours: 8h 00m
+                    </span>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- RECORDS TABLE -->
+
+    <div class="working-card">
+
+        <div class="working-card-header">
+            <span>
+                <i class="bi bi-list-ul me-2"></i>
+                Working Hours Records
+            </span>
+
+            <span class="working-count">
+                {{ records|length }} Records
+            </span>
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="working-table">
+
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>Starting Hours</th>
+                        <th>Ending Hours</th>
+                        <th>Total Hours</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for record in records %}
+
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>
+                            <strong>{{ record.month_name }}</strong>
+                        </td>
+
+                        <td>{{ record.year }}</td>
+
+                        <td>
+                            <span class="time-badge">
+                                <i class="bi bi-sunrise me-1"></i>
+                                {{ record.start_time|time:"h:i A" }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="time-badge">
+                                <i class="bi bi-sunset me-1"></i>
+                                {{ record.end_time|time:"h:i A" }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="hours-badge">
+                                {{ record.duration_display }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <button type="button"
+                                    class="working-edit"
+                                    data-month="{{ record.month }}"
+                                    data-year="{{ record.year }}"
+                                    data-start="{{ record.start_time|time:'H:i' }}"
+                                    data-end="{{ record.end_time|time:'H:i' }}"
+                                    onclick="editWorkingHours(this)">
+                                <i class="bi bi-pencil-square me-1"></i>
+                                Edit
+                            </button>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="7" class="working-empty">
+                            <i class="bi bi-calendar-x d-block fs-2 mb-2"></i>
+                            No working hours configured yet.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    // ===========================================
+    // GET INPUT ELEMENTS
+    // ===========================================
+
+    const startInput = document.getElementById("start_time");
+    const endInput = document.getElementById("end_time");
+    const durationText = document.getElementById("durationText");
+    const preview = document.getElementById("durationPreview");
+
+    // ===========================================
+    // CALCULATE WORKING HOURS
+    // ===========================================
+
+    function calculateWorkingHours() {
+
+        const start = startInput.value;
+        const end = endInput.value;
+
+        if (!start || !end) {
+            durationText.textContent = "Please select working hours.";
+            return;
+        }
+
+        const [sh, sm] = start.split(":").map(Number);
+        const [eh, em] = end.split(":").map(Number);
+
+        const startMinutes = (sh * 60) + sm;
+        const endMinutes = (eh * 60) + em;
+
+        const totalMinutes = endMinutes - startMinutes;
+
+        if (totalMinutes <= 0) {
+
+            durationText.textContent =
+                "Ending hours must be greater than starting hours.";
+
+            preview.style.background = "#fff1f2";
+            preview.style.color = "#be123c";
+            preview.style.borderColor = "#fecdd3";
+
+            return;
+        }
+
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+
+        durationText.textContent =
+            `Total Working Hours: ${hours}h ${String(minutes).padStart(2, "0")}m`;
+
+        preview.style.background = "#f0fdf4";
+        preview.style.color = "#15803d";
+        preview.style.borderColor = "#dcfce7";
+    }
+
+    startInput.addEventListener("input", calculateWorkingHours);
+    endInput.addEventListener("input", calculateWorkingHours);
+
+    // ===========================================
+    // EDIT WORKING HOURS
+    // ===========================================
+
+    function editWorkingHours(button) {
+
+        document.getElementById("month").value =
+            button.dataset.month;
+
+        document.getElementById("year").value =
+            button.dataset.year;
+
+        startInput.value = button.dataset.start;
+        endInput.value = button.dataset.end;
+
+        document.getElementById("saveButton").innerHTML =
+            '<i class="bi bi-arrow-repeat me-1"></i> Update Hours';
+
+        calculateWorkingHours();
+
+        document.getElementById("workingFormCard")
+            .scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+    }
+
+    // ===========================================
+    // FORM VALIDATION
+    // ===========================================
+
+    document.getElementById("workingHoursForm")
+        .addEventListener("submit", function(event) {
+
+            if (!startInput.value || !endInput.value ||
+                endInput.value <= startInput.value) {
+
+                event.preventDefault();
+
+                alert(
+                    "Ending Working Hours must be greater than Starting Working Hours."
+                );
+            }
+
+        });
+
+    calculateWorkingHours();
+
+</script>
+
+{% endblock %}

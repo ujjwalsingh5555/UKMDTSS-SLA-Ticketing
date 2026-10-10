@@ -15,6 +15,7 @@ from loginApp.models import(
     Registeruse
 )
 from raiseTicketApp.models import *
+from masterApp.models import WeekOffMaster
 
 
 
@@ -83,6 +84,26 @@ def raise_ticket(request):
     # POST REQUEST
     # ======================================================
     if request.method == "POST":
+        # ==================================================
+        # WEEK OFF DATE CHECK
+        # ==================================================
+        current_date = timezone.localdate()
+
+        week_off = WeekOffMaster.objects.filter(
+            off_date=current_date
+        ).first()
+
+        if week_off:
+            messages.error(
+                request,
+                (
+                    f"Ticket cannot be generated on "
+                    f"{current_date.strftime('%d-%m-%Y (%A)')}. "
+                    f"This date is marked as a Week Off."
+                )
+            )
+            return redirect("/raise/genrate-ticket/")
+
         # ==================================================
         # GET FORM DATA
         # ==================================================
